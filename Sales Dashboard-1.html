@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Dashboard</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #1abc9c;
+            --light-bg: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            padding-top: 20px;
+        }
+        
+        .compact-header {
+            background: white;
+            color: var(--primary-color);
+            padding: 15px 0;
+            border-bottom: 3px solid var(--accent-color);
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        
+        .header-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .kpi-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            height: 100%;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .kpi-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 5px 0;
+            color: var(--primary-color);
+        }
+        
+        .chart-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            height: 300px;
+            position: relative;
+        }
+        
+        .chart-container canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        
+        .filter-panel {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        
+        .data-table-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            overflow-x: auto;
+            max-height: 400px;
+        }
+        
+        .upload-btn {
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .clear-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .clear-btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+        
+        .filter-badge {
+            background: var(--accent-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .file-info {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 6px;
+            border-left: 3px solid var(--secondary-color);
+            margin-bottom: 15px;
+        }
+        
+        .table-sm th, .table-sm td {
+            padding: 8px 10px;
+            font-size: 0.9rem;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .btn-icon {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+        }
+        
+        .date-range-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .date-input {
+            width: 120px;
+        }
+        
+        .compare-section {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 3px solid #3498db;
+        }
+        
+        .compare-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .compare-positive {
+            color: #27ae60;
+        }
+        
+        .compare-negative {
+            color: #e74c3c;
+        }
+        
+        .compare-neutral {
+            color: #7f8c8d;
+        }
+        
+        .debug-info {
+            background: #f1f8ff;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .kpi-value {
+                font-size: 1.5rem;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+            
+            .header-controls {
+                flex-wrap: wrap;
+                justify-content: center;
+                margin-top: 10px;
+            }
+            
+            .date-range-group {
+                flex-wrap: wrap;
+            }
+            
+            .date-input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Compact Header -->
+    <div class="container-fluid compact-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h2 class="mb-0"><i class="fas fa-chart-bar text-primary me-2"></i>Sales Analytics Dashboard</h2>
+                    <p class="text-muted mb-0 small">Upload Excel data for analysis</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="header-controls justify-content-md-end">
+                        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" hidden>
+                        <button class="btn upload-btn" id="uploadTrigger">
+                            <i class="fas fa-upload me-2"></i>Upload Excel
+                        </button>
+                        <button class="btn btn-outline-secondary btn-icon" id="clearData">
+                            <i class="fas fa-trash-alt me-1"></i>Clear
+                        </button>
+                        <button class="btn btn-outline-primary btn-icon" id="exportBtn">
+                            <i class="fas fa-download me-1"></i>Export
+                        </button>
+                        <button class="btn btn-outline-info btn-icon" id="debugBtn">
+                            <i class="fas fa-bug me-1"></i>Debug
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- File Info -->
+        <div id="fileInfo">
+            <div class="file-info">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fas fa-file-excel text-success me-2"></i>
+                        <strong>Sample Data Loaded</strong>
+                        <span class="badge bg-secondary ms-2">150 records</span>
+                    </div>
+                    <div class="text-muted small">
+                        <i class="fas fa-filter me-1"></i> Use filters to analyze data
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Debug Info -->
+        <div class="debug-info" id="debugInfo">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <strong>Debug Information:</strong>
+                    <div id="debugContent">No debug data available</div>
+                </div>
+                <button class="btn btn-sm btn-outline-secondary" id="hideDebug">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Filters Panel -->
+        <div class="filter-panel">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <h5 class="mb-0"><i class="fas fa-filter text-primary me-2"></i>Data Filters</h5>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div id="activeFilters" class="d-flex flex-wrap gap-2 justify-content-md-end">
+                        <span class="text-muted small">No filters applied</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row g-3">
+                <!-- Date Range -->
+                <div class="col-lg-4 col-md-6">
+                    <label class="form-label small fw-bold">Date Range</label>
+                    <div class="date-range-group">
+                        <input type="date" class="form-control form-control-sm date-input" id="dateFrom" value="2023-01-01">
+                        <span class="text-muted">to</span>
+                        <input type="date" class="form-control form-control-sm date-input" id="dateTo" value="2023-12-31">
+                        <button class="btn btn-sm btn-primary" id="applyDateRange">
+                            <i class="fas fa-check"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Party Filter -->
+                <div class="col-lg-2 col-md-6">
+                    <label class="form-label small fw-bold">Party Name</label>
+                    <select class="form-select form-select-sm" id="partyFilter">
+                        <option value="all">All Parties</option>
+                    </select>
+                </div>
+                
+                <!-- Product Filter -->
+                <div class="col-lg-2 col-md-6">
+                    <label class="form-label small fw-bold">Product</label>
+                    <select class="form-select form-select-sm" id="productFilter">
+                        <option value="all">All Products</option>
+                    </select>
+                </div>
+                
+                <!-- GST Filter -->
+                <div class="col-lg-2 col-md-6">
+                    <label class="form-label small fw-bold">GST Rate</label>
+                    <select class="form-select form-select-sm" id="gstFilter">
+                        <option value="all">All GST Rates</option>
+                        <option value="5">5%</option>
+                        <option value="12">12%</option>
+                        <option value="18">18%</option>
+                        <option value="28">28%</option>
+                    </select>
+                </div>
+                
+                <!-- Compare Period -->
+                <div class="col-lg-2 col-md-6">
+                    <label class="form-label small fw-bold">Compare With</label>
+                    <select class="form-select form-select-sm" id="comparePeriod">
+                        <option value="none">No Comparison</option>
+                        <option value="previous_month">Previous Month</option>
+                        <option value="previous_quarter">Previous Quarter</option>
+                        <option value="previous_year">Previous Year</option>
+                        <option value="custom">Custom Period</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Custom Compare Period (Hidden by Default) -->
+            <div class="row mt-3 d-none" id="customCompareSection">
+                <div class="col-md-12">
+                    <div class="compare-section">
+                        <h6 class="mb-2">Custom Compare Period</h6>
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label small fw-bold">Compare From</label>
+                                <input type="date" class="form-control form-control-sm" id="compareFrom" value="2022-01-01">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small fw-bold">Compare To</label>
+                                <input type="date" class="form-control form-control-sm" id="compareTo" value="2022-12-31">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">Comparison Results</label>
+                                <div id="compareResults" class="compare-value compare-neutral">
+                                    Select comparison period
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-3">
+                <div class="col-12 text-end">
+                    <button class="btn btn-sm btn-outline-secondary" id="resetFilters">
+                        <i class="fas fa-redo me-1"></i>Reset All Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI Cards with Comparison -->
+        <div class="row mb-4 g-3">
+            <div class="col-xl-3 col-lg-6">
+                <div class="kpi-card">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary bg-opacity-10 p-3 rounded me-3">
+                            <i class="fas fa-rupee-sign fa-2x text-primary"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-uppercase text-muted small mb-1">Total Sales</h6>
+                            <div class="kpi-value" id="totalSales">₹0</div>
+                            <div id="totalSalesCompare" class="small text-muted">No comparison</div>
+                            <p class="text-muted small mb-0">Grand total value</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6">
+                <div class="kpi-card" style="border-left-color: #1abc9c;">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-success bg-opacity-10 p-3 rounded me-3">
+                            <i class="fas fa-chart-line fa-2x text-success"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-uppercase text-muted small mb-1">Avg Daily</h6>
+                            <div class="kpi-value" id="avgSales">₹0</div>
+                            <div id="avgSalesCompare" class="small text-muted">No comparison</div>
+                            <p class="text-muted small mb-0">Average per day</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6">
+                <div class="kpi-card" style="border-left-color: #f39c12;">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-warning bg-opacity-10 p-3 rounded me-3">
+                            <i class="fas fa-file-invoice-dollar fa-2x text-warning"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-uppercase text-muted small mb-1">Total Tax</h6>
+                            <div class="kpi-value" id="totalTax">₹0</div>
+                            <div id="totalTaxCompare" class="small text-muted">No comparison</div>
+                            <p class="text-muted small mb-0">CGST + SGST + IGST</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6">
+                <div class="kpi-card" style="border-left-color: #e74c3c;">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-danger bg-opacity-10 p-3 rounded me-3">
+                            <i class="fas fa-receipt fa-2x text-danger"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-uppercase text-muted small mb-1">Transactions</h6>
+                            <div class="kpi-value" id="totalTransactions">0</div>
+                            <div id="totalTransactionsCompare" class="small text-muted">No comparison</div>
+                            <p class="text-muted small mb-0">Total invoices</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="row mb-4 g-3">
+            <div class="col-lg-8">
+                <div class="chart-container">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="mb-0">Daily Sales Trend</h6>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="button" class="btn btn-outline-secondary active" data-chart-type="line">Line</button>
+                            <button type="button" class="btn btn-outline-secondary" data-chart-type="bar">Bar</button>
+                        </div>
+                    </div>
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="chart-container">
+                    <h6 class="mb-3">Top Products</h6>
+                    <canvas id="productChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4 g-3">
+            <div class="col-lg-6">
+                <div class="chart-container">
+                    <h6 class="mb-3">Sales by Party</h6>
+                    <canvas id="partyChart"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="chart-container">
+                    <h6 class="mb-3">GST Distribution</h6>
+                    <canvas id="gstChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="data-table-container">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="mb-0">Sales Data (<span id="rowCount">0</span> records)</h6>
+                <div class="btn-group btn-group-sm" role="group">
+                    <button type="button" class="btn btn-outline-secondary" id="prevPage"><i class="fas fa-chevron-left"></i></button>
+                    <button type="button" class="btn btn-outline-secondary" id="nextPage"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr class="table-light">
+                            <th>S.No</th>
+                            <th>Date</th>
+                            <th>Party</th>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Rate</th>
+                            <th>Value</th>
+                            <th>GST %</th>
+                            <th>Tax</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTable">
+                        <!-- Data will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+            <div class="spinner"></div>
+            <p class="text-primary fw-bold">Processing Excel Data...</p>
+            <p class="text-muted small" id="loadingText">Reading file and preparing charts</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center py-3 text-muted small border-top mt-4">
+            <p class="mb-1">Sales Analytics Dashboard &copy; 2023</p>
+            <p class="mb-0">Supports date range filtering and period comparison</p>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Excel file reader library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <script>
+        // Sample data based on your Excel structure
+        const generateSampleData = () => {
+            const sampleData = [];
+            const parties = [
+                'ABC Traders', 'Shree Balaji Enterprises', 'Mahadev Sales', 
+                'Om Sai Distributors', 'Krishna Wholesalers', 'Rajesh General Store',
+                'Gupta Traders', 'Jain Agencies', 'Star Enterprises', 'Global Impex',
+                'Metro Distributors', 'Prime Suppliers', 'City Mart', 'Super Value Stores',
+                'National Traders', 'Reliance Suppliers', 'Bharat Enterprises'
+            ];
+            
+            const products = [
+                'Product A', 'Product B', 'Product C', 'Product D', 'Product E',
+                'Product F', 'Product G', 'Product H', 'Product I', 'Product J',
+                'Product K', 'Product L', 'Product M', 'Product N', 'Product O'
+            ];
+            
+            const gstRates = [5, 12, 18, 28];
+            
+            let sNo = 1;
+            // Generate data for 2023 and 2022 for comparison
+            for (let year = 2022; year <= 2023; year++) {
+                for (let i = 0; i < 75; i++) {
+                    const party = parties[Math.floor(Math.random() * parties.length)];
+                    const product = products[Math.floor(Math.random() * products.length)];
+                    const gstRate = gstRates[Math.floor(Math.random() * gstRates.length)];
+                    const qty = Math.floor(Math.random() * 50) + 1;
+                    const rate = Math.floor(Math.random() * 1000) + 50;
+                    const value = qty * rate;
+                    const taxAmount = value * (gstRate / 100);
+                    const discount = Math.random() > 0.8 ? Math.floor(value * 0.1) : 0;
+                    const grandTotal = value + taxAmount - discount;
+                    
+                    // Generate dates
+                    const month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+                    const day = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
+                    const date = `${year}-${month}-${day}`;
+                    
+                    sampleData.push({
+                        sNo: sNo++,
+                        date: date,
+                        partyName: party,
+                        vchType: 'Sales',
+                        vchNo: i + 1,
+                        itemName: product,
+                        hsnCode: 'XXXX',
+                        qty: qty,
+                        rate: rate,
+                        value: value,
+                        gstRate: gstRate,
+                        cgst: taxAmount / 2,
+                        sgst: taxAmount / 2,
+                        igst: 0,
+                        taxAmount: taxAmount,
+                        discount: discount,
+                        grandTotal: grandTotal
+                    });
+                }
+            }
+            
+            return sampleData;
+        };
+
+        let currentData = [];
+        let charts = {};
+        let currentPage = 1;
+        const pageSize = 15;
+        let allParties = [];
+        let allProducts = [];
+        let filteredData = [];
+        let compareData = [];
+        let isDataLoaded = false;
+        let debugMode = false;
+        
+        // DOM Elements
+        const uploadTrigger = document.getElementById('uploadTrigger');
+        const fileInput = document.getElementById('fileInput');
+        const clearDataBtn = document.getElementById('clearData');
+        const exportBtn = document.getElementById('exportBtn');
+        const resetFiltersBtn = document.getElementById('resetFilters');
+        const applyDateRangeBtn = document.getElementById('applyDateRange');
+        const comparePeriodSelect = document.getElementById('comparePeriod');
+        const customCompareSection = document.getElementById('customCompareSection');
+        const debugBtn = document.getElementById('debugBtn');
+        const debugInfo = document.getElementById('debugInfo');
+        const debugContent = document.getElementById('debugContent');
+        const hideDebugBtn = document.getElementById('hideDebug');
+        
+        // Date filters
+        const dateFrom = document.getElementById('dateFrom');
+        const dateTo = document.getElementById('dateTo');
+        const compareFrom = document.getElementById('compareFrom');
+        const compareTo = document.getElementById('compareTo');
+        
+        // Other filters
+        const filters = {
+            party: document.getElementById('partyFilter'),
+            product: document.getElementById('productFilter'),
+            gst: document.getElementById('gstFilter')
+        };
+        
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingText = document.getElementById('loadingText');
+        const activeFiltersContainer = document.getElementById('activeFilters');
+        
+        // KPI Elements
+        const kpiElements = {
+            totalSales: document.getElementById('totalSales'),
+            avgSales: document.getElementById('avgSales'),
+            totalTax: document.getElementById('totalTax'),
+            totalTransactions: document.getElementById('totalTransactions')
+        };
+        
+        // Compare Elements
+        const compareElements = {
+            totalSales: document.getElementById('totalSalesCompare'),
+            avgSales: document.getElementById('avgSalesCompare'),
+            totalTax: document.getElementById('totalTaxCompare'),
+            totalTransactions: document.getElementById('totalTransactionsCompare')
+        };
+        
+        const rowCountElement = document.getElementById('rowCount');
+        const dataTableBody = document.getElementById('dataTable');
+        const prevPageBtn = document.getElementById('prevPage');
+        const nextPageBtn = document.getElementById('nextPage');
+        const fileInfo = document.getElementById('fileInfo');
+        const compareResults = document.getElementById('compareResults');
+        
+        // Event Listeners
+        uploadTrigger.addEventListener('click', () => fileInput.click());
+        clearDataBtn.addEventListener('click', clearAllData);
+        resetFiltersBtn.addEventListener('click', resetFilters);
+        exportBtn.addEventListener('click', exportReport);
+        prevPageBtn.addEventListener('click', () => changePage(-1));
+        nextPageBtn.addEventListener('click', () => changePage(1));
+        applyDateRangeBtn.addEventListener('click', applyFilters);
+        debugBtn.addEventListener('click', toggleDebugMode);
+        hideDebugBtn.addEventListener('click', () => debugInfo.style.display = 'none');
+        
+        // Chart type buttons
+        document.querySelectorAll('[data-chart-type]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('[data-chart-type]').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                if (charts.salesChart) {
+                    charts.salesChart.config.type = this.dataset.chartType;
+                    charts.salesChart.update();
+                }
+            });
+        });
+        
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                handleFileUpload(e.target.files[0]);
+                e.target.value = '';
+            }
+        });
+        
+        // Compare period change
+        comparePeriodSelect.addEventListener('change', function() {
+            if (this.value === 'custom') {
+                customCompareSection.classList.remove('d-none');
+                calculateComparison();
+            } else {
+                customCompareSection.classList.add('d-none');
+                calculateComparison();
+            }
+        });
+        
+        // Compare date changes
+        compareFrom.addEventListener('change', calculateComparison);
+        compareTo.addEventListener('change', calculateComparison);
+        
+        // Add filter change listeners
+        Object.values(filters).forEach(filter => {
+            filter.addEventListener('change', applyFilters);
+        });
+        
+        // Initialize with sample data
+        loadSampleData();
+        
+        // Functions
+        function loadSampleData() {
+            showLoading('Loading sample data...');
+            setTimeout(() => {
+                currentData = generateSampleData();
+                filteredData = [...currentData];
+                isDataLoaded = true;
+                updateFilterOptions();
+                applyFilters();
+                updateFileInfo('sample-data.xlsx', currentData.length);
+                hideLoading();
+            }, 800);
+        }
+        
+        function handleFileUpload(file) {
+            const fileName = file.name;
+            const fileSize = (file.size / (1024*1024)).toFixed(2);
+            const fileExtension = fileName.split('.').pop().toLowerCase();
+            
+            if (!['xlsx', 'xls', 'csv'].includes(fileExtension)) {
+                alert('Please upload a valid Excel file (.xlsx, .xls, .csv)');
+                return;
+            }
+            
+            showLoading(`Processing ${fileName} (${fileSize} MB)...`);
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    const data = e.target.result;
+                    const workbook = XLSX.read(data, { type: 'binary' });
+                    
+                    // Get first sheet
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    // Convert to JSON with raw values (not calculated)
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { 
+                        defval: "",
+                        raw: false, // Get calculated values
+                        header: 1 // Get array of arrays first
+                    });
+                    
+                    // Debug: Show raw column headers
+                    if (debugMode && jsonData.length > 0) {
+                        const headers = jsonData[0];
+                        debugContent.innerHTML = `Excel Headers: ${headers.join(', ')}<br>`;
+                    }
+                    
+                    // Convert to object with proper headers
+                    const jsonDataObjects = XLSX.utils.sheet_to_json(worksheet, { 
+                        defval: "",
+                        raw: false
+                    });
+                    
+                    // Process the data
+                    processUploadedData(jsonDataObjects, fileName, workbook, worksheet);
+                    
+                } catch (error) {
+                    console.error('Error reading file:', error);
+                    alert('Error reading Excel file. Please check the format.');
+                    hideLoading();
+                }
+            };
+            
+            reader.onerror = function() {
+                alert('Error reading file. Please try again.');
+                hideLoading();
+            };
+            
+            reader.readAsBinaryString(file);
+        }
+        
+        function processUploadedData(jsonData, fileName, workbook, worksheet) {
+            loadingText.textContent = 'Processing data and creating visualizations...';
+            
+            // Process data - FIXED: Better column detection
+            const processedData = [];
+            const foundColumns = {};
+            
+            // First row for debugging
+            if (jsonData.length > 0 && debugMode) {
+                const firstRow = jsonData[0];
+                debugContent.innerHTML += `First Row Keys: ${Object.keys(firstRow).join(', ')}<br>`;
+                debugContent.innerHTML += `First Row Values: ${JSON.stringify(firstRow).substring(0, 500)}<br>`;
+            }
+            
+            jsonData.forEach((row, index) => {
+                // Skip empty rows
+                if (!row || Object.keys(row).length === 0) return;
+                
+                // FIXED: Find column names dynamically
+                let date = null, party = null, product = null, qty = 0, rate = 0, value = 0, gstRate = 0, taxAmount = 0, grandTotal = 0;
+                
+                // Look for date column
+                for (const key in row) {
+                    const val = row[key];
+                    if (!val) continue;
+                    
+                    // Check for date
+                    if (!date && (
+                        key.toLowerCase().includes('date') || 
+                        key.toLowerCase().includes('vch date') ||
+                        (typeof val === 'string' && val.match(/\d{4}[-/]\d{1,2}[-/]\d{1,2}/))
+                    )) {
+                        date = val;
+                        foundColumns.date = key;
+                    }
+                    
+                    // Check for party
+                    if (!party && (
+                        key.toLowerCase().includes('party') || 
+                        key.toLowerCase().includes('customer') ||
+                        key.toLowerCase().includes('client') ||
+                        (typeof val === 'string' && val.length > 3 && !/\d/.test(val))
+                    )) {
+                        party = val;
+                        foundColumns.party = key;
+                    }
+                    
+                    // Check for product
+                    if (!product && (
+                        key.toLowerCase().includes('item') || 
+                        key.toLowerCase().includes('product') ||
+                        key.toLowerCase().includes('description') ||
+                        key.toLowerCase().includes('name') && !key.toLowerCase().includes('party')
+                    )) {
+                        product = val;
+                        foundColumns.product = key;
+                    }
+                    
+                    // Check for quantity
+                    if (qty === 0 && (
+                        key.toLowerCase().includes('qty') || 
+                        key.toLowerCase().includes('quantity')
+                    )) {
+                        qty = parseNumber(val);
+                        foundColumns.qty = key;
+                    }
+                    
+                    // Check for rate
+                    if (rate === 0 && (
+                        key.toLowerCase().includes('rate') || 
+                        key.toLowerCase().includes('price')
+                    )) {
+                        rate = parseNumber(val);
+                        foundColumns.rate = key;
+                    }
+                    
+                    // Check for value
+                    if (value === 0 && (
+                        key.toLowerCase().includes('value') || 
+                        key.toLowerCase().includes('amount')
+                    )) {
+                        value = parseNumber(val);
+                        foundColumns.value = key;
+                    }
+                    
+                    // Check for GST rate
+                    if (gstRate === 0 && (
+                        key.toLowerCase().includes('gst') || 
+                        key.toLowerCase().includes('tax') && key.toLowerCase().includes('rate')
+                    )) {
+                        gstRate = parseNumber(val);
+                        foundColumns.gstRate = key;
+                    }
+                    
+                    // Check for tax amount
+                    if (taxAmount === 0 && (
+                        key.toLowerCase().includes('tax') && 
+                        (key.toLowerCase().includes('amount') || key.toLowerCase().includes('amt'))
+                    )) {
+                        taxAmount = parseNumber(val);
+                        foundColumns.taxAmount = key;
+                    }
+                    
+                    // Check for grand total
+                    if (grandTotal === 0 && (
+                        key.toLowerCase().includes('total') || 
+                        key.toLowerCase().includes('grand')
+                    )) {
+                        grandTotal = parseNumber(val);
+                        foundColumns.grandTotal = key;
+                    }
+                }
+                
+                // Calculate missing values
+                if (value === 0 && qty > 0 && rate > 0) {
+                    value = qty * rate;
+                }
+                
+                if (gstRate === 0) {
+                    gstRate = 18; // Default GST rate
+                }
+                
+                if (taxAmount === 0 && value > 0) {
+                    taxAmount = value * (gstRate / 100);
+                }
+                
+                if (grandTotal === 0 && value > 0) {
+                    grandTotal = value + taxAmount;
+                }
+                
+                // Format date
+                let formattedDate = formatDate(date);
+                if (!formattedDate) {
+                    // Generate fallback date
+                    const month = String((index % 12) + 1).padStart(2, '0');
+                    const day = String((index % 28) + 1).padStart(2, '0');
+                    formattedDate = `2023-${month}-${day}`;
+                }
+                
+                processedData.push({
+                    sNo: index + 1,
+                    date: formattedDate,
+                    partyName: party || `Party ${(index % 10) + 1}`,
+                    itemName: product || `Product ${String.fromCharCode(65 + (index % 10))}`,
+                    qty: qty,
+                    rate: rate,
+                    value: value,
+                    gstRate: gstRate,
+                    taxAmount: taxAmount,
+                    grandTotal: grandTotal,
+                    rawData: row // Store raw data for debugging
+                });
+            });
+            
+            // Debug info
+            if (debugMode) {
+                debugContent.innerHTML += `Found Columns: ${JSON.stringify(foundColumns)}<br>`;
+                debugContent.innerHTML += `Processed ${processedData.length} records<br>`;
+                debugContent.innerHTML += `Sample Record: ${JSON.stringify(processedData[0] || {}).substring(0, 300)}<br>`;
+                debugInfo.style.display = 'block';
+            }
+            
+            // Update data
+            currentData = processedData;
+            filteredData = [...processedData];
+            isDataLoaded = true;
+            
+            // Update UI
+            setTimeout(() => {
+                updateFilterOptions();
+                applyFilters();
+                updateFileInfo(fileName, processedData.length);
+                hideLoading();
+            }, 500);
+        }
+        
+        function parseNumber(value) {
+            if (value === null || value === undefined) return 0;
+            if (typeof value === 'number') return value;
+            if (typeof value === 'string') {
+                // Remove currency symbols, commas, percentage, etc.
+                const cleaned = value.replace(/[₹$€£,%\s]/g, '');
+                const num = parseFloat(cleaned);
+                return isNaN(num) ? 0 : num;
+            }
+            return 0;
+        }
+        
+        function formatDate(dateValue) {
+            if (!dateValue) return null;
+            
+            if (typeof dateValue === 'string') {
+                // Try different date formats
+                const formats = [
+                    /(\d{4})[-/](\d{1,2})[-/](\d{1,2})/, // YYYY-MM-DD or YYYY/MM/DD
+                    /(\d{1,2})[-/](\d{1,2})[-/](\d{4})/, // DD-MM-YYYY or DD/MM/YYYY
+                    /(\d{1,2})[-/](\d{1,2})[-/](\d{2})/  // DD-MM-YY or DD/MM/YY
+                ];
+                
+                for (const format of formats) {
+                    const match = dateValue.match(format);
+                    if (match) {
+                        if (match[1].length === 4) {
+                            // YYYY-MM-DD
+                            return `${match[1]}-${match[2].padStart(2, '0')}-${match[3].padStart(2, '0')}`;
+                        } else if (match[3].length === 4) {
+                            // DD-MM-YYYY
+                            return `${match[3]}-${match[2].padStart(2, '0')}-${match[1].padStart(2, '0')}`;
+                        } else if (match[3].length === 2) {
+                            // DD-MM-YY
+                            const year = parseInt(match[3]) > 50 ? `19${match[3]}` : `20${match[3]}`;
+                            return `${year}-${match[2].padStart(2, '0')}-${match[1].padStart(2, '0')}`;
+                        }
+                    }
+                }
+                
+                // Try parsing as Excel serial number
+                const excelNum = parseFloat(dateValue);
+                if (!isNaN(excelNum) && excelNum > 0) {
+                    // Excel serial number to date (Excel epoch is 1899-12-30)
+                    const excelEpoch = new Date(1899, 11, 30);
+                    const date = new Date(excelEpoch.getTime() + (excelNum - 1) * 24 * 60 * 60 * 1000);
+                    return date.toISOString().split('T')[0];
+                }
+            } else if (typeof dateValue === 'number') {
+                // Handle Excel serial numbers
+                const excelEpoch = new Date(1899, 11, 30);
+                const date = new Date(excelEpoch.getTime() + (dateValue - 1) * 24 * 60 * 60 * 1000);
+                return date.toISOString().split('T')[0];
+            }
+            
+            return null;
+        }
+        
+        function updateFilterOptions() {
+            if (!isDataLoaded || currentData.length === 0) return;
+            
+            // Get unique parties
+            allParties = [...new Set(currentData.map(item => item.partyName))].sort();
+            updateSelectOptions(filters.party, allParties);
+            
+            // Get unique products
+            allProducts = [...new Set(currentData.map(item => item.itemName))].sort();
+            updateSelectOptions(filters.product, allProducts);
+            
+            // Debug info
+            if (debugMode) {
+                debugContent.innerHTML += `Unique Parties: ${allParties.length}<br>`;
+                debugContent.innerHTML += `Unique Products: ${allProducts.length}<br>`;
+                debugContent.innerHTML += `Sample Parties: ${allParties.slice(0, 5).join(', ')}<br>`;
+            }
+        }
+        
+        function updateSelectOptions(selectElement, options) {
+            // Save current value
+            const currentValue = selectElement.value;
+            
+            // Clear existing options except first
+            while (selectElement.options.length > 1) {
+                selectElement.remove(1);
+            }
+            
+            // Add new options
+            options.forEach(option => {
+                if (option && option.trim() !== '') {
+                    const opt = document.createElement('option');
+                    opt.value = option;
+                    opt.textContent = option.length > 20 ? option.substring(0, 20) + '...' : option;
+                    selectElement.appendChild(opt);
+                }
+            });
+            
+            // Restore value if it exists in new options
+            if (options.includes(currentValue)) {
+                selectElement.value = currentValue;
+            }
+        }
+        
+        function applyFilters() {
+            if (!isDataLoaded || currentData.length === 0) {
+                showNoDataMessage();
+                return;
+            }
+            
+            let tempFilteredData = [...currentData];
+            const activeFilters = [];
+            
+            // Debug info
+            if (debugMode) {
+                debugContent.innerHTML += `Applying filters...<br>`;
+                debugContent.innerHTML += `Initial data: ${tempFilteredData.length} records<br>`;
+            }
+            
+            // Date range filter
+            const fromDate = dateFrom.value;
+            const toDate = dateTo.value;
+            
+            if (fromDate && toDate) {
+                const before = tempFilteredData.length;
+                tempFilteredData = tempFilteredData.filter(item => {
+                    const itemDate = item.date;
+                    return itemDate >= fromDate && itemDate <= toDate;
+                });
+                activeFilters.push({type: 'Date', value: `${fromDate} to ${toDate}`});
+                
+                if (debugMode) {
+                    debugContent.innerHTML += `Date filter: ${before} → ${tempFilteredData.length} records<br>`;
+                }
+            }
+            
+            // Party filter
+            if (filters.party.value !== 'all') {
+                const before = tempFilteredData.length;
+                tempFilteredData = tempFilteredData.filter(item => {
+                    // Case insensitive comparison
+                    return item.partyName.toLowerCase() === filters.party.value.toLowerCase();
+                });
+                activeFilters.push({type: 'Party', value: filters.party.value});
+                
+                if (debugMode) {
+                    debugContent.innerHTML += `Party filter (${filters.party.value}): ${before} → ${tempFilteredData.length} records<br>`;
+                    if (tempFilteredData.length === 0) {
+                        debugContent.innerHTML += `No data for party: ${filters.party.value}<br>`;
+                        debugContent.innerHTML += `Available parties: ${allParties.slice(0, 10).join(', ')}<br>`;
+                    }
+                }
+            }
+            
+            // Product filter
+            if (filters.product.value !== 'all') {
+                const before = tempFilteredData.length;
+                tempFilteredData = tempFilteredData.filter(item => {
+                    // Case insensitive comparison
+                    return item.itemName.toLowerCase() === filters.product.value.toLowerCase();
+                });
+                activeFilters.push({type: 'Product', value: filters.product.value});
+                
+                if (debugMode) {
+                    debugContent.innerHTML += `Product filter (${filters.product.value}): ${before} → ${tempFilteredData.length} records<br>`;
+                }
+            }
+            
+            // GST filter
+            if (filters.gst.value !== 'all') {
+                const before = tempFilteredData.length;
+                const gstValue = parseInt(filters.gst.value);
+                tempFilteredData = tempFilteredData.filter(item => item.gstRate === gstValue);
+                activeFilters.push({type: 'GST', value: `${filters.gst.value}%`});
+                
+                if (debugMode) {
+                    debugContent.innerHTML += `GST filter (${gstValue}%): ${before} → ${tempFilteredData.length} records<br>`;
+                }
+            }
+            
+            filteredData = tempFilteredData;
+            updateActiveFilters(activeFilters);
+            updateKPIs();
+            updateCharts();
+            updateDataTable();
+            calculateComparison();
+            
+            // Final debug info
+            if (debugMode) {
+                debugContent.innerHTML += `Final filtered data: ${filteredData.length} records<br>`;
+                if (filteredData.length > 0) {
+                    debugContent.innerHTML += `Sample filtered records:<br>`;
+                    filteredData.slice(0, 3).forEach((item, i) => {
+                        debugContent.innerHTML += `${i+1}. ${item.date} - ${item.partyName} - ${item.itemName} - ₹${item.grandTotal}<br>`;
+                    });
+                }
+            }
+        }
+        
+        function showNoDataMessage() {
+            dataTableBody.innerHTML = `
+                <tr>
+                    <td colspan="10" class="text-center py-5 text-muted">
+                        <i class="fas fa-database fa-2x mb-3 d-block"></i>
+                        No data available. Please upload an Excel file.
+                    </td>
+                </tr>
+            `;
+            
+            // Reset KPIs
+            kpiElements.totalSales.textContent = '₹0';
+            kpiElements.avgSales.textContent = '₹0';
+            kpiElements.totalTax.textContent = '₹0';
+            kpiElements.totalTransactions.textContent = '0';
+            
+            // Reset comparison
+            Object.values(compareElements).forEach(el => {
+                el.textContent = 'No comparison';
+                el.className = 'small text-muted';
+            });
+            
+            rowCountElement.textContent = '0';
+        }
+        
+        function calculateComparison() {
+            if (!isDataLoaded || filteredData.length === 0) {
+                compareResults.textContent = 'No data for comparison';
+                compareResults.className = 'compare-value compare-neutral';
+                return;
+            }
+            
+            const comparePeriod = comparePeriodSelect.value;
+            
+            if (comparePeriod === 'none') {
+                // Reset compare indicators
+                Object.values(compareElements).forEach(el => {
+                    el.textContent = 'No comparison';
+                    el.className = 'small text-muted';
+                });
+                compareData = [];
+                compareResults.textContent = 'Select comparison period';
+                compareResults.className = 'compare-value compare-neutral';
+                return;
+            }
+            
+            let compareFromDate, compareToDate;
+            
+            // Calculate comparison period based on selection
+            if (comparePeriod === 'custom') {
+                compareFromDate = compareFrom.value;
+                compareToDate = compareTo.value;
+            } else {
+                // Calculate based on current date range
+                const currentFrom = new Date(dateFrom.value);
+                const currentTo = new Date(dateTo.value);
+                
+                if (comparePeriod === 'previous_month') {
+                    compareFromDate = new Date(currentFrom);
+                    compareFromDate.setMonth(currentFrom.getMonth() - 1);
+                    compareToDate = new Date(currentTo);
+                    compareToDate.setMonth(currentTo.getMonth() - 1);
+                } else if (comparePeriod === 'previous_quarter') {
+                    compareFromDate = new Date(currentFrom);
+                    compareFromDate.setMonth(currentFrom.getMonth() - 3);
+                    compareToDate = new Date(currentTo);
+                    compareToDate.setMonth(currentTo.getMonth() - 3);
+                } else if (comparePeriod === 'previous_year') {
+                    compareFromDate = new Date(currentFrom);
+                    compareFromDate.setFullYear(currentFrom.getFullYear() - 1);
+                    compareToDate = new Date(currentTo);
+                    compareToDate.setFullYear(currentTo.getFullYear() - 1);
+                }
+                
+                compareFromDate = compareFromDate.toISOString().split('T')[0];
+                compareToDate = compareToDate.toISOString().split('T')[0];
+            }
+            
+            // Get comparison data
+            compareData = currentData.filter(item => {
+                const itemDate = item.date;
+                return itemDate >= compareFromDate && itemDate <= compareToDate;
+            });
+            
+            // Apply same filters to comparison data
+            if (filters.party.value !== 'all') {
+                compareData = compareData.filter(item => item.partyName.toLowerCase() === filters.party.value.toLowerCase());
+            }
+            if (filters.product.value !== 'all') {
+                compareData = compareData.filter(item => item.itemName.toLowerCase() === filters.product.value.toLowerCase());
+            }
+            if (filters.gst.value !== 'all') {
+                compareData = compareData.filter(item => item.gstRate === parseInt(filters.gst.value));
+            }
+            
+            // Calculate comparison metrics
+            const currentMetrics = calculateMetrics(filteredData);
+            const compareMetrics = calculateMetrics(compareData);
+            
+            // Update comparison indicators
+            updateComparisonIndicators(currentMetrics, compareMetrics);
+            
+            // Update comparison results summary
+            if (compareMetrics.totalSales > 0) {
+                const salesChange = ((currentMetrics.totalSales - compareMetrics.totalSales) / compareMetrics.totalSales) * 100;
+                compareResults.textContent = `Sales: ${salesChange >= 0 ? '+' : ''}${salesChange.toFixed(1)}%`;
+                compareResults.className = `compare-value ${salesChange > 0 ? 'compare-positive' : salesChange < 0 ? 'compare-negative' : 'compare-neutral'}`;
+            } else {
+                compareResults.textContent = 'No comparison data';
+                compareResults.className = 'compare-value compare-neutral';
+            }
+        }
+        
+        function calculateMetrics(data) {
+            if (data.length === 0) {
+                return {
+                    totalSales: 0,
+                    avgSales: 0,
+                    totalTax: 0,
+                    totalTransactions: 0
+                };
+            }
+            
+            const totalSales = data.reduce((sum, item) => sum + item.grandTotal, 0);
+            const totalTax = data.reduce((sum, item) => sum + item.taxAmount, 0);
+            
+            // Calculate unique days for average daily sales
+            const uniqueDays = [...new Set(data.map(item => item.date))].length;
+            const avgDailySales = uniqueDays > 0 ? totalSales / uniqueDays : 0;
+            
+            return {
+                totalSales,
+                avgSales: avgDailySales,
+                totalTax,
+                totalTransactions: data.length
+            };
+        }
+        
+        function updateComparisonIndicators(currentMetrics, compareMetrics) {
+            // Total Sales
+            if (compareMetrics.totalSales > 0) {
+                const salesChange = ((currentMetrics.totalSales - compareMetrics.totalSales) / compareMetrics.totalSales) * 100;
+                compareElements.totalSales.textContent = `${salesChange >= 0 ? '+' : ''}${salesChange.toFixed(1)}%`;
+                compareElements.totalSales.className = `small ${salesChange > 0 ? 'text-success' : salesChange < 0 ? 'text-danger' : 'text-muted'}`;
+            } else {
+                compareElements.totalSales.textContent = 'No data';
+                compareElements.totalSales.className = 'small text-muted';
+            }
+            
+            // Avg Sales
+            if (compareMetrics.avgSales > 0) {
+                const avgChange = ((currentMetrics.avgSales - compareMetrics.avgSales) / compareMetrics.avgSales) * 100;
+                compareElements.avgSales.textContent = `${avgChange >= 0 ? '+' : ''}${avgChange.toFixed(1)}%`;
+                compareElements.avgSales.className = `small ${avgChange > 0 ? 'text-success' : avgChange < 0 ? 'text-danger' : 'text-muted'}`;
+            } else {
+                compareElements.avgSales.textContent = 'No data';
+                compareElements.avgSales.className = 'small text-muted';
+            }
+            
+            // Total Tax
+            if (compareMetrics.totalTax > 0) {
+                const taxChange = ((currentMetrics.totalTax - compareMetrics.totalTax) / compareMetrics.totalTax) * 100;
+                compareElements.totalTax.textContent = `${taxChange >= 0 ? '+' : ''}${taxChange.toFixed(1)}%`;
+                compareElements.totalTax.className = `small ${taxChange > 0 ? 'text-success' : taxChange < 0 ? 'text-danger' : 'text-muted'}`;
+            } else {
+                compareElements.totalTax.textContent = 'No data';
+                compareElements.totalTax.className = 'small text-muted';
+            }
+            
+            // Transactions
+            if (compareMetrics.totalTransactions > 0) {
+                const transChange = ((currentMetrics.totalTransactions - compareMetrics.totalTransactions) / compareMetrics.totalTransactions) * 100;
+                compareElements.totalTransactions.textContent = `${transChange >= 0 ? '+' : ''}${transChange.toFixed(1)}%`;
+                compareElements.totalTransactions.className = `small ${transChange > 0 ? 'text-success' : transChange < 0 ? 'text-danger' : 'text-muted'}`;
+            } else {
+                compareElements.totalTransactions.textContent = 'No data';
+                compareElements.totalTransactions.className = 'small text-muted';
+            }
+        }
+        
+        function updateActiveFilters(activeFilters) {
+            activeFiltersContainer.innerHTML = '';
+            
+            if (activeFilters.length === 0) {
+                activeFiltersContainer.innerHTML = '<span class="text-muted small">No filters applied</span>';
+                return;
+            }
+            
+            activeFilters.forEach(filter => {
+                const badge = document.createElement('span');
+                badge.className = 'filter-badge';
+                badge.innerHTML = `${filter.type}: ${filter.value} <i class="fas fa-times ms-1" style="cursor:pointer; font-size:0.8rem;"></i>`;
+                
+                // Add click event to remove filter
+                badge.querySelector('i').addEventListener('click', () => {
+                    if (filter.type === 'Date') {
+                        // Reset date range to default
+                        dateFrom.value = '2023-01-01';
+                        dateTo.value = '2023-12-31';
+                    }
+                    if (filter.type === 'Party') filters.party.value = 'all';
+                    if (filter.type === 'Product') filters.product.value = 'all';
+                    if (filter.type === 'GST') filters.gst.value = 'all';
+                    applyFilters();
+                });
+                
+                activeFiltersContainer.appendChild(badge);
+            });
+        }
+        
+        function resetFilters() {
+            dateFrom.value = '2023-01-01';
+            dateTo.value = '2023-12-31';
+            filters.party.value = 'all';
+            filters.product.value = 'all';
+            filters.gst.value = 'all';
+            comparePeriodSelect.value = 'none';
+            customCompareSection.classList.add('d-none');
+            applyFilters();
+        }
+        
+        function updateKPIs() {
+            const metrics = calculateMetrics(filteredData);
+            
+            kpiElements.totalSales.textContent = '₹' + formatNumber(metrics.totalSales);
+            kpiElements.avgSales.textContent = '₹' + formatNumber(metrics.avgSales);
+            kpiElements.totalTax.textContent = '₹' + formatNumber(metrics.totalTax);
+            kpiElements.totalTransactions.textContent = metrics.totalTransactions.toLocaleString();
+        }
+        
+        function formatNumber(num) {
+            if (num >= 10000000) return (num/10000000).toFixed(1) + 'Cr';
+            if (num >= 100000) return (num/100000).toFixed(1) + 'L';
+            if (num >= 1000) return (num/1000).toFixed(1) + 'K';
+            return Math.round(num).toLocaleString();
+        }
+        
+        function updateCharts() {
+            if (!isDataLoaded || filteredData.length === 0) {
+                // Clear all charts
+                Object.values(charts).forEach(chart => {
+                    if (chart) chart.destroy();
+                });
+                charts = {};
+                return;
+            }
+            
+            createSalesChart();
+            createProductChart();
+            createPartyChart();
+            createGSTChart();
+        }
+        
+        function createSalesChart() {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            
+            // Destroy existing chart if it exists
+            if (charts.salesChart) {
+                charts.salesChart.destroy();
+            }
+            
+            // Group data by date
+            const salesByDate = {};
+            filteredData.forEach(item => {
+                if (!salesByDate[item.date]) {
+                    salesByDate[item.date] = 0;
+                }
+                salesByDate[item.date] += item.grandTotal;
+            });
+            
+            // Sort dates
+            const dates = Object.keys(salesByDate).sort();
+            const sales = dates.map(date => salesByDate[date]);
+            
+            // Get chart type from active button
+            const chartType = document.querySelector('[data-chart-type].active').dataset.chartType;
+            
+            charts.salesChart = new Chart(ctx, {
+                type: chartType,
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Sales',
+                        data: sales,
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        backgroundColor: chartType === 'bar' ? 'rgba(52, 152, 219, 0.7)' : 'rgba(52, 152, 219, 0.1)',
+                        borderWidth: 2,
+                        fill: chartType === 'line',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '₹' + formatNumber(value);
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createProductChart() {
+            const ctx = document.getElementById('productChart').getContext('2d');
+            
+            // Destroy existing chart if it exists
+            if (charts.productChart) {
+                charts.productChart.destroy();
+            }
+            
+            // Group data by product
+            const salesByProduct = {};
+            filteredData.forEach(item => {
+                if (!salesByProduct[item.itemName]) {
+                    salesByProduct[item.itemName] = 0;
+                }
+                salesByProduct[item.itemName] += item.grandTotal;
+            });
+            
+            // Sort by sales value and get top 8
+            const sortedProducts = Object.entries(salesByProduct)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 8);
+            
+            const productNames = sortedProducts.map(item => item[0]);
+            const productSales = sortedProducts.map(item => item[1]);
+            
+            // Color palette
+            const backgroundColors = [
+                'rgba(52, 152, 219, 0.8)',
+                'rgba(46, 204, 113, 0.8)',
+                'rgba(155, 89, 182, 0.8)',
+                'rgba(241, 196, 15, 0.8)',
+                'rgba(230, 126, 34, 0.8)',
+                'rgba(231, 76, 60, 0.8)',
+                'rgba(149, 165, 166, 0.8)',
+                'rgba(22, 160, 133, 0.8)'
+            ];
+            
+            charts.productChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: productNames,
+                    datasets: [{
+                        data: productSales,
+                        backgroundColor: backgroundColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                boxWidth: 12,
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createPartyChart() {
+            const ctx = document.getElementById('partyChart').getContext('2d');
+            
+            // Destroy existing chart if it exists
+            if (charts.partyChart) {
+                charts.partyChart.destroy();
+            }
+            
+            // Group data by party
+            const salesByParty = {};
+            filteredData.forEach(item => {
+                if (!salesByParty[item.partyName]) {
+                    salesByParty[item.partyName] = 0;
+                }
+                salesByParty[item.partyName] += item.grandTotal;
+            });
+            
+            // Sort and get top 10
+            const sortedParties = Object.entries(salesByParty)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
+            
+            const partyNames = sortedParties.map(item => item[0]);
+            const partySales = sortedParties.map(item => item[1]);
+            
+            charts.partyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: partyNames,
+                    datasets: [{
+                        label: 'Sales',
+                        data: partySales,
+                        backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '₹' + formatNumber(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createGSTChart() {
+            const ctx = document.getElementById('gstChart').getContext('2d');
+            
+            // Destroy existing chart if it exists
+            if (charts.gstChart) {
+                charts.gstChart.destroy();
+            }
+            
+            // Group data by GST rate
+            const salesByGST = {};
+            filteredData.forEach(item => {
+                const rate = item.gstRate;
+                if (!salesByGST[rate]) {
+                    salesByGST[rate] = 0;
+                }
+                salesByGST[rate] += item.grandTotal;
+            });
+            
+            const gstRates = Object.keys(salesByGST).map(rate => `${rate}%`);
+            const gstSales = Object.values(salesByGST);
+            
+            // Color palette
+            const backgroundColors = [
+                'rgba(52, 152, 219, 0.8)',
+                'rgba(46, 204, 113, 0.8)',
+                'rgba(241, 196, 15, 0.8)',
+                'rgba(230, 126, 34, 0.8)'
+            ];
+            
+            charts.gstChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: gstRates,
+                    datasets: [{
+                        data: gstSales,
+                        backgroundColor: backgroundColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                boxWidth: 12,
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function updateDataTable() {
+            dataTableBody.innerHTML = '';
+            rowCountElement.textContent = filteredData.length.toLocaleString();
+            currentPage = 1;
+            
+            if (!isDataLoaded || filteredData.length === 0) {
+                showNoDataMessage();
+                return;
+            }
+            
+            renderTablePage();
+        }
+        
+        function renderTablePage() {
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = Math.min(startIndex + pageSize, filteredData.length);
+            const pageData = filteredData.slice(startIndex, endIndex);
+            
+            dataTableBody.innerHTML = '';
+            
+            pageData.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.sNo}</td>
+                    <td>${item.date}</td>
+                    <td><span class="badge bg-light text-dark">${item.partyName}</span></td>
+                    <td>${item.itemName}</td>
+                    <td>${item.qty}</td>
+                    <td>₹${item.rate.toLocaleString('en-IN')}</td>
+                    <td>₹${item.value.toLocaleString('en-IN')}</td>
+                    <td><span class="badge bg-info">${item.gstRate}%</span></td>
+                    <td>₹${item.taxAmount.toLocaleString('en-IN', {maximumFractionDigits: 0})}</td>
+                    <td><strong>₹${item.grandTotal.toLocaleString('en-IN', {maximumFractionDigits: 0})}</strong></td>
+                `;
+                dataTableBody.appendChild(row);
+            });
+            
+            // Update pagination buttons
+            prevPageBtn.disabled = currentPage === 1;
+            nextPageBtn.disabled = endIndex >= filteredData.length;
+        }
+        
+        function changePage(direction) {
+            const totalPages = Math.ceil(filteredData.length / pageSize);
+            currentPage += direction;
+            
+            if (currentPage < 1) currentPage = 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+            
+            renderTablePage();
+        }
+        
+        function clearAllData() {
+            if (confirm('Clear all data and reset dashboard?')) {
+                currentData = [];
+                filteredData = [];
+                compareData = [];
+                isDataLoaded = false;
+                updateKPIs();
+                updateDataTable();
+                activeFiltersContainer.innerHTML = '<span class="text-muted small">No filters applied</span>';
+                fileInfo.innerHTML = `
+                    <div class="file-info">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fas fa-file-excel text-secondary me-2"></i>
+                                <strong>No Data Loaded</strong>
+                            </div>
+                            <div class="text-muted small">
+                                <i class="fas fa-upload me-1"></i> Upload Excel file to begin
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Reset filters
+                resetFilters();
+                
+                // Clear charts
+                Object.values(charts).forEach(chart => {
+                    if (chart) chart.destroy();
+                });
+                charts = {};
+                
+                // Hide debug info
+                debugInfo.style.display = 'none';
+            }
+        }
+        
+        function exportReport() {
+            if (!isDataLoaded || filteredData.length === 0) {
+                alert('No data to export.');
+                return;
+            }
+            
+            // Create a simple CSV
+            let csvContent = "S.No,Date,Party,Product,Qty,Rate,Value,GST%,Tax,Total\n";
+            
+            filteredData.forEach(item => {
+                csvContent += `${item.sNo},${item.date},${item.partyName},${item.itemName},${item.qty},${item.rate},${item.value},${item.gstRate}%,${item.taxAmount},${item.grandTotal}\n`;
+            });
+            
+            // Create download link
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute("href", url);
+            link.setAttribute("download", `sales-report-${new Date().toISOString().slice(0,10)}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        function updateFileInfo(fileName, recordCount) {
+            fileInfo.innerHTML = `
+                <div class="file-info">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-file-excel text-success me-2"></i>
+                            <strong>${fileName}</strong>
+                            <span class="badge bg-secondary ms-2">${recordCount} records</span>
+                        </div>
+                        <div class="text-muted small">
+                            <i class="fas fa-filter me-1"></i> Use filters to analyze data
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function toggleDebugMode() {
+            debugMode = !debugMode;
+            debugBtn.classList.toggle('btn-info', debugMode);
+            debugBtn.classList.toggle('btn-outline-info', !debugMode);
+            
+            if (debugMode) {
+                debugInfo.style.display = 'block';
+                debugContent.innerHTML = `Debug mode enabled<br>`;
+                debugContent.innerHTML += `Data loaded: ${isDataLoaded}<br>`;
+                debugContent.innerHTML += `Current data: ${currentData.length} records<br>`;
+                debugContent.innerHTML += `Filtered data: ${filteredData.length} records<br>`;
+                if (currentData.length > 0) {
+                    debugContent.innerHTML += `Sample data columns: ${Object.keys(currentData[0]).join(', ')}<br>`;
+                }
+            } else {
+                debugInfo.style.display = 'none';
+            }
+        }
+        
+        function showLoading(message) {
+            loadingText.textContent = message;
+            loadingOverlay.style.display = 'flex';
+        }
+        
+        function hideLoading() {
+            loadingOverlay.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
