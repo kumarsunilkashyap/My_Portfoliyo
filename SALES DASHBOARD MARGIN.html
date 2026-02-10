@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Enhanced Sales Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+            --gray-color: #6c757d;
+            --sidebar-width: 250px;
+            --header-height: 70px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f5f7fb;
+            color: var(--dark-color);
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            font-size: 28px;
+        }
+        
+        .header-title h1 {
+            font-size: 22px;
+            font-weight: 600;
+        }
+        
+        .header-title p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background-color: white;
+            width: var(--sidebar-width);
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+            padding: 25px 20px;
+            z-index: 999;
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+        
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sidebar-title i {
+            font-size: 14px;
+        }
+        
+        .filter-group {
+            margin-bottom: 20px;
+        }
+        
+        .filter-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--gray-color);
+        }
+        
+        select, input, .multiselect {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: white;
+            transition: border 0.3s;
+        }
+        
+        select:focus, input:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+        
+        .multiselect {
+            min-height: 42px;
+            max-height: 120px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+        
+        .multiselect-option {
+            padding: 8px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 2px;
+            font-size: 14px;
+        }
+        
+        .multiselect-option:hover {
+            background-color: #f0f5ff;
+        }
+        
+        .multiselect-option.selected {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .multiselect-option input {
+            margin-right: 8px;
+        }
+        
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-secondary {
+            background-color: #e9ecef;
+            color: var(--dark-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #dee2e6;
+        }
+        
+        .btn-success {
+            background-color: #38b000;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #2d9500;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e11574;
+        }
+        
+        .btn-block {
+            width: 100%;
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 25px;
+            transition: margin-left 0.3s ease;
+        }
+        
+        /* KPI Cards */
+        .kpi-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .kpi-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 5px solid var(--primary-color);
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .kpi-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-right: 15px;
+            color: white;
+        }
+        
+        .kpi-content h4 {
+            font-size: 14px;
+            color: var(--gray-color);
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .kpi-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        .kpi-trend {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .positive {
+            color: #38b000;
+        }
+        
+        .negative {
+            color: #e63946;
+        }
+        
+        /* Export Controls */
+        .export-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .chart-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chart-wrapper {
+            height: 300px;
+            position: relative;
+        }
+        
+        /* Table */
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background-color: #f1f5fd;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 2px solid #eaeaea;
+            position: sticky;
+            top: 0;
+        }
+        
+        td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        
+        tr:hover {
+            background-color: #f9fafc;
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 20px;
+            margin-top: 40px;
+            text-align: center;
+            font-size: 14px;
+            margin-left: var(--sidebar-width);
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Modal for Fullscreen Chart */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 90%;
+            height: 90%;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-title {
+            font-size: 22px;
+            font-weight: 600;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--gray-color);
+        }
+        
+        .modal-body {
+            flex: 1;
+            overflow: auto;
+        }
+        
+        /* Data Table for Charts */
+        .chart-data-table {
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            display: none;
+        }
+        
+        .chart-data-table table {
+            margin-bottom: 0;
+        }
+        
+        .chart-data-table th, .chart-data-table td {
+            padding: 8px 12px;
+            font-size: 13px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .footer {
+                margin-left: 0;
+            }
+            
+            .sidebar-open .sidebar {
+                transform: translateX(0);
+            }
+            
+            .sidebar-open .main-content {
+                margin-left: var(--sidebar-width);
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .kpi-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .export-controls {
+                justify-content: center;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .kpi-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-title h1 {
+                font-size: 18px;
+            }
+            
+            .header-title p {
+                display: none;
+            }
+        }
+        
+        /* Toggle button for sidebar */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        
+        /* Utility Classes */
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+        
+        .mt-20 {
+            margin-top: 20px;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .d-flex {
+            display: flex;
+        }
+        
+        .align-center {
+            align-items: center;
+        }
+        
+        .justify-between {
+            justify-content: space-between;
+        }
+        
+        .gap-10 {
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="header-title">
+                <h1>Sales Intelligence Dashboard</h1>
+                <p>Interactive analytics for business insights</p>
+            </div>
+        </div>
+        <div class="header-controls">
+            <div class="upload-container">
+                <label for="upload" class="btn btn-primary btn-sm">
+                    <i class="fas fa-upload"></i> Upload Data
+                </label>
+                <input type="file" id="upload" accept=".xlsx,.xls" style="display: none;">
+            </div>
+            <div class="current-date">
+                <span id="currentDate"></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-title">
+                <i class="fas fa-filter"></i> Filters
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">Date</label>
+                <input type="date" id="fDate" class="form-control">
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">Voucher Type</label>
+                <div class="multiselect" id="fVoucherMultiselect">
+                    <!-- Options will be populated by JS -->
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">Party Name</label>
+                <div class="multiselect" id="fPartyMultiselect">
+                    <!-- Options will be populated by JS -->
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">Item Name</label>
+                <div class="multiselect" id="fItemMultiselect">
+                    <!-- Options will be populated by JS -->
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <button class="btn btn-primary btn-block" onclick="applyFilters()">
+                    <i class="fas fa-check-circle"></i> Apply Filters
+                </button>
+            </div>
+            
+            <div class="filter-group">
+                <button class="btn btn-secondary btn-block" onclick="clearFilters()">
+                    <i class="fas fa-eraser"></i> Clear Filters
+                </button>
+            </div>
+        </div>
+        
+        <div class="sidebar-section">
+            <div class="sidebar-title">
+                <i class="fas fa-download"></i> Export Data
+            </div>
+            
+            <div class="filter-group">
+                <button class="btn btn-success btn-block mb-10" onclick="exportToExcel()">
+                    <i class="fas fa-file-excel"></i> Export to Excel
+                </button>
+                <button class="btn btn-warning btn-block" onclick="exportToPDF()">
+                    <i class="fas fa-file-pdf"></i> Export to PDF
+                </button>
+            </div>
+        </div>
+        
+        <div class="sidebar-section">
+            <div class="sidebar-title">
+                <i class="fas fa-cog"></i> Settings
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">Chart Theme</label>
+                <select id="chartTheme" onchange="changeChartTheme()">
+                    <option value="default">Default</option>
+                    <option value="dark">Dark</option>
+                    <option value="colorful">Colorful</option>
+                </select>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- KPI Cards -->
+        <div class="kpi-container" id="kpiContainer">
+            <!-- KPI cards will be populated by JS -->
+        </div>
+        
+        <!-- Export Controls -->
+        <div class="export-controls">
+            <div class="d-flex align-center gap-10">
+                <button class="btn btn-primary" onclick="exportChartData()">
+                    <i class="fas fa-table"></i> Export Chart Data
+                </button>
+                <button class="btn btn-success" onclick="exportFilteredData()">
+                    <i class="fas fa-filter"></i> Export Filtered Data
+                </button>
+            </div>
+            <div class="d-flex align-center gap-10">
+                <span id="recordCount">0 records loaded</span>
+            </div>
+        </div>
+        
+        <!-- Charts Grid -->
+        <div class="charts-grid" id="chartsGrid">
+            <!-- Charts will be populated by JS -->
+        </div>
+        
+        <!-- Data Table -->
+        <div class="table-container">
+            <div class="table-header">
+                <div class="table-title">Sales Data</div>
+                <div class="table-controls">
+                    <button class="btn btn-sm btn-secondary" onclick="toggleDataTable()">
+                        <i class="fas fa-eye"></i> Toggle View
+                    </button>
+                </div>
+            </div>
+            <div id="dataTableContainer">
+                <!-- Table will be populated by JS -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-left">
+                <p>&copy; 2023 Sales Intelligence Dashboard. All rights reserved.</p>
+            </div>
+            <div class="footer-right">
+                <p>Data last updated: <span id="lastUpdated"></span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Full Screen Chart Modal -->
+    <div class="modal" id="chartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalChartTitle"></div>
+                <button class="close-modal" onclick="closeFullscreenChart()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <canvas id="fullscreenChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let masterData = [];
+        let filteredData = [];
+        let charts = {};
+        let currentChartTheme = 'default';
+        let selectedFilters = {
+            voucher: [],
+            party: [],
+            item: []
+        };
+
+        // DOM elements
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        const uploadInput = document.getElementById('upload');
+        const currentDateElement = document.getElementById('currentDate');
+        const lastUpdatedElement = document.getElementById('lastUpdated');
+        const recordCountElement = document.getElementById('recordCount');
+        const kpiContainer = document.getElementById('kpiContainer');
+        const chartsGrid = document.getElementById('chartsGrid');
+        const dataTableContainer = document.getElementById('dataTableContainer');
+        const chartModal = document.getElementById('chartModal');
+        const fullscreenChartCanvas = document.getElementById('fullscreenChart');
+        const modalChartTitle = document.getElementById('modalChartTitle');
+        
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current date
+            const now = new Date();
+            currentDateElement.textContent = now.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            lastUpdatedElement.textContent = now.toLocaleDateString();
+            
+            // Setup menu toggle for mobile
+            menuToggle.addEventListener('click', function() {
+                document.body.classList.toggle('sidebar-open');
+            });
+            
+            // Setup file upload
+            uploadInput.addEventListener('change', handleFileUpload);
+            
+            // Initialize KPI cards
+            initializeKPICards();
+            
+            // Initialize chart containers
+            initializeChartContainers();
+        });
+        
+        // Handle file upload
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const sheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[sheetName];
+                masterData = XLSX.utils.sheet_to_json(worksheet);
+                
+                // Set filtered data to all data initially
+                filteredData = [...masterData];
+                
+                // Update UI
+                updateRecordCount();
+                loadFilterOptions();
+                applyFilters();
+            };
+            reader.readAsArrayBuffer(file);
+        }
+        
+        // Initialize KPI cards with default values
+        function initializeKPICards() {
+            const kpiCards = [
+                { id: 'sales', title: 'Total Sales', icon: 'fa-shopping-cart', color: '#4361ee', value: '₹ 0' },
+                { id: 'tax', title: 'Total Tax', icon: 'fa-file-invoice-dollar', color: '#3a0ca3', value: '₹ 0' },
+                { id: 'discount', title: 'Total Discount', icon: 'fa-tag', color: '#7209b7', value: '₹ 0' },
+                { id: 'margin', title: 'Total Margin', icon: 'fa-chart-line', color: '#f72585', value: '₹ 0' },
+                { id: 'qty', title: 'Quantity Sold', icon: 'fa-boxes', color: '#4cc9f0', value: '0' },
+                { id: 'avgSale', title: 'Average Sale', icon: 'fa-calculator', color: '#38b000', value: '₹ 0' },
+                { id: 'transactions', title: 'Transactions', icon: 'fa-receipt', color: '#ff9e00', value: '0' },
+                { id: 'profitMargin', title: 'Profit Margin %', icon: 'fa-percentage', color: '#06d6a0', value: '0%' }
+            ];
+            
+            let kpiHTML = '';
+            kpiCards.forEach(card => {
+                kpiHTML += `
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background-color: ${card.color};">
+                        <i class="fas ${card.icon}"></i>
+                    </div>
+                    <div class="kpi-content">
+                        <h4>${card.title}</h4>
+                        <div class="kpi-value" id="${card.id}">${card.value}</div>
+                        <div class="kpi-trend positive" id="${card.id}Trend">+0.0%</div>
+                    </div>
+                </div>
+                `;
+            });
+            
+            kpiContainer.innerHTML = kpiHTML;
+        }
+        
+        // Initialize chart containers
+        function initializeChartContainers() {
+            const chartConfigs = [
+                { id: 'voucherSale', title: 'Voucher Type Sales', type: 'doughnut' },
+                { id: 'partySale', title: 'Party Wise Sales', type: 'bar' },
+                { id: 'itemSale', title: 'Item Wise Sales', type: 'bar', horizontal: true },
+                { id: 'voucherQty', title: 'Voucher Wise Quantity', type: 'bar' },
+                { id: 'partyMargin', title: 'Party Wise Margin', type: 'line' },
+                { id: 'dateSale', title: 'Date Wise Sales', type: 'line', fill: true }
+            ];
+            
+            let chartsHTML = '';
+            chartConfigs.forEach(config => {
+                chartsHTML += `
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <div class="chart-title">${config.title}</div>
+                        <div class="chart-controls">
+                            <button class="btn btn-sm btn-secondary" onclick="toggleChartDataTable('${config.id}')">
+                                <i class="fas fa-table"></i> Data
+                            </button>
+                            <button class="btn btn-sm btn-primary" onclick="openFullscreenChart('${config.id}')">
+                                <i class="fas fa-expand"></i> Fullscreen
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="${config.id}"></canvas>
+                    </div>
+                    <div class="chart-data-table" id="${config.id}DataTable">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Label</th>
+                                    <th>Value</th>
+                                    <th>Percentage</th>
+                                </tr>
+                            </thead>
+                            <tbody id="${config.id}DataTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                `;
+            });
+            
+            chartsGrid.innerHTML = chartsHTML;
+        }
+        
+        // Load filter options from data
+        function loadFilterOptions() {
+            if (masterData.length === 0) return;
+            
+            // Get unique values for each filter
+            const voucherTypes = [...new Set(masterData.map(row => row['Voucher Type']))];
+            const partyNames = [...new Set(masterData.map(row => row['Party Name']))];
+            const itemNames = [...new Set(masterData.map(row => row['Item Name']))];
+            
+            // Populate multiselect filters
+            populateMultiselect('fVoucherMultiselect', voucherTypes, 'voucher');
+            populateMultiselect('fPartyMultiselect', partyNames, 'party');
+            populateMultiselect('fItemMultiselect', itemNames, 'item');
+        }
+        
+        // Populate multiselect with options
+        function populateMultiselect(containerId, options, filterType) {
+            const container = document.getElementById(containerId);
+            let html = '';
+            
+            options.forEach(option => {
+                if (option) {
+                    html += `
+                    <div class="multiselect-option" onclick="toggleMultiselectOption(this, '${filterType}', '${option}')">
+                        <input type="checkbox" id="${filterType}_${option}">
+                        <label for="${filterType}_${option}">${option}</label>
+                    </div>
+                    `;
+                }
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Toggle multiselect option selection
+        function toggleMultiselectOption(element, filterType, value) {
+            const checkbox = element.querySelector('input');
+            checkbox.checked = !checkbox.checked;
+            
+            if (checkbox.checked) {
+                element.classList.add('selected');
+                if (!selectedFilters[filterType].includes(value)) {
+                    selectedFilters[filterType].push(value);
+                }
+            } else {
+                element.classList.remove('selected');
+                selectedFilters[filterType] = selectedFilters[filterType].filter(item => item !== value);
+            }
+        }
+        
+        // Apply filters to data
+        function applyFilters() {
+            if (masterData.length === 0) return;
+            
+            // Start with all data
+            filteredData = [...masterData];
+            
+            // Apply date filter
+            const dateFilter = document.getElementById('fDate').value;
+            if (dateFilter) {
+                filteredData = filteredData.filter(row => row.Date === dateFilter);
+            }
+            
+            // Apply multiselect filters
+            if (selectedFilters.voucher.length > 0) {
+                filteredData = filteredData.filter(row => selectedFilters.voucher.includes(row['Voucher Type']));
+            }
+            
+            if (selectedFilters.party.length > 0) {
+                filteredData = filteredData.filter(row => selectedFilters.party.includes(row['Party Name']));
+            }
+            
+            if (selectedFilters.item.length > 0) {
+                filteredData = filteredData.filter(row => selectedFilters.item.includes(row['Item Name']));
+            }
+            
+            // Update UI with filtered data
+            updateRecordCount();
+            updateKPIs();
+            renderCharts();
+            renderDataTable();
+        }
+        
+        // Clear all filters
+        function clearFilters() {
+            // Reset filter inputs
+            document.getElementById('fDate').value = '';
+            
+            // Clear multiselect selections
+            selectedFilters = {
+                voucher: [],
+                party: [],
+                item: []
+            };
+            
+            // Uncheck all checkboxes
+            document.querySelectorAll('.multiselect-option').forEach(option => {
+                option.classList.remove('selected');
+                const checkbox = option.querySelector('input');
+                if (checkbox) checkbox.checked = false;
+            });
+            
+            // Reset filtered data to all data
+            filteredData = [...masterData];
+            
+            // Update UI
+            updateRecordCount();
+            updateKPIs();
+            renderCharts();
+            renderDataTable();
+        }
+        
+        // Update record count display
+        function updateRecordCount() {
+            const totalRecords = masterData.length;
+            const filteredRecords = filteredData.length;
+            
+            if (filteredRecords === totalRecords) {
+                recordCountElement.textContent = `${totalRecords.toLocaleString()} records loaded`;
+            } else {
+                recordCountElement.textContent = `${filteredRecords.toLocaleString()} of ${totalRecords.toLocaleString()} records (filtered)`;
+            }
+        }
+        
+        // Update KPI cards with data
+        function updateKPIs() {
+            if (filteredData.length === 0) {
+                // Reset to zeros if no data
+                document.getElementById('sales').textContent = '₹ 0';
+                document.getElementById('tax').textContent = '₹ 0';
+                document.getElementById('discount').textContent = '₹ 0';
+                document.getElementById('margin').textContent = '₹ 0';
+                document.getElementById('qty').textContent = '0';
+                document.getElementById('avgSale').textContent = '₹ 0';
+                document.getElementById('transactions').textContent = '0';
+                document.getElementById('profitMargin').textContent = '0%';
+                return;
+            }
+            
+            // Calculate KPI values
+            const totalSales = sum(filteredData, 'Grass Amount');
+            const totalTax = sum(filteredData, 'Tax');
+            const totalDiscount = sum(filteredData, 'Discount Amount');
+            const totalMargin = sum(filteredData, 'Margin');
+            const totalQty = sum(filteredData, 'Billed Quantity');
+            const transactions = filteredData.length;
+            const avgSale = transactions > 0 ? totalSales / transactions : 0;
+            const profitMargin = totalSales > 0 ? (totalMargin / totalSales) * 100 : 0;
+            
+            // Update KPI cards
+            document.getElementById('sales').textContent = '₹ ' + formatNumber(totalSales);
+            document.getElementById('tax').textContent = '₹ ' + formatNumber(totalTax);
+            document.getElementById('discount').textContent = '₹ ' + formatNumber(totalDiscount);
+            document.getElementById('margin').textContent = '₹ ' + formatNumber(totalMargin);
+            document.getElementById('qty').textContent = formatNumber(totalQty);
+            document.getElementById('avgSale').textContent = '₹ ' + formatNumber(avgSale);
+            document.getElementById('transactions').textContent = formatNumber(transactions);
+            document.getElementById('profitMargin').textContent = profitMargin.toFixed(2) + '%';
+            
+            // Add random trends for demo (in real app, calculate actual trends)
+            document.querySelectorAll('.kpi-trend').forEach(trend => {
+                const randomTrend = (Math.random() * 10 - 5).toFixed(1);
+                trend.textContent = randomTrend >= 0 ? `+${randomTrend}%` : `${randomTrend}%`;
+                trend.className = randomTrend >= 0 ? 'kpi-trend positive' : 'kpi-trend negative';
+            });
+        }
+        
+        // Render all charts
+        function renderCharts() {
+            if (filteredData.length === 0) return;
+            
+            // Group data for different charts
+            const voucherSales = groupData(filteredData, 'Voucher Type', 'Grass Amount');
+            const partySales = groupData(filteredData, 'Party Name', 'Grass Amount');
+            const itemSales = groupData(filteredData, 'Item Name', 'Grass Amount');
+            const voucherQty = groupData(filteredData, 'Voucher Type', 'Billed Quantity');
+            const partyMargin = groupData(filteredData, 'Party Name', 'Margin');
+            const dateSales = groupData(filteredData, 'Date', 'Grass Amount');
+            
+            // Create charts
+            createChart('voucherSale', 'doughnut', voucherSales, 'Voucher Type Sales');
+            createChart('partySale', 'bar', partySales, 'Party Wise Sales');
+            createChart('itemSale', 'bar', itemSales, 'Item Wise Sales', true);
+            createChart('voucherQty', 'bar', voucherQty, 'Voucher Wise Quantity');
+            createChart('partyMargin', 'line', partyMargin, 'Party Wise Margin');
+            createChart('dateSale', 'line', dateSales, 'Date Wise Sales', false, true);
+            
+            // Update chart data tables
+            updateChartDataTable('voucherSale', voucherSales);
+            updateChartDataTable('partySale', partySales);
+            updateChartDataTable('itemSale', itemSales);
+            updateChartDataTable('voucherQty', voucherQty);
+            updateChartDataTable('partyMargin', partyMargin);
+            updateChartDataTable('dateSale', dateSales);
+        }
+        
+        // Create a chart
+        function createChart(canvasId, type, data, title, horizontal = false, fill = false) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            
+            // Destroy existing chart if it exists
+            if (charts[canvasId]) {
+                charts[canvasId].destroy();
+            }
+            
+            // Get colors based on theme
+            const colors = getChartColors(data, type);
+            
+            // Create new chart
+            charts[canvasId] = new Chart(canvas, {
+                type: type,
+                data: {
+                    labels: Object.keys(data),
+                    datasets: [{
+                        label: title,
+                        data: Object.values(data),
+                        backgroundColor: colors.backgroundColor,
+                        borderColor: colors.borderColor,
+                        borderWidth: 2,
+                        fill: fill,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    indexAxis: horizontal ? 'y' : 'x',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: type === 'doughnut' ? 'right' : 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== undefined) {
+                                        label += '₹ ' + formatNumber(context.parsed.y);
+                                    } else if (context.parsed !== undefined) {
+                                        label += '₹ ' + formatNumber(context.parsed);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: type !== 'doughnut' ? {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '₹ ' + formatNumber(value);
+                                }
+                            }
+                        }
+                    } : {}
+                }
+            });
+        }
+        
+        // Get chart colors based on theme
+        function getChartColors(data, chartType) {
+            const count = Object.keys(data).length;
+            let backgroundColor = [];
+            let borderColor = [];
+            
+            if (currentChartTheme === 'dark') {
+                // Dark theme
+                for (let i = 0; i < count; i++) {
+                    const hue = (i * 137.5) % 360; // Golden angle for distribution
+                    backgroundColor.push(`hsla(${hue}, 70%, 40%, 0.7)`);
+                    borderColor.push(`hsla(${hue}, 70%, 30%, 1)`);
+                }
+            } else if (currentChartTheme === 'colorful') {
+                // Colorful theme
+                const colors = [
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', 
+                    '#9966FF', '#FF9F40', '#8AC926', '#1982C4',
+                    '#6A4C93', '#F15BB5', '#00BBF9', '#00F5D4'
+                ];
+                
+                for (let i = 0; i < count; i++) {
+                    backgroundColor.push(colors[i % colors.length]);
+                    borderColor.push(colors[i % colors.length]);
+                }
+            } else {
+                // Default theme
+                if (chartType === 'doughnut' || chartType === 'pie') {
+                    // Different colors for each segment
+                    for (let i = 0; i < count; i++) {
+                        const hue = (i * 360 / count) % 360;
+                        backgroundColor.push(`hsla(${hue}, 70%, 60%, 0.7)`);
+                        borderColor.push(`hsla(${hue}, 70%, 50%, 1)`);
+                    }
+                } else {
+                    // Single color for bar/line charts
+                    backgroundColor = 'rgba(54, 162, 235, 0.6)';
+                    borderColor = 'rgba(54, 162, 235, 1)';
+                }
+            }
+            
+            return { backgroundColor, borderColor };
+        }
+        
+        // Change chart theme
+        function changeChartTheme() {
+            const themeSelect = document.getElementById('chartTheme');
+            currentChartTheme = themeSelect.value;
+            
+            // Re-render all charts with new theme
+            if (filteredData.length > 0) {
+                renderCharts();
+            }
+        }
+        
+        // Update chart data table
+        function updateChartDataTable(chartId, data) {
+            const tableBody = document.getElementById(`${chartId}DataTableBody`);
+            if (!tableBody) return;
+            
+            let html = '';
+            const total = Object.values(data).reduce((sum, value) => sum + value, 0);
+            
+            Object.entries(data).forEach(([label, value]) => {
+                const percentage = total > 0 ? ((value / total) * 100).toFixed(2) : 0;
+                html += `
+                <tr>
+                    <td>${label}</td>
+                    <td>₹ ${formatNumber(value)}</td>
+                    <td>${percentage}%</td>
+                </tr>
+                `;
+            });
+            
+            tableBody.innerHTML = html;
+        }
+        
+        // Toggle chart data table visibility
+        function toggleChartDataTable(chartId) {
+            const dataTable = document.getElementById(`${chartId}DataTable`);
+            if (dataTable.style.display === 'block') {
+                dataTable.style.display = 'none';
+            } else {
+                dataTable.style.display = 'block';
+            }
+        }
+        
+        // Open chart in fullscreen
+        function openFullscreenChart(chartId) {
+            // Get the chart data
+            const chart = charts[chartId];
+            if (!chart) return;
+            
+            // Set modal title
+            modalChartTitle.textContent = document.querySelector(`#${chartId}`).closest('.chart-container').querySelector('.chart-title').textContent;
+            
+            // Create fullscreen chart
+            const fullscreenChart = new Chart(fullscreenChartCanvas, {
+                type: chart.config.type,
+                data: chart.config.data,
+                options: {
+                    ...chart.config.options,
+                    maintainAspectRatio: true,
+                    responsive: true
+                }
+            });
+            
+            // Show modal
+            chartModal.style.display = 'flex';
+            
+            // Store reference to close later
+            chartModal.currentChart = fullscreenChart;
+        }
+        
+        // Close fullscreen chart
+        function closeFullscreenChart() {
+            if (chartModal.currentChart) {
+                chartModal.currentChart.destroy();
+                chartModal.currentChart = null;
+            }
+            chartModal.style.display = 'none';
+        }
+        
+        // Render data table
+        function renderDataTable() {
+            if (filteredData.length === 0) {
+                dataTableContainer.innerHTML = '<p class="text-center">No data available. Please upload a file.</p>';
+                return;
+            }
+            
+            // Get column headers from first row
+            const headers = Object.keys(filteredData[0]);
+            
+            // Build table HTML
+            let html = `
+            <table>
+                <thead>
+                    <tr>
+                        ${headers.map(header => `<th>${header}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+            
+            // Add data rows (limit to 100 for performance)
+            const displayData = filteredData.slice(0, 100);
+            displayData.forEach(row => {
+                html += '<tr>';
+                headers.forEach(header => {
+                    const value = row[header];
+                    html += `<td>${value !== undefined ? value : ''}</td>`;
+                });
+                html += '</tr>';
+            });
+            
+            html += `
+                </tbody>
+            </table>
+            `;
+            
+            // Add note if data was truncated
+            if (filteredData.length > 100) {
+                html += `<p class="text-center mt-20">Showing 100 of ${filteredData.length} rows. Use export to see all data.</p>`;
+            }
+            
+            dataTableContainer.innerHTML = html;
+        }
+        
+        // Toggle data table view (collapsed/expanded)
+        function toggleDataTable() {
+            const table = dataTableContainer.querySelector('table');
+            if (!table) return;
+            
+            if (table.style.maxHeight === '300px') {
+                table.style.maxHeight = 'none';
+            } else {
+                table.style.maxHeight = '300px';
+                table.style.overflowY = 'auto';
+                table.style.display = 'block';
+            }
+        }
+        
+        // Export filtered data to Excel
+        function exportToExcel() {
+            if (filteredData.length === 0) {
+                alert('No data to export!');
+                return;
+            }
+            
+            // Create worksheet
+            const ws = XLSX.utils.json_to_sheet(filteredData);
+            
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Sales Data');
+            
+            // Generate file and trigger download
+            XLSX.writeFile(wb, `sales_data_${new Date().toISOString().split('T')[0]}.xlsx`);
+        }
+        
+        // Export chart data
+        function exportChartData() {
+            if (filteredData.length === 0) {
+                alert('No data to export!');
+                return;
+            }
+            
+            // Collect all chart data
+            const chartData = {};
+            
+            // Group data for different charts
+            chartData['Voucher Sales'] = groupData(filteredData, 'Voucher Type', 'Grass Amount');
+            chartData['Party Sales'] = groupData(filteredData, 'Party Name', 'Grass Amount');
+            chartData['Item Sales'] = groupData(filteredData, 'Item Name', 'Grass Amount');
+            chartData['Voucher Quantity'] = groupData(filteredData, 'Voucher Type', 'Billed Quantity');
+            chartData['Party Margin'] = groupData(filteredData, 'Party Name', 'Margin');
+            chartData['Date Sales'] = groupData(filteredData, 'Date', 'Grass Amount');
+            
+            // Convert to array format for Excel
+            const excelData = [];
+            
+            Object.entries(chartData).forEach(([chartName, data]) => {
+                // Add header row
+                excelData.push([chartName]);
+                excelData.push(['Category', 'Value']);
+                
+                // Add data rows
+                Object.entries(data).forEach(([category, value]) => {
+                    excelData.push([category, value]);
+                });
+                
+                // Add empty row for separation
+                excelData.push([]);
+            });
+            
+            // Create worksheet
+            const ws = XLSX.utils.aoa_to_sheet(excelData);
+            
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Chart Data');
+            
+            // Generate file and trigger download
+            XLSX.writeFile(wb, `chart_data_${new Date().toISOString().split('T')[0]}.xlsx`);
+        }
+        
+        // Export filtered data
+        function exportFilteredData() {
+            exportToExcel(); // Reuse the same function for now
+        }
+        
+        // Export dashboard to PDF
+        function exportToPDF() {
+            if (filteredData.length === 0) {
+                alert('No data to export!');
+                return;
+            }
+            
+            // Create a temporary container for PDF generation
+            const pdfContainer = document.createElement('div');
+            pdfContainer.style.cssText = 'position: absolute; left: -9999px; top: 0; width: 1200px; background: white; padding: 20px;';
+            
+            // Add title
+            pdfContainer.innerHTML = `
+                <h1 style="text-align: center; color: #4361ee; margin-bottom: 10px;">Sales Intelligence Dashboard</h1>
+                <p style="text-align: center; color: #666; margin-bottom: 30px;">Generated on ${new Date().toLocaleDateString()}</p>
+                
+                <h2 style="color: #333; border-bottom: 2px solid #4361ee; padding-bottom: 5px; margin-bottom: 15px;">Key Performance Indicators</h2>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px;">
+            `;
+            
+            // Add KPI cards
+            const kpiCards = document.querySelectorAll('.kpi-card');
+            kpiCards.forEach(card => {
+                const title = card.querySelector('h4').textContent;
+                const value = card.querySelector('.kpi-value').textContent;
+                pdfContainer.innerHTML += `
+                    <div style="border: 1px solid #ddd; border-radius: 8px; padding: 15px; text-align: center;">
+                        <h4 style="margin: 0 0 10px 0; color: #666; font-size: 14px;">${title}</h4>
+                        <div style="font-size: 24px; font-weight: bold; color: #333;">${value}</div>
+                    </div>
+                `;
+            });
+            
+            pdfContainer.innerHTML += `</div>`;
+            
+            // Add chart placeholders
+            pdfContainer.innerHTML += `
+                <h2 style="color: #333; border-bottom: 2px solid #4361ee; padding-bottom: 5px; margin-bottom: 15px;">Charts</h2>
+                <p style="color: #666; font-style: italic; margin-bottom: 20px;">Note: Charts are exported as images. For interactive charts, please use the Excel export.</p>
+            `;
+            
+            // Add table
+            pdfContainer.innerHTML += `
+                <h2 style="color: #333; border-bottom: 2px solid #4361ee; padding-bottom: 5px; margin-bottom: 15px; margin-top: 30px;">Sales Data (First 50 rows)</h2>
+            `;
+            
+            // Add table HTML
+            const tableHTML = dataTableContainer.innerHTML;
+            pdfContainer.innerHTML += tableHTML;
+            
+            // Add footer
+            pdfContainer.innerHTML += `
+                <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; color: #666; font-size: 12px;">
+                    <p>Generated by Sales Intelligence Dashboard</p>
+                </div>
+            `;
+            
+            // Add to document
+            document.body.appendChild(pdfContainer);
+            
+            // Use html2canvas to capture the content
+            html2canvas(pdfContainer).then(canvas => {
+                // Create PDF
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 210; // A4 width in mm
+                const pageHeight = 297; // A4 height in mm
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                
+                let heightLeft = imgHeight;
+                let position = 0;
+                
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                // Add additional pages if needed
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                // Save the PDF
+                pdf.save(`sales_dashboard_${new Date().toISOString().split('T')[0]}.pdf`);
+                
+                // Clean up
+                document.body.removeChild(pdfContainer);
+            });
+        }
+        
+        // Utility functions
+        function sum(rows, column) {
+            return rows.reduce((total, row) => total + (parseFloat(row[column]) || 0), 0);
+        }
+        
+        function groupData(rows, keyColumn, valueColumn) {
+            return rows.reduce((result, row) => {
+                const key = row[keyColumn];
+                const value = parseFloat(row[valueColumn]) || 0;
+                if (key) {
+                    result[key] = (result[key] || 0) + value;
+                }
+                return result;
+            }, {});
+        }
+        
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(2) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(2) + 'K';
+            } else {
+                return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            }
+        }
+        
+        // Add sample data for demo purposes
+        function loadSampleData() {
+            // Create sample data if no file is uploaded
+            if (masterData.length === 0) {
+                const sampleData = [];
+                const voucherTypes = ['Invoice', 'Receipt', 'Credit Note', 'Debit Note'];
+                const parties = ['ABC Corp', 'XYZ Ltd', 'Global Traders', 'Prime Suppliers', 'Best Buy Inc'];
+                const items = ['Laptop', 'Mouse', 'Keyboard', 'Monitor', 'Printer', 'Scanner'];
+                
+                const startDate = new Date();
+                startDate.setDate(startDate.getDate() - 30);
+                
+                for (let i = 0; i < 100; i++) {
+                    const date = new Date(startDate);
+                    date.setDate(startDate.getDate() + Math.floor(Math.random() * 30));
+                    
+                    const voucherType = voucherTypes[Math.floor(Math.random() * voucherTypes.length)];
+                    const party = parties[Math.floor(Math.random() * parties.length)];
+                    const item = items[Math.floor(Math.random() * items.length)];
+                    const qty = Math.floor(Math.random() * 10) + 1;
+                    const price = Math.floor(Math.random() * 1000) + 100;
+                    const gross = qty * price;
+                    const discount = gross * (Math.random() * 0.2);
+                    const tax = (gross - discount) * 0.1;
+                    const margin = gross * (Math.random() * 0.3);
+                    
+                    sampleData.push({
+                        'Date': date.toISOString().split('T')[0],
+                        'Voucher Type': voucherType,
+                        'Party Name': party,
+                        'Item Name': item,
+                        'Billed Quantity': qty,
+                        'Grass Amount': gross,
+                        'Discount Amount': discount,
+                        'Tax': tax,
+                        'Margin': margin
+                    });
+                }
+                
+                masterData = sampleData;
+                filteredData = [...masterData];
+                
+                updateRecordCount();
+                loadFilterOptions();
+                applyFilters();
+                
+                alert('Sample data loaded for demonstration. You can also upload your own Excel file.');
+            }
+        }
+        
+        // Load sample data when page loads for demo
+        window.onload = loadSampleData;
+    </script>
+</body>
+</html>
