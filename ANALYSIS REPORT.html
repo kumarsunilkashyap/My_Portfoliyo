@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Purchase BI Dashboard</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable"></script>
+
+<style>
+html,body{height:100%;overflow:hidden}
+.fullscreen{position:fixed;inset:0;background:#fff;z-index:9999;padding:20px}
+canvas{max-height:100%!important}
+.btn{width:100%;text-align:left;padding:6px;border-radius:4px}
+.btn:hover{background:#e0e7ff}
+.dark .bg-white{background-color:#1f2937 !important; color:#f3f4f6;}
+.dark .bg-gray-100{background-color:#111827 !important;}
+.dark .text-gray-500{color:#9ca3af !important;}
+.dark .text-gray-700{color:#d1d5db !important;}
+.dark .border{border-color:#374151 !important;}
+.dark .bg-gray-800{background-color:#111827 !important;}
+.dark .bg-gray-200{background-color:#374151 !important; color:#f3f4f6;}
+.dark .bg-gray-700{background-color:#374151 !important;}
+.dark .bg-indigo-700{background-color:#3730a3 !important;}
+.dark .bg-indigo-600{background-color:#4f46e5 !important;}
+.dark .bg-red-500{background-color:#dc2626 !important;}
+.dark .bg-green-600{background-color:#059669 !important;}
+.dark .bg-red-600{background-color:#dc2626 !important;}
+.dark .text-black{color:#f3f4f6 !important;}
+
+/* Custom styles */
+.chart-container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+.kpi-card {
+  transition: all 0.3s ease;
+  border-left: 4px solid #4f46e5;
+}
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+.filter-input {
+  transition: all 0.2s;
+}
+.filter-input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+.table-container {
+  height: calc(100% - 40px);
+  overflow-y: auto;
+}
+.table-container::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.table-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+.dark .table-container::-webkit-scrollbar-track {
+  background: #374151;
+}
+.dark .table-container::-webkit-scrollbar-thumb {
+  background: #6b7280;
+}
+.data-type-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 8px;
+}
+</style>
+</head>
+
+<body class="bg-gray-100 flex flex-col dark:bg-gray-900">
+
+<header class="h-16 bg-indigo-700 text-white px-4 flex items-center justify-between">
+  <div class="flex items-center gap-3">
+    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+      <span class="text-indigo-700 font-bold text-lg">BI</span>
+    </div>
+    <div>
+      <h1 class="font-bold text-2xl">Sale and Purchase Analytics Dashboard</h1>
+      <div class="text-sm text-indigo-200" id="dataTypeIndicator">No data loaded</div>
+    </div>
+  </div>
+  <div class="flex gap-2 items-center">
+    <button onclick="toggleLayout()" class="bg-gray-800 dark:bg-gray-700 px-3 py-2 rounded flex items-center gap-2">
+      <span id="layoutIcon">📊</span>
+      <span class="text-sm">Switch Layout</span>
+    </button>
+    <button onclick="toggleDark()" class="bg-gray-800 dark:bg-gray-700 px-3 py-2 rounded flex items-center gap-2">
+      <span id="darkModeIcon">🌙</span>
+      <span class="text-sm">Dark Mode</span>
+    </button>
+    <div class="relative">
+      <input type="file" id="fileInput" class="hidden" accept=".xlsx,.xls,.csv">
+      <label for="fileInput" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded cursor-pointer flex items-center gap-2">
+        <span>📁</span>
+        <span>Upload Data</span>
+      </label>
+    </div>
+    <button onclick="clearAll()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded flex items-center gap-2">
+      <span>🗑️</span>
+      <span>Clear</span>
+    </button>
+  </div>
+</header>
+
+<div class="flex flex-1 overflow-hidden">
+
+<!-- SIDEBAR -->
+<aside class="w-64 bg-white dark:bg-gray-800 p-3 overflow-y-auto flex flex-col">
+  <h2 class="font-bold mb-2 text-lg flex items-center gap-2 dark:text-white">
+    <span>📊</span> Reports
+    <span id="layoutBadge" class="data-type-badge bg-indigo-500 text-white">Simple</span>
+  </h2>
+  
+  <!-- Simple Layout Reports -->
+  <div id="simpleReports" class="space-y-1 text-sm mb-4">
+    <li><button class="btn flex items-center gap-2 dark:text-gray-200 dark:hover:bg-gray-700" onclick="show('daily')"><span>📆</span> Daily</button></li>
+    <li><button class="btn flex items-center gap-2 dark:text-gray-200 dark:hover:bg-gray-700" onclick="show('monthly')"><span>📅</span> Monthly</button></li>
+    <li><button class="btn flex items-center gap-2 dark:text-gray-200 dark:hover:bg-gray-700" onclick="show('yearly')"><span>🗓️</span> Yearly</button></li>
+    <li><button class="btn flex items-center gap-2 dark:text-gray-200 dark:hover:bg-gray-700" onclick="show('party')"><span>👤</span> Party Wise</button></li>
+    <li><button class="btn flex items-center gap-2 dark:text-gray-200 dark:hover:bg-gray-700" onclick="show('top')"><span>🔼</span> Top 10</button></li>
+    <li><button class="btn flex items-center gap-2 dark:text-gray-200 dark:hover:bg-gray-700" onclick="show('bottom')"><span>🔽</span> Bottom 10</button></li>
+    <li><button class="btn flex items-center gap-2 dark:text-gray-200 dark:hover:bg-gray-700" onclick="show('simpleTable')"><span>📋</span> Data Table</button></li>
+  </div>
+  
+  <!-- Detailed Layout Reports -->
+  <div id="detailedReports" class="space-y-1 text-sm mb-4 hidden">
+    <li><button class="btn flex items-center gap-2 dark:text-gray-200 dark:hover:bg-gray-700" onclick="showDetailed('itemAnalysis')"><span>📦</span> Item Analysis</button></li>
+    <li><button class="btn flex items-center gap-2 dark:text-gray-200 dark:hover:bg-gray-700" onclick="showDetailed('gstAnalysis')"><span>💰</span> GST Analysis</button></li>
+    <li><button class="btn flex items-center gap-2 dark:text-gray-200 dark:hover:bg-gray-700" onclick="showDetailed('salesTrend')"><span>📈</span> Sales Trend</button></li>
+    <li><button class="btn flex items-center gap-2 dark:text-gray-200 dark:hover:bg-gray-700" onclick="showDetailed('taxBreakdown')"><span>🧾</span> Tax Breakdown</button></li>
+    <li><button class="btn flex items-center gap-2 dark:text-gray-200 dark:hover:bg-gray-700" onclick="showDetailed('detailedTable')"><span>📊</span> Detailed Table</button></li>
+    <li><button class="btn flex items-center gap-2 dark:text-gray-200 dark:hover:bg-gray-700" onclick="showDetailed('discountAnalysis')"><span>🎯</span> Discount Analysis</button></li>
+    <li><button class="btn flex items-center gap-2 dark:text-gray-200 dark:hover:bg-gray-700" onclick="showDetailed('valueAnalysis')"><span>💎</span> Value Analysis</button></li>
+  </div>
+  
+  <div class="flex gap-2 mb-3">
+    <button id="kpiBtn" onclick="show('kpiChart')" class="flex-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 py-2 rounded text-sm font-medium">📊 KPI Charts</button>
+    <button id="detailedKpiBtn" onclick="showDetailed('detailedKpi')" class="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 py-2 rounded text-sm font-medium hidden">📈 Detailed KPIs</button>
+  </div>
+
+  <hr class="my-3 dark:border-gray-700">
+
+  <div class="mb-3">
+    <h3 class="font-semibold mb-2 dark:text-white">Date Range</h3>
+    <div class="space-y-2">
+      <div>
+        <label class="block text-xs mb-1 dark:text-gray-300">From</label>
+        <input type="date" id="from" class="border p-1 w-full rounded filter-input dark:bg-gray-700 dark:text-white dark:border-gray-600">
+      </div>
+      <div>
+        <label class="block text-xs mb-1 dark:text-gray-300">To</label>
+        <input type="date" id="to" class="border p-1 w-full rounded filter-input dark:bg-gray-700 dark:text-white dark:border-gray-600">
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-4" id="simpleFilter">
+    <label class="block font-semibold mb-2 dark:text-white">Voucher Type</label>
+    <select id="vchType" class="border p-1 w-full rounded filter-input dark:bg-gray-700 dark:text-white dark:border-gray-600">
+      <option value="">All Voucher Types</option>
+    </select>
+  </div>
+
+  <div class="mb-4 hidden" id="detailedFilter">
+    <label class="block font-semibold mb-2 dark:text-white">Item Filter</label>
+    <select id="itemFilter" class="border p-1 w-full rounded filter-input dark:bg-gray-700 dark:text-white dark:border-gray-600">
+      <option value="">All Items</option>
+    </select>
+  </div>
+
+  <div class="space-y-2 mt-auto">
+    <button onclick="applyFilter()" class="bg-indigo-600 hover:bg-indigo-700 text-white w-full py-2 rounded flex items-center justify-center gap-2">
+      <span>🔍</span> Apply Filters
+    </button>
+    <button onclick="resetFilter()" class="bg-gray-500 hover:bg-gray-600 text-white w-full py-2 rounded flex items-center justify-center gap-2">
+      <span>🔄</span> Reset Filters
+    </button>
+  </div>
+
+  <div class="space-y-2 mt-4">
+    <button onclick="exportExcel()" class="bg-green-600 hover:bg-green-700 text-white w-full py-2 rounded flex items-center justify-center gap-2">
+      <span>📊</span> Export Excel
+    </button>
+    <button onclick="exportPDF()" class="bg-red-600 hover:bg-red-700 text-white w-full py-2 rounded flex items-center justify-center gap-2">
+      <span>📄</span> Export PDF
+    </button>
+    <button onclick="exportCharts()" class="bg-purple-600 hover:bg-purple-700 text-white w-full py-2 rounded flex items-center justify-center gap-2">
+      <span>🖼️</span> Export Charts
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="flex-1 p-4 overflow-auto">
+
+<!-- KPI Cards - Simple Layout -->
+<div id="kpi" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 mb-6"></div>
+
+<!-- KPI Cards - Detailed Layout -->
+<div id="detailedKpi" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 mb-6 hidden"></div>
+
+<!-- CHARTS CONTAINER -->
+<div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg h-[60vh] relative">
+  
+  <!-- SIMPLE LAYOUT CHARTS -->
+  <!-- DAILY CHART -->
+  <div id="daily" class="chart hidden h-full">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="font-bold text-lg dark:text-white">Daily Transactions</h3>
+      <div class="flex gap-2">
+        <button onclick="toggleFullscreen('dailyChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⛶ Fullscreen</button>
+        <button onclick="downloadChart('dailyChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⬇ Download</button>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="dailyChart"></canvas>
+    </div>
+  </div>
+  
+  <!-- MONTHLY CHART -->
+  <div id="monthly" class="chart hidden h-full">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="font-bold text-lg dark:text-white">Monthly Transactions</h3>
+      <div class="flex gap-2">
+        <button onclick="toggleFullscreen('monthlyChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⛶ Fullscreen</button>
+        <button onclick="downloadChart('monthlyChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⬇ Download</button>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="monthlyChart"></canvas>
+    </div>
+  </div>
+  
+  <!-- YEARLY CHART -->
+  <div id="yearly" class="chart hidden h-full">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="font-bold text-lg dark:text-white">Yearly Transactions</h3>
+      <div class="flex gap-2">
+        <button onclick="toggleFullscreen('yearlyChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⛶ Fullscreen</button>
+        <button onclick="downloadChart('yearlyChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⬇ Download</button>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="yearlyChart"></canvas>
+    </div>
+  </div>
+  
+  <!-- PARTY CHART -->
+  <div id="party" class="chart hidden h-full">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="font-bold text-lg dark:text-white">Party Wise Transactions</h3>
+      <div class="flex gap-2">
+        <button onclick="toggleFullscreen('partyChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⛶ Fullscreen</button>
+        <button onclick="downloadChart('partyChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⬇ Download</button>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="partyChart"></canvas>
+    </div>
+  </div>
+  
+  <!-- TOP 10 CHART -->
+  <div id="top" class="chart hidden h-full">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="font-bold text-lg dark:text-white">Top 10 Parties</h3>
+      <div class="flex gap-2">
+        <button onclick="toggleFullscreen('topChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⛶ Fullscreen</button>
+        <button onclick="downloadChart('topChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⬇ Download</button>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="topChart"></canvas>
+    </div>
+  </div>
+  
+  <!-- BOTTOM 10 CHART -->
+  <div id="bottom" class="chart hidden h-full">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="font-bold text-lg dark:text-white">Bottom 10 Parties</h3>
+      <div class="flex gap-2">
+        <button onclick="toggleFullscreen('bottomChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⛶ Fullscreen</button>
+        <button onclick="downloadChart('bottomChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⬇ Download</button>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="bottomChart"></canvas>
+    </div>
+  </div>
+  
+  <!-- KPI CHART -->
+  <div id="kpiChart" class="chart hidden h-full">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="font-bold text-lg dark:text-white">KPI Overview</h3>
+      <div class="flex gap-2">
+        <button onclick="toggleFullscreen('kpiOverviewChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⛶ Fullscreen</button>
+        <button onclick="downloadChart('kpiOverviewChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⬇ Download</button>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="kpiOverviewChart"></canvas>
+    </div>
+  </div>
+  
+  <!-- SIMPLE DATA TABLE -->
+  <div id="simpleTable" class="hidden h-full flex flex-col">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="font-bold text-lg dark:text-white">Simple Data Table</h3>
+      <div class="flex items-center gap-2">
+        <div class="text-xs dark:text-gray-300">
+          Showing <span id="rowCount">0</span> rows
+        </div>
+        <button onclick="exportTable()" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">📋 Export Table</button>
+      </div>
+    </div>
+    
+    <!-- Table Filters -->
+    <div class="grid grid-cols-4 gap-2 mb-3 text-sm">
+      <div>
+        <label class="block text-xs mb-1 dark:text-gray-300">Date Filter</label>
+        <input type="text" id="filterDate" onkeyup="filterTable()" placeholder="Filter by date..." class="border p-1 w-full rounded text-xs filter-input dark:bg-gray-700 dark:text-white dark:border-gray-600">
+      </div>
+      <div>
+        <label class="block text-xs mb-1 dark:text-gray-300">Party Filter</label>
+        <input type="text" id="filterParty" onkeyup="filterTable()" placeholder="Filter by party..." class="border p-1 w-full rounded text-xs filter-input dark:bg-gray-700 dark:text-white dark:border-gray-600">
+      </div>
+      <div>
+        <label class="block text-xs mb-1 dark:text-gray-300">Voucher Filter</label>
+        <input type="text" id="filterVoucher" onkeyup="filterTable()" placeholder="Filter by voucher..." class="border p-1 w-full rounded text-xs filter-input dark:bg-gray-700 dark:text-white dark:border-gray-600">
+      </div>
+      <div>
+        <label class="block text-xs mb-1 dark:text-gray-300">Amount Filter</label>
+        <input type="text" id="filterAmount" onkeyup="filterTable()" placeholder="Filter by amount..." class="border p-1 w-full rounded text-xs filter-input dark:bg-gray-700 dark:text-white dark:border-gray-600">
+      </div>
+    </div>
+    
+    <div class="table-container border rounded">
+      <table class="w-full text-sm">
+        <thead class="bg-gray-200 dark:bg-gray-700 sticky top-0">
+          <tr>
+            <th class="border p-2 text-left dark:text-white">
+              <div class="flex items-center justify-between">
+                <span>Date</span>
+                <button onclick="sortTable(0)" class="text-xs">↕️</button>
+              </div>
+            </th>
+            <th class="border p-2 text-left dark:text-white">
+              <div class="flex items-center justify-between">
+                <span>Party</span>
+                <button onclick="sortTable(1)" class="text-xs">↕️</button>
+              </div>
+            </th>
+            <th class="border p-2 text-left dark:text-white">
+              <div class="flex items-center justify-between">
+                <span>Voucher</span>
+                <button onclick="sortTable(2)" class="text-xs">↕️</button>
+              </div>
+            </th>
+            <th class="border p-2 text-right dark:text-white">
+              <div class="flex items-center justify-between">
+                <span>Amount</span>
+                <button onclick="sortTable(3)" class="text-xs">↕️</button>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="tableBody" class="dark:text-gray-300"></tbody>
+      </table>
+    </div>
+    
+    <div class="flex justify-between items-center mt-2 text-xs dark:text-gray-300">
+      <div>
+        <button onclick="prevPage()" class="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded mr-1">◀ Prev</button>
+        <span id="pageInfo">Page 1 of 1</span>
+        <button onclick="nextPage()" class="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded ml-1">Next ▶</button>
+      </div>
+      <div>
+        <span>Rows per page: </span>
+        <select id="rowsPerPage" onchange="changeRowsPerPage()" class="border rounded p-1 dark:bg-gray-700 dark:text-white">
+          <option value="10">10</option>
+          <option value="25" selected>25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  
+  <!-- DETAILED LAYOUT CHARTS -->
+  <!-- ITEM ANALYSIS CHART -->
+  <div id="itemAnalysis" class="chart hidden h-full">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="font-bold text-lg dark:text-white">Item Analysis</h3>
+      <div class="flex gap-2">
+        <button onclick="toggleFullscreen('itemAnalysisChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⛶ Fullscreen</button>
+        <button onclick="downloadChart('itemAnalysisChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⬇ Download</button>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="itemAnalysisChart"></canvas>
+    </div>
+  </div>
+  
+  <!-- GST ANALYSIS CHART -->
+  <div id="gstAnalysis" class="chart hidden h-full">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="font-bold text-lg dark:text-white">GST Analysis</h3>
+      <div class="flex gap-2">
+        <button onclick="toggleFullscreen('gstAnalysisChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⛶ Fullscreen</button>
+        <button onclick="downloadChart('gstAnalysisChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⬇ Download</button>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="gstAnalysisChart"></canvas>
+    </div>
+  </div>
+  
+  <!-- SALES TREND CHART -->
+  <div id="salesTrend" class="chart hidden h-full">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="font-bold text-lg dark:text-white">Sales Trend Analysis</h3>
+      <div class="flex gap-2">
+        <button onclick="toggleFullscreen('salesTrendChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⛶ Fullscreen</button>
+        <button onclick="downloadChart('salesTrendChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⬇ Download</button>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="salesTrendChart"></canvas>
+    </div>
+  </div>
+  
+  <!-- TAX BREAKDOWN CHART -->
+  <div id="taxBreakdown" class="chart hidden h-full">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="font-bold text-lg dark:text-white">Tax Breakdown</h3>
+      <div class="flex gap-2">
+        <button onclick="toggleFullscreen('taxBreakdownChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⛶ Fullscreen</button>
+        <button onclick="downloadChart('taxBreakdownChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⬇ Download</button>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="taxBreakdownChart"></canvas>
+    </div>
+  </div>
+  
+  <!-- DISCOUNT ANALYSIS CHART -->
+  <div id="discountAnalysis" class="chart hidden h-full">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="font-bold text-lg dark:text-white">Discount Analysis</h3>
+      <div class="flex gap-2">
+        <button onclick="toggleFullscreen('discountAnalysisChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⛶ Fullscreen</button>
+        <button onclick="downloadChart('discountAnalysisChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⬇ Download</button>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="discountAnalysisChart"></canvas>
+    </div>
+  </div>
+  
+  <!-- VALUE ANALYSIS CHART -->
+  <div id="valueAnalysis" class="chart hidden h-full">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="font-bold text-lg dark:text-white">Value Analysis</h3>
+      <div class="flex gap-2">
+        <button onclick="toggleFullscreen('valueAnalysisChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⛶ Fullscreen</button>
+        <button onclick="downloadChart('valueAnalysisChart')" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">⬇ Download</button>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="valueAnalysisChart"></canvas>
+    </div>
+  </div>
+  
+  <!-- DETAILED DATA TABLE -->
+  <div id="detailedTable" class="hidden h-full flex flex-col">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="font-bold text-lg dark:text-white">Detailed Data Table</h3>
+      <div class="flex items-center gap-2">
+        <div class="text-xs dark:text-gray-300">
+          Showing <span id="detailedRowCount">0</span> rows
+        </div>
+        <button onclick="exportDetailedTable()" class="text-xs bg-gray-200 dark:bg-gray-700 dark:text-white px-2 py-1 rounded">📋 Export Table</button>
+      </div>
+    </div>
+    
+    <!-- Detailed Table Filters -->
+    <div class="grid grid-cols-4 gap-2 mb-3 text-sm">
+      <div>
+        <label class="block text-xs mb-1 dark:text-gray-300">Item Filter</label>
+        <input type="text" id="filterItem" onkeyup="filterDetailedTable()" placeholder="Filter by item..." class="border p-1 w-full rounded text-xs filter-input dark:bg-gray-700 dark:text-white dark:border-gray-600">
+      </div>
+      <div>
+        <label class="block text-xs mb-1 dark:text-gray-300">HSN Filter</label>
+        <input type="text" id="filterHsn" onkeyup="filterDetailedTable()" placeholder="Filter by HSN..." class="border p-1 w-full rounded text-xs filter-input dark:bg-gray-700 dark:text-white dark:border-gray-600">
+      </div>
+      <div>
+        <label class="block text-xs mb-1 dark:text-gray-300">GST Filter</label>
+        <input type="text" id="filterGst" onkeyup="filterDetailedTable()" placeholder="Filter by GST %..." class="border p-1 w-full rounded text-xs filter-input dark:bg-gray-700 dark:text-white dark:border-gray-600">
+      </div>
+      <div>
+        <label class="block text-xs mb-1 dark:text-gray-300">Value Filter</label>
+        <input type="text" id="filterValue" onkeyup="filterDetailedTable()" placeholder="Filter by value..." class="border p-1 w-full rounded text-xs filter-input dark:bg-gray-700 dark:text-white dark:border-gray-600">
+      </div>
+    </div>
+    
+    <div class="table-container border rounded">
+      <table class="w-full text-xs">
+        <thead class="bg-gray-200 dark:bg-gray-700 sticky top-0">
+          <tr>
+            <th class="border p-1 text-left dark:text-white">SNo</th>
+            <th class="border p-1 text-left dark:text-white">Date</th>
+            <th class="border p-1 text-left dark:text-white">Party</th>
+            <th class="border p-1 text-left dark:text-white">Vch Type</th>
+            <th class="border p-1 text-left dark:text-white">Item</th>
+            <th class="border p-1 text-left dark:text-white">HSN</th>
+            <th class="border p-1 text-right dark:text-white">Qty</th>
+            <th class="border p-1 text-right dark:text-white">Rate</th>
+            <th class="border p-1 text-right dark:text-white">Value</th>
+            <th class="border p-1 text-right dark:text-white">GST %</th>
+            <th class="border p-1 text-right dark:text-white">Tax Amt</th>
+            <th class="border p-1 text-right dark:text-white">Discount</th>
+            <th class="border p-1 text-right dark:text-white">Grand Total</th>
+          </tr>
+        </thead>
+        <tbody id="detailedTableBody" class="dark:text-gray-300"></tbody>
+      </table>
+    </div>
+    
+    <div class="flex justify-between items-center mt-2 text-xs dark:text-gray-300">
+      <div>
+        <button onclick="prevDetailedPage()" class="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded mr-1">◀ Prev</button>
+        <span id="detailedPageInfo">Page 1 of 1</span>
+        <button onclick="nextDetailedPage()" class="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded ml-1">Next ▶</button>
+      </div>
+      <div>
+        <span>Rows per page: </span>
+        <select id="detailedRowsPerPage" onchange="changeDetailedRowsPerPage()" class="border rounded p-1 dark:bg-gray-700 dark:text-white">
+          <option value="10">10</option>
+          <option value="25" selected>25</option>
+          <option value="50">50</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+</div>
+
+<footer class="h-10 bg-gray-800 dark:bg-gray-900 text-white text-sm flex items-center justify-center">
+  <div class="flex items-center gap-2">
+    <span>Copyright © 2025-26 All Rights Reserved</span>
+    <span class="text-gray-400">|</span>
+    <span>Generated By Sunil Kumar Kashyap</span>
+    <span class="text-gray-400">|</span>
+    <span id="dataInfo">No data loaded</span>
+  </div>
+</footer>
+
+<script>
+// Global variables
+let raw = [], data = [], detailedRaw = [], detailedData = [], charts = {};
+let filteredData = [], filteredDetailedData = [];
+let currentPage = 1, rowsPerPage = 25, totalPages = 1;
+let detailedCurrentPage = 1, detailedRowsPerPage = 25, detailedTotalPages = 1;
+let sortColumn = -1, sortDirection = 1;
+let detailedSortColumn = -1, detailedSortDirection = 1;
+let currentLayout = 'simple'; // 'simple' or 'detailed'
+let dataType = 'none'; // 'simple', 'detailed', or 'none'
+
+// Utility functions
+const sum = a => a.reduce((x, y) => x + y, 0);
+const k = (t, v, icon, color) => `<div class="kpi-card bg-white dark:bg-gray-800 p-3 shadow rounded-lg dark:text-white">
+  <div class="flex items-start justify-between">
+    <div>
+      <div class="text-gray-500 dark:text-gray-400 text-xs font-medium">${t}</div>
+      <div class="font-bold text-xl mt-1">${v}</div>
+    </div>
+    <div class="text-2xl" style="color: ${color}">${icon}</div>
+  </div>
+</div>`;
+
+// File upload handler
+fileInput.onchange = e => {
+  const r = new FileReader();
+  r.onload = x => {
+    try {
+      const wb = XLSX.read(x.target.result, {type: "binary"});
+      const firstSheet = wb.Sheets[wb.SheetNames[0]];
+      const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+      
+      // Detect data type based on column names
+      const columns = Object.keys(jsonData[0] || {});
+      const isDetailedData = columns.some(col => 
+        ['sno', 'item', 'hsn', 'qty', 'rate', 'gstRate', 'cgst', 'sgst', 'igst', 'taxAmount', 'discount', 'grandTotal']
+        .includes(col.toLowerCase())
+      );
+      
+      if (isDetailedData) {
+        // Detailed data structure
+        detailedRaw = jsonData;
+        detailedData = detailedRaw;
+        filteredDetailedData = [...detailedData];
+        dataType = 'detailed';
+        
+        // Convert simple data from detailed if needed
+        convertDetailedToSimple();
+        
+        updateDataInfo();
+        buildItemFilter();
+        buildDetailedKPI();
+        buildDetailedCharts();
+        buildDetailedTable();
+        
+        // If in simple layout, switch to detailed
+        if (currentLayout === 'simple') {
+          toggleLayout();
+        }
+        
+        showDetailed('itemAnalysis');
+      } else {
+        // Simple data structure
+        raw = jsonData;
+        data = raw;
+        filteredData = [...data];
+        dataType = 'simple';
+        
+        updateDataInfo();
+        buildVoucherFilter();
+        buildKPI();
+        buildCharts();
+        buildTable();
+        
+        // If in detailed layout, switch to simple
+        if (currentLayout === 'detailed') {
+          toggleLayout();
+        }
+        
+        show('daily');
+      }
+      
+    } catch (error) {
+      alert("Error reading file: " + error.message);
+    }
+  };
+  r.readAsBinaryString(e.target.files[0]);
+};
+
+// Convert detailed data to simple format for backward compatibility
+function convertDetailedToSimple() {
+  raw = detailedData.map(row => ({
+    Date: row.date || row.Date || '',
+    Particulars: row.party || row.Particulars || '',
+    "Vch Type": row.vchType || row["Vch Type"] || '',
+    Amount: row.grandTotal || row.Amount || 0
+  }));
+  data = raw;
+  filteredData = [...data];
+}
+
+// Grouping function
+function group(src, fn) {
+  const o = {};
+  src.forEach(r => {
+    const k = fn(r);
+    o[k] = (o[k] || 0) + (+r.Amount);
+  });
+  return o;
+}
+
+// Detailed grouping function
+function groupDetailed(src, fn, valueField = 'grandTotal') {
+  const o = {};
+  src.forEach(r => {
+    const k = fn(r);
+    o[k] = (o[k] || 0) + (+(r[valueField] || 0));
+  });
+  return o;
+}
+
+// Format currency
+function formatCurrency(value) {
+  if (isNaN(value)) return "0";
+  return new Intl.NumberFormat('en-IN', {
+    maximumFractionDigits: 0,
+    style: 'currency',
+    currency: 'INR'
+  }).format(value).replace('₹', '₹ ');
+}
+
+// Format number
+function formatNumber(value) {
+  if (isNaN(value)) return "0";
+  return new Intl.NumberFormat('en-IN', {
+    maximumFractionDigits: 2
+  }).format(value);
+}
+
+// SIMPLE LAYOUT FUNCTIONS
+function buildKPI() {
+  const amounts = data.map(r => +r.Amount);
+  const party = Object.entries(group(data, r => r.Particulars));
+  const top = party.sort((a, b) => b[1] - a[1])[0];
+  const bottom = party.sort((a, b) => a[1] - b[1])[0];
+  const total = sum(amounts);
+  const avg = amounts.length > 0 ? (total / amounts.length).toFixed(0) : 0;
+
+  document.getElementById('kpi').innerHTML = `
+    ${k("Total Amount", formatCurrency(total), "💰", "#10b981")}
+    ${k("Max Amount", formatCurrency(Math.max(...amounts)), "📈", "#ef4444")}
+    ${k("Min Amount", formatCurrency(Math.min(...amounts)), "📉", "#3b82f6")}
+    ${k("Average Amount", formatCurrency(avg), "📊", "#8b5cf6")}
+    ${k("Vouchers", amounts.length, "📋", "#f59e0b")}
+    ${k("Parties", party.length, "👥", "#ec4899")}
+    ${k("Top Party", top?.[0]?.substring(0, 15) + (top?.[0]?.length > 15 ? "..." : "") || "-", "🥇", "#fbbf24")}
+    ${k("Bottom Party", bottom?.[0]?.substring(0, 15) + (bottom?.[0]?.length > 15 ? "..." : "") || "-", "🥈", "#60a5fa")}
+  `;
+}
+
+function buildCharts() {
+  // Destroy existing charts
+  Object.values(charts).forEach(c => c && c.destroy && c.destroy());
+  charts = {};
+  
+  // DAILY CHART
+  const daily = group(data, r => r.Date);
+  const dailyLabels = Object.keys(daily).sort();
+  const dailyData = dailyLabels.map(label => daily[label]);
+  
+  if (document.getElementById('dailyChart')) {
+    charts.daily = new Chart(document.getElementById('dailyChart'), {
+      type: "line",
+      data: {
+        labels: dailyLabels,
+        datasets: [{
+          label: "Daily Amount",
+          data: dailyData,
+          borderColor: "#4f46e5",
+          backgroundColor: "rgba(79, 70, 229, 0.1)",
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true }
+        }
+      }
+    });
+  }
+
+  // MONTHLY CHART
+  const monthly = group(data, r => {
+    const date = new Date(r.Date);
+    return date.toLocaleString("default", {month: "short", year: "numeric"});
+  });
+  const monthlyLabels = Object.keys(monthly);
+  const monthlyData = monthlyLabels.map(label => monthly[label]);
+  
+  if (document.getElementById('monthlyChart')) {
+    charts.monthly = new Chart(document.getElementById('monthlyChart'), {
+      type: "bar",
+      data: {
+        labels: monthlyLabels,
+        datasets: [{
+          label: "Monthly Amount",
+          data: monthlyData,
+          backgroundColor: "#6366f1",
+          borderColor: "#4f46e5",
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true }
+        }
+      }
+    });
+  }
+
+  // YEARLY CHART
+  const yearly = group(data, r => new Date(r.Date).getFullYear());
+  
+  if (document.getElementById('yearlyChart')) {
+    charts.yearly = new Chart(document.getElementById('yearlyChart'), {
+      type: "doughnut",
+      data: {
+        labels: Object.keys(yearly),
+        datasets: [{
+          data: Object.values(yearly),
+          backgroundColor: [
+            "#4f46e5", "#7c3aed", "#a78bfa", "#c4b5fd",
+            "#10b981", "#34d399", "#6ee7b7", "#a7f3d0"
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right' }
+        }
+      }
+    });
+  }
+
+  // PARTY CHART
+  const party = group(data, r => r.Particulars);
+  const partyEntries = Object.entries(party).slice(0, 15);
+  
+  if (document.getElementById('partyChart')) {
+    charts.party = new Chart(document.getElementById('partyChart'), {
+      type: "bar",
+      data: {
+        labels: partyEntries.map(x => x[0].substring(0, 15) + (x[0].length > 15 ? "..." : "")),
+        datasets: [{
+          label: "Amount",
+          data: partyEntries.map(x => x[1]),
+          backgroundColor: "#8b5cf6",
+          borderColor: "#7c3aed",
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true }
+        },
+        scales: {
+          x: { ticks: { maxRotation: 45 } }
+        }
+      }
+    });
+  }
+
+  // TOP 10 CHART
+  const topEntries = Object.entries(party).sort((a, b) => b[1] - a[1]).slice(0, 10);
+  
+  if (document.getElementById('topChart')) {
+    charts.top = new Chart(document.getElementById('topChart'), {
+      type: "bar",
+      data: {
+        labels: topEntries.map(x => x[0].substring(0, 15) + (x[0].length > 15 ? "..." : "")),
+        datasets: [{
+          label: "Amount",
+          data: topEntries.map(x => x[1]),
+          backgroundColor: "#10b981",
+          borderColor: "#059669",
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true }
+        },
+        scales: {
+          x: { ticks: { maxRotation: 45 } }
+        }
+      }
+    });
+  }
+
+  // BOTTOM 10 CHART
+  const bottomEntries = Object.entries(party).sort((a, b) => a[1] - b[1]).slice(0, 10);
+  
+  if (document.getElementById('bottomChart')) {
+    charts.bottom = new Chart(document.getElementById('bottomChart'), {
+      type: "bar",
+      data: {
+        labels: bottomEntries.map(x => x[0].substring(0, 15) + (x[0].length > 15 ? "..." : "")),
+        datasets: [{
+          label: "Amount",
+          data: bottomEntries.map(x => x[1]),
+          backgroundColor: "#ef4444",
+          borderColor: "#dc2626",
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true }
+        },
+        scales: {
+          x: { ticks: { maxRotation: 45 } }
+        }
+      }
+    });
+  }
+
+  // KPI CHART
+  const amounts = data.map(r => +r.Amount);
+  const kpiData = [
+    sum(amounts),
+    Math.max(...amounts),
+    Math.min(...amounts),
+    amounts.length > 0 ? sum(amounts) / amounts.length : 0
+  ];
+  
+  if (document.getElementById('kpiOverviewChart')) {
+    charts.kpi = new Chart(document.getElementById('kpiOverviewChart'), {
+      type: "radar",
+      data: {
+        labels: ["Total", "Maximum", "Minimum", "Average"],
+        datasets: [{
+          label: "KPI Values",
+          data: kpiData,
+          backgroundColor: "rgba(79, 70, 229, 0.2)",
+          borderColor: "#4f46e5",
+          borderWidth: 2,
+          pointBackgroundColor: "#4f46e5",
+          pointBorderColor: "#fff",
+          pointHoverBackgroundColor: "#fff",
+          pointHoverBorderColor: "#4f46e5"
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          r: {
+            beginAtZero: true,
+            ticks: { display: false }
+          }
+        }
+      }
+    });
+  }
+}
+
+// DETAILED LAYOUT FUNCTIONS
+function buildDetailedKPI() {
+  if (detailedData.length === 0) return;
+  
+  const totalValue = sum(detailedData.map(r => +(r.value || 0)));
+  const totalQty = sum(detailedData.map(r => +(r.qty || 0)));
+  const totalTax = sum(detailedData.map(r => +(r.taxAmount || 0)));
+  const totalDiscount = sum(detailedData.map(r => +(r.discount || 0)));
+  const totalGrandTotal = sum(detailedData.map(r => +(r.grandTotal || 0)));
+  
+  const avgValue = detailedData.length > 0 ? totalValue / detailedData.length : 0;
+  const avgGstRate = detailedData.length > 0 ? 
+    sum(detailedData.map(r => +(r.gstRate || 0))) / detailedData.length : 0;
+  
+  const uniqueItems = [...new Set(detailedData.map(r => r.item))].length;
+  const uniqueParties = [...new Set(detailedData.map(r => r.party))].length;
+  
+  document.getElementById('detailedKpi').innerHTML = `
+    ${k("Total Value", formatCurrency(totalValue), "💰", "#10b981")}
+    ${k("Total Qty", formatNumber(totalQty), "📦", "#3b82f6")}
+    ${k("Total Tax", formatCurrency(totalTax), "🧾", "#ef4444")}
+    ${k("Total Discount", formatCurrency(totalDiscount), "🎯", "#f59e0b")}
+    ${k("Grand Total", formatCurrency(totalGrandTotal), "💎", "#8b5cf6")}
+    ${k("Avg Value", formatCurrency(avgValue), "📊", "#ec4899")}
+    ${k("Avg GST %", avgGstRate.toFixed(2) + "%", "📈", "#fbbf24")}
+    ${k("Unique Items", uniqueItems, "📦", "#60a5fa")}
+  `;
+}
+
+function buildDetailedCharts() {
+  if (detailedData.length === 0) return;
+  
+  // ITEM ANALYSIS CHART
+  const itemAnalysis = groupDetailed(detailedData, r => r.item, 'grandTotal');
+  const itemEntries = Object.entries(itemAnalysis).sort((a, b) => b[1] - a[1]).slice(0, 10);
+  
+  if (document.getElementById('itemAnalysisChart')) {
+    charts.itemAnalysis = new Chart(document.getElementById('itemAnalysisChart'), {
+      type: "bar",
+      data: {
+        labels: itemEntries.map(x => x[0]?.substring(0, 15) + (x[0]?.length > 15 ? "..." : "") || 'N/A'),
+        datasets: [{
+          label: "Total Value",
+          data: itemEntries.map(x => x[1]),
+          backgroundColor: "#4f46e5",
+          borderColor: "#3730a3",
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true }
+        },
+        scales: {
+          x: { ticks: { maxRotation: 45 } }
+        }
+      }
+    });
+  }
+
+  // GST ANALYSIS CHART
+  const gstAnalysis = groupDetailed(detailedData, r => r.gstRate + '%', 'taxAmount');
+  
+  if (document.getElementById('gstAnalysisChart')) {
+    charts.gstAnalysis = new Chart(document.getElementById('gstAnalysisChart'), {
+      type: "pie",
+      data: {
+        labels: Object.keys(gstAnalysis),
+        datasets: [{
+          data: Object.values(gstAnalysis),
+          backgroundColor: [
+            "#4f46e5", "#7c3aed", "#a78bfa", "#c4b5fd",
+            "#10b981", "#34d399", "#6ee7b7", "#a7f3d0"
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right' }
+        }
+      }
+    });
+  }
+
+  // SALES TREND CHART
+  const salesTrend = groupDetailed(detailedData, r => r.date, 'grandTotal');
+  const salesLabels = Object.keys(salesTrend).sort();
+  const salesData = salesLabels.map(label => salesTrend[label]);
+  
+  if (document.getElementById('salesTrendChart')) {
+    charts.salesTrend = new Chart(document.getElementById('salesTrendChart'), {
+      type: "line",
+      data: {
+        labels: salesLabels,
+        datasets: [{
+          label: "Sales Trend",
+          data: salesData,
+          borderColor: "#10b981",
+          backgroundColor: "rgba(16, 185, 129, 0.1)",
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true }
+        }
+      }
+    });
+  }
+
+  // TAX BREAKDOWN CHART
+  const taxData = {
+    'CGST': sum(detailedData.map(r => +(r.cgst || 0))),
+    'SGST': sum(detailedData.map(r => +(r.sgst || 0))),
+    'IGST': sum(detailedData.map(r => +(r.igst || 0)))
+  };
+  
+  if (document.getElementById('taxBreakdownChart')) {
+    charts.taxBreakdown = new Chart(document.getElementById('taxBreakdownChart'), {
+      type: "doughnut",
+      data: {
+        labels: Object.keys(taxData),
+        datasets: [{
+          data: Object.values(taxData),
+          backgroundColor: ["#4f46e5", "#10b981", "#f59e0b"]
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right' }
+        }
+      }
+    });
+  }
+
+  // DISCOUNT ANALYSIS CHART
+  const discountByParty = groupDetailed(detailedData, r => r.party, 'discount');
+  const discountEntries = Object.entries(discountByParty)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 8);
+  
+  if (document.getElementById('discountAnalysisChart')) {
+    charts.discountAnalysis = new Chart(document.getElementById('discountAnalysisChart'), {
+      type: "bar",
+      data: {
+        labels: discountEntries.map(x => x[0]?.substring(0, 12) + (x[0]?.length > 12 ? "..." : "") || 'N/A'),
+        datasets: [{
+          label: "Discount Amount",
+          data: discountEntries.map(x => x[1]),
+          backgroundColor: "#f59e0b",
+          borderColor: "#d97706",
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true }
+        },
+        scales: {
+          x: { ticks: { maxRotation: 45 } }
+        }
+      }
+    });
+  }
+
+  // VALUE ANALYSIS CHART
+  const valueByHSN = groupDetailed(detailedData, r => r.hsn, 'value');
+  const valueEntries = Object.entries(valueByHSN)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10);
+  
+  if (document.getElementById('valueAnalysisChart')) {
+    charts.valueAnalysis = new Chart(document.getElementById('valueAnalysisChart'), {
+      type: "bar",
+      data: {
+        labels: valueEntries.map(x => x[0] || 'N/A'),
+        datasets: [{
+          label: "Total Value",
+          data: valueEntries.map(x => x[1]),
+          backgroundColor: "#8b5cf6",
+          borderColor: "#7c3aed",
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true }
+        },
+        scales: {
+          x: { ticks: { maxRotation: 45 } }
+        }
+      }
+    });
+  }
+}
+
+// TABLE FUNCTIONS
+function buildTable() {
+  updateTable();
+}
+
+function updateTable() {
+  if (data.length === 0) return;
+  
+  const dateFilter = document.getElementById('filterDate')?.value.toLowerCase() || '';
+  const partyFilter = document.getElementById('filterParty')?.value.toLowerCase() || '';
+  const voucherFilter = document.getElementById('filterVoucher')?.value.toLowerCase() || '';
+  const amountFilter = document.getElementById('filterAmount')?.value.toLowerCase() || '';
+  
+  filteredData = data.filter(r => {
+    return (!dateFilter || (r.Date || '').toLowerCase().includes(dateFilter)) &&
+           (!partyFilter || (r.Particulars || '').toLowerCase().includes(partyFilter)) &&
+           (!voucherFilter || (r["Vch Type"] || '').toLowerCase().includes(voucherFilter)) &&
+           (!amountFilter || (r.Amount || '').toString().includes(amountFilter));
+  });
+  
+  // Sort data if needed
+  if (sortColumn >= 0) {
+    filteredData.sort((a, b) => {
+      let aVal, bVal;
+      switch(sortColumn) {
+        case 0: aVal = new Date(a.Date); bVal = new Date(b.Date); break;
+        case 1: aVal = a.Particulars; bVal = b.Particulars; break;
+        case 2: aVal = a["Vch Type"]; bVal = b["Vch Type"]; break;
+        case 3: aVal = +a.Amount; bVal = +b.Amount; break;
+        default: return 0;
+      }
+      
+      if (aVal < bVal) return -1 * sortDirection;
+      if (aVal > bVal) return 1 * sortDirection;
+      return 0;
+    });
+  }
+  
+  // Calculate pagination
+  totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  if (currentPage > totalPages) currentPage = totalPages || 1;
+  
+  const start = (currentPage - 1) * rowsPerPage;
+  const end = start + rowsPerPage;
+  const pageData = filteredData.slice(start, end);
+  
+  // Build table rows
+  if (document.getElementById('tableBody')) {
+    document.getElementById('tableBody').innerHTML = pageData.map(r => `
+      <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+        <td class="border p-2 dark:border-gray-600">${r.Date || ''}</td>
+        <td class="border p-2 dark:border-gray-600">${r.Particulars || ''}</td>
+        <td class="border p-2 dark:border-gray-600">${r["Vch Type"] || ''}</td>
+        <td class="border p-2 text-right font-medium dark:border-gray-600">${formatCurrency(r.Amount || 0)}</td>
+      </tr>
+    `).join("");
+  }
+  
+  // Update pagination info
+  if (document.getElementById('rowCount')) {
+    document.getElementById('rowCount').textContent = filteredData.length;
+  }
+  if (document.getElementById('pageInfo')) {
+    document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+  }
+}
+
+function buildDetailedTable() {
+  updateDetailedTable();
+}
+
+function updateDetailedTable() {
+  if (detailedData.length === 0) return;
+  
+  const itemFilter = document.getElementById('filterItem')?.value.toLowerCase() || '';
+  const hsnFilter = document.getElementById('filterHsn')?.value.toLowerCase() || '';
+  const gstFilter = document.getElementById('filterGst')?.value.toLowerCase() || '';
+  const valueFilter = document.getElementById('filterValue')?.value.toLowerCase() || '';
+  
+  filteredDetailedData = detailedData.filter(r => {
+    return (!itemFilter || (r.item || '').toLowerCase().includes(itemFilter)) &&
+           (!hsnFilter || (r.hsn || '').toString().includes(hsnFilter)) &&
+           (!gstFilter || (r.gstRate || '').toString().includes(gstFilter)) &&
+           (!valueFilter || (r.value || '').toString().includes(valueFilter));
+  });
+  
+  // Sort data if needed
+  if (detailedSortColumn >= 0) {
+    filteredDetailedData.sort((a, b) => {
+      let aVal, bVal;
+      const fields = ['sno', 'date', 'party', 'vchType', 'item', 'hsn', 'qty', 'rate', 'value', 'gstRate', 'taxAmount', 'discount', 'grandTotal'];
+      const field = fields[detailedSortColumn];
+      
+      if (!field) return 0;
+      
+      aVal = a[field] || '';
+      bVal = b[field] || '';
+      
+      // Convert to numbers if applicable
+      if (['qty', 'rate', 'value', 'gstRate', 'taxAmount', 'discount', 'grandTotal'].includes(field)) {
+        aVal = +aVal;
+        bVal = +bVal;
+      }
+      
+      if (aVal < bVal) return -1 * detailedSortDirection;
+      if (aVal > bVal) return 1 * detailedSortDirection;
+      return 0;
+    });
+  }
+  
+  // Calculate pagination
+  detailedTotalPages = Math.ceil(filteredDetailedData.length / detailedRowsPerPage);
+  if (detailedCurrentPage > detailedTotalPages) detailedCurrentPage = detailedTotalPages || 1;
+  
+  const start = (detailedCurrentPage - 1) * detailedRowsPerPage;
+  const end = start + detailedRowsPerPage;
+  const pageData = filteredDetailedData.slice(start, end);
+  
+  // Build table rows
+  if (document.getElementById('detailedTableBody')) {
+    document.getElementById('detailedTableBody').innerHTML = pageData.map(r => `
+      <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+        <td class="border p-1 dark:border-gray-600">${r.sno || ''}</td>
+        <td class="border p-1 dark:border-gray-600">${r.date || r.Date || ''}</td>
+        <td class="border p-1 dark:border-gray-600">${r.party || r.Particulars || ''}</td>
+        <td class="border p-1 dark:border-gray-600">${r.vchType || r["Vch Type"] || ''}</td>
+        <td class="border p-1 dark:border-gray-600">${r.item || ''}</td>
+        <td class="border p-1 dark:border-gray-600">${r.hsn || ''}</td>
+        <td class="border p-1 text-right dark:border-gray-600">${formatNumber(r.qty || 0)}</td>
+        <td class="border p-1 text-right dark:border-gray-600">${formatNumber(r.rate || 0)}</td>
+        <td class="border p-1 text-right dark:border-gray-600">${formatCurrency(r.value || 0)}</td>
+        <td class="border p-1 text-right dark:border-gray-600">${formatNumber(r.gstRate || 0)}%</td>
+        <td class="border p-1 text-right dark:border-gray-600">${formatCurrency(r.taxAmount || 0)}</td>
+        <td class="border p-1 text-right dark:border-gray-600">${formatCurrency(r.discount || 0)}</td>
+        <td class="border p-1 text-right font-medium dark:border-gray-600">${formatCurrency(r.grandTotal || 0)}</td>
+      </tr>
+    `).join("");
+  }
+  
+  // Update pagination info
+  if (document.getElementById('detailedRowCount')) {
+    document.getElementById('detailedRowCount').textContent = filteredDetailedData.length;
+  }
+  if (document.getElementById('detailedPageInfo')) {
+    document.getElementById('detailedPageInfo').textContent = `Page ${detailedCurrentPage} of ${detailedTotalPages}`;
+  }
+}
+
+// Filter functions
+function filterTable() {
+  currentPage = 1;
+  updateTable();
+}
+
+function filterDetailedTable() {
+  detailedCurrentPage = 1;
+  updateDetailedTable();
+}
+
+function sortTable(column) {
+  if (sortColumn === column) {
+    sortDirection *= -1;
+  } else {
+    sortColumn = column;
+    sortDirection = 1;
+  }
+  updateTable();
+}
+
+function sortDetailedTable(column) {
+  if (detailedSortColumn === column) {
+    detailedSortDirection *= -1;
+  } else {
+    detailedSortColumn = column;
+    detailedSortDirection = 1;
+  }
+  updateDetailedTable();
+}
+
+// Pagination functions
+function prevPage() {
+  if (currentPage > 1) {
+    currentPage--;
+    updateTable();
+  }
+}
+
+function nextPage() {
+  if (currentPage < totalPages) {
+    currentPage++;
+    updateTable();
+  }
+}
+
+function changeRowsPerPage() {
+  rowsPerPage = parseInt(document.getElementById('rowsPerPage').value);
+  currentPage = 1;
+  updateTable();
+}
+
+function prevDetailedPage() {
+  if (detailedCurrentPage > 1) {
+    detailedCurrentPage--;
+    updateDetailedTable();
+  }
+}
+
+function nextDetailedPage() {
+  if (detailedCurrentPage < detailedTotalPages) {
+    detailedCurrentPage++;
+    updateDetailedTable();
+  }
+}
+
+function changeDetailedRowsPerPage() {
+  detailedRowsPerPage = parseInt(document.getElementById('detailedRowsPerPage').value);
+  detailedCurrentPage = 1;
+  updateDetailedTable();
+}
+
+// View management
+function show(id) {
+  // Hide all charts and tables
+  document.querySelectorAll(".chart, #simpleTable, #detailedTable").forEach(x => x.classList.add("hidden"));
+  // Show the selected one
+  document.getElementById(id).classList.remove("hidden");
+  
+  // Update active button state for simple layout
+  document.querySelectorAll('#simpleReports .btn').forEach(btn => btn.classList.remove('bg-indigo-100', 'dark:bg-indigo-900'));
+  const activeBtn = document.querySelector(`#simpleReports button[onclick="show('${id}')"]`);
+  if (activeBtn) activeBtn.classList.add('bg-indigo-100', 'dark:bg-indigo-900');
+}
+
+function showDetailed(id) {
+  // Hide all charts and tables
+  document.querySelectorAll(".chart, #simpleTable, #detailedTable").forEach(x => x.classList.add("hidden"));
+  // Show the selected one
+  document.getElementById(id).classList.remove("hidden");
+  
+  // Update active button state for detailed layout
+  document.querySelectorAll('#detailedReports .btn').forEach(btn => btn.classList.remove('bg-indigo-100', 'dark:bg-indigo-900'));
+  const activeBtn = document.querySelector(`#detailedReports button[onclick="showDetailed('${id}')"]`);
+  if (activeBtn) activeBtn.classList.add('bg-indigo-100', 'dark:bg-indigo-900');
+}
+
+function toggleLayout() {
+  const layoutIcon = document.getElementById('layoutIcon');
+  const layoutBadge = document.getElementById('layoutBadge');
+  const simpleReports = document.getElementById('simpleReports');
+  const detailedReports = document.getElementById('detailedReports');
+  const simpleFilter = document.getElementById('simpleFilter');
+  const detailedFilter = document.getElementById('detailedFilter');
+  const kpiBtn = document.getElementById('kpiBtn');
+  const detailedKpiBtn = document.getElementById('detailedKpiBtn');
+  const kpiSection = document.getElementById('kpi');
+  const detailedKpiSection = document.getElementById('detailedKpi');
+  
+  if (currentLayout === 'simple') {
+    // Switch to detailed layout
+    currentLayout = 'detailed';
+    layoutIcon.textContent = "📈";
+    layoutBadge.textContent = "Detailed";
+    layoutBadge.className = "data-type-badge bg-green-500 text-white";
+    
+    simpleReports.classList.add('hidden');
+    detailedReports.classList.remove('hidden');
+    simpleFilter.classList.add('hidden');
+    detailedFilter.classList.remove('hidden');
+    kpiBtn.classList.add('hidden');
+    detailedKpiBtn.classList.remove('hidden');
+    kpiSection.classList.add('hidden');
+    detailedKpiSection.classList.remove('hidden');
+    
+    // Show first detailed view
+    if (detailedData.length > 0) {
+      showDetailed('itemAnalysis');
+    }
+  } else {
+    // Switch to simple layout
+    currentLayout = 'simple';
+    layoutIcon.textContent = "📊";
+    layoutBadge.textContent = "Simple";
+    layoutBadge.className = "data-type-badge bg-indigo-500 text-white";
+    
+    simpleReports.classList.remove('hidden');
+    detailedReports.classList.add('hidden');
+    simpleFilter.classList.remove('hidden');
+    detailedFilter.classList.add('hidden');
+    kpiBtn.classList.remove('hidden');
+    detailedKpiBtn.classList.add('hidden');
+    kpiSection.classList.remove('hidden');
+    detailedKpiSection.classList.add('hidden');
+    
+    // Show first simple view
+    if (data.length > 0) {
+      show('daily');
+    }
+  }
+}
+
+// Filter application
+function applyFilter() {
+  if (currentLayout === 'simple') {
+    data = raw.filter(r => {
+      const d = new Date(r.Date);
+      return (!from.value || d >= new Date(from.value)) &&
+             (!to.value || d <= new Date(to.value)) &&
+             (!vchType.value || r["Vch Type"] === vchType.value);
+    });
+    buildKPI();
+    buildCharts();
+    updateTable();
+  } else {
+    detailedData = detailedRaw.filter(r => {
+      const d = new Date(r.date || r.Date);
+      const fromDate = from.value ? new Date(from.value) : null;
+      const toDate = to.value ? new Date(to.value) : null;
+      const itemFilterValue = document.getElementById('itemFilter').value;
+      
+      return (!fromDate || d >= fromDate) &&
+             (!toDate || d <= toDate) &&
+             (!itemFilterValue || r.item === itemFilterValue);
+    });
+    buildDetailedKPI();
+    buildDetailedCharts();
+    updateDetailedTable();
+  }
+  updateDataInfo();
+}
+
+function resetFilter() {
+  from.value = "";
+  to.value = "";
+  vchType.value = "";
+  if (document.getElementById('itemFilter')) {
+    document.getElementById('itemFilter').value = "";
+  }
+  
+  if (currentLayout === 'simple') {
+    data = raw;
+    buildKPI();
+    buildCharts();
+    updateTable();
+  } else {
+    detailedData = detailedRaw;
+    buildDetailedKPI();
+    buildDetailedCharts();
+    updateDetailedTable();
+  }
+  updateDataInfo();
+}
+
+// Build filter options
+function buildVoucherFilter() {
+  if (!document.getElementById('vchType')) return;
+  
+  const voucherTypes = [...new Set(raw.map(r => r["Vch Type"]).filter(Boolean))];
+  document.getElementById('vchType').innerHTML = '<option value="">All Voucher Types</option>' +
+    voucherTypes.map(x => `<option value="${x}">${x}</option>`).join("");
+}
+
+function buildItemFilter() {
+  if (!document.getElementById('itemFilter')) return;
+  
+  const items = [...new Set(detailedData.map(r => r.item).filter(Boolean))];
+  document.getElementById('itemFilter').innerHTML = '<option value="">All Items</option>' +
+    items.map(x => `<option value="${x}">${x}</option>`).join("");
+}
+
+// Export functions
+function exportExcel() {
+  let exportData, fileName;
+  
+  if (currentLayout === 'simple') {
+    if (data.length === 0) {
+      alert("No data to export!");
+      return;
+    }
+    exportData = data;
+    fileName = "simple_dashboard_report.xlsx";
+  } else {
+    if (detailedData.length === 0) {
+      alert("No data to export!");
+      return;
+    }
+    exportData = detailedData;
+    fileName = "detailed_dashboard_report.xlsx";
+  }
+  
+  const ws = XLSX.utils.json_to_sheet(exportData);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Report");
+  XLSX.writeFile(wb, fileName);
+}
+
+function exportPDF() {
+  let exportData, fileName, title;
+  
+  if (currentLayout === 'simple') {
+    if (data.length === 0) {
+      alert("No data to export!");
+      return;
+    }
+    exportData = data;
+    fileName = "simple_dashboard_report.pdf";
+    title = "Simple Dashboard Report";
+  } else {
+    if (detailedData.length === 0) {
+      alert("No data to export!");
+      return;
+    }
+    exportData = detailedData;
+    fileName = "detailed_dashboard_report.pdf";
+    title = "Detailed Dashboard Report";
+  }
+  
+  const {jsPDF} = window.jspdf;
+  const pdf = new jsPDF();
+  
+  // Add title
+  pdf.setFontSize(18);
+  pdf.text(title, 14, 22);
+  pdf.setFontSize(11);
+  pdf.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 30);
+  
+  // Add table
+  pdf.autoTable({
+    head: [currentLayout === 'simple' ? 
+      ["Date", "Party", "Voucher", "Amount"] :
+      ["Date", "Party", "Item", "HSN", "Qty", "Value", "GST%", "Tax", "Discount", "Total"]
+    ],
+    body: exportData.slice(0, 100).map(r => {
+      if (currentLayout === 'simple') {
+        return [r.Date, r.Particulars, r["Vch Type"], r.Amount];
+      } else {
+        return [
+          r.date || r.Date || '',
+          r.party || r.Particulars || '',
+          r.item || '',
+          r.hsn || '',
+          r.qty || 0,
+          r.value || 0,
+          r.gstRate || 0,
+          r.taxAmount || 0,
+          r.discount || 0,
+          r.grandTotal || 0
+        ];
+      }
+    }),
+    startY: 40,
+    styles: {fontSize: 8},
+    headStyles: {fillColor: [79, 70, 229]}
+  });
+  
+  pdf.save(fileName);
+}
+
+function exportTable() {
+  if (filteredData.length === 0) {
+    alert("No data to export!");
+    return;
+  }
+  
+  const ws = XLSX.utils.json_to_sheet(filteredData);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Filtered Data");
+  XLSX.writeFile(wb, "filtered_table_data.xlsx");
+}
+
+function exportDetailedTable() {
+  if (filteredDetailedData.length === 0) {
+    alert("No data to export!");
+    return;
+  }
+  
+  const ws = XLSX.utils.json_to_sheet(filteredDetailedData);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Detailed Filtered Data");
+  XLSX.writeFile(wb, "detailed_filtered_data.xlsx");
+}
+
+function exportCharts() {
+  if (Object.keys(charts).length === 0) {
+    alert("No charts to export!");
+    return;
+  }
+  
+  const {jsPDF} = window.jspdf;
+  const pdf = new jsPDF('p', 'mm', 'a4');
+  
+  pdf.setFontSize(18);
+  pdf.text("Dashboard Charts Export", 14, 20);
+  pdf.setFontSize(11);
+  pdf.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 28);
+  
+  let yPos = 40;
+  let chartCount = 0;
+  
+  // Export each chart as image
+  Object.entries(charts).forEach(([name, chart], index) => {
+    if (chartCount > 0 && chartCount % 2 === 0) {
+      pdf.addPage();
+      yPos = 20;
+    }
+    
+    try {
+      const canvas = chart.canvas;
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = 90;
+      const imgHeight = 60;
+      
+      const xPos = (chartCount % 2 === 0) ? 10 : 110;
+      
+      pdf.addImage(imgData, 'PNG', xPos, yPos, imgWidth, imgHeight);
+      pdf.text(name.charAt(0).toUpperCase() + name.slice(1) + " Chart", xPos, yPos + imgHeight + 5);
+      
+      if (chartCount % 2 === 1) yPos += 80;
+      chartCount++;
+    } catch (e) {
+      console.error("Error exporting chart:", name, e);
+    }
+  });
+  
+  pdf.save("dashboard_charts.pdf");
+}
+
+function downloadChart(chartId) {
+  const canvas = document.getElementById(chartId);
+  if (!canvas) return;
+  
+  const link = document.createElement('a');
+  link.download = `${chartId}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+function toggleFullscreen(chartId) {
+  const canvas = document.getElementById(chartId);
+  if (!canvas) return;
+  
+  const chartDiv = canvas.closest('.chart');
+  if (!chartDiv) return;
+  
+  chartDiv.classList.toggle('fullscreen');
+  
+  if (chartDiv.classList.contains('fullscreen')) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = '';
+  }
+  
+  // Resize chart
+  const chartName = chartId.replace('Chart', '');
+  if (charts[chartName]) {
+    setTimeout(() => charts[chartName].resize(), 100);
+  }
+}
+
+function toggleDark() {
+  document.documentElement.classList.toggle("dark");
+  const icon = document.getElementById('darkModeIcon');
+  if (document.documentElement.classList.contains("dark")) {
+    icon.textContent = "☀️";
+  } else {
+    icon.textContent = "🌙";
+  }
+  
+  // Update charts for dark mode
+  Object.values(charts).forEach(chart => {
+    if (chart && chart.update) {
+      chart.update();
+    }
+  });
+}
+
+function clearAll() {
+  if (confirm("Are you sure you want to clear all data?")) {
+    location.reload();
+  }
+}
+
+function updateDataInfo() {
+  const info = document.getElementById('dataInfo');
+  const typeIndicator = document.getElementById('dataTypeIndicator');
+  
+  if (dataType === 'none') {
+    info.textContent = "No data loaded";
+    info.style.color = "#ef4444";
+    typeIndicator.textContent = "No data loaded";
+  } else if (dataType === 'simple') {
+    info.textContent = `${data.length} records loaded (Simple Format) | ${new Date().toLocaleTimeString()}`;
+    info.style.color = "#10b981";
+    typeIndicator.textContent = "Simple Data Format";
+  } else if (dataType === 'detailed') {
+    info.textContent = `${detailedData.length} records loaded (Detailed Format) | ${new Date().toLocaleTimeString()}`;
+    info.style.color = "#10b981";
+    typeIndicator.textContent = "Detailed Data Format";
+  }
+}
+
+// Initialize
+window.onload = function() {
+  updateDataInfo();
+  
+  // Set default dates
+  const today = new Date();
+  const lastMonth = new Date();
+  lastMonth.setMonth(lastMonth.getMonth() - 1);
+  
+  document.getElementById('from').valueAsDate = lastMonth;
+  document.getElementById('to').valueAsDate = today;
+};
+
+// Make functions available globally for HTML onclick handlers
+window.sortTable = sortTable;
+window.prevPage = prevPage;
+window.nextPage = nextPage;
+window.changeRowsPerPage = changeRowsPerPage;
+window.prevDetailedPage = prevDetailedPage;
+window.nextDetailedPage = nextDetailedPage;
+window.changeDetailedRowsPerPage = changeDetailedRowsPerPage;
+window.filterTable = filterTable;
+window.filterDetailedTable = filterDetailedTable;
+window.downloadChart = downloadChart;
+window.toggleFullscreen = toggleFullscreen;
+window.exportTable = exportTable;
+window.exportDetailedTable = exportDetailedTable;
+</script>
+
+</body>
+</html>
