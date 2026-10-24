@@ -2,492 +2,2781 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sunil Kumar Kashyap</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#114f43">
+  <meta name="description"
+    content="Sunil Kumar Kashyap: MIS professional with 3 years of experience, focused on data analytics, Advanced Excel, Power BI and business reporting. Explore projects, skills and experience.">
+  <title>Sunil Kumar Kashyap | Data Analytics & MIS Professional</title>
+  <style>
+    :root {
+      --ink: #172e28;
+      --muted: #61746d;
+      --green: #16634f;
+      --light: #e8f0e9;
+      --line: #dce4dd;
+      --paper: #f8faf6;
+      --white: #fff;
+      --lime: #d3ec93
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 95px
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font: 15px/1.65 Arial, Helvetica, sans-serif
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit
+    }
+
+    button,
+    a,
+    input,
+    textarea,
+    select {
+      -webkit-tap-highlight-color: transparent
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none
+    }
+
+    button {
+      cursor: pointer
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible {
+      outline: 3px solid #7f9e27;
+      outline-offset: 4px
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0
+    }
+
+    h1,
+    h2,
+    h3 {
+      line-height: 1.15;
+      letter-spacing: -.045em
+    }
+
+    h1 {
+      font-size: clamp(44px, 5.3vw, 72px);
+      font-weight: 600
+    }
+
+    h2 {
+      font-size: clamp(32px, 3.4vw, 46px);
+      font-weight: 500
+    }
+
+    h3 {
+      font-size: 23px;
+      font-weight: 600
+    }
+
+    p {
+      color: var(--muted)
+    }
+
+    .wrap {
+      max-width: 1180px;
+      width: calc(100% - 80px);
+      margin: auto
+    }
+
+    .skip {
+      position: fixed;
+      top: -80px;
+      left: 12px;
+      background: white;
+      padding: 12px;
+      z-index: 100
+    }
+
+    .skip:focus {
+      top: 10px
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      background: #f8faf6f2;
+      backdrop-filter: blur(15px);
+      z-index: 20;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .nav {
+      height: 86px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      line-height: 1.3
+    }
+
+    .monogram {
+      background: var(--green);
+      color: white;
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      font-size: 17px;
+      letter-spacing: -1px
+    }
+
+    .brand small {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 1.8px;
+      font-weight: 400;
+      margin-top: 4px
+    }
+
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      font-size: 13px
+    }
+
+    .links a:hover,
+    .links a.active {
+      color: var(--green);
+      text-decoration: underline;
+      text-underline-offset: 7px
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      border: 1px solid var(--green);
+      background: var(--green);
+      color: white;
+      padding: 13px 21px;
+      border-radius: 7px;
+      font-weight: 600;
+      font-size: 13px;
+      transition: transform .2s, background .2s
+    }
+
+    .btn:hover {
+      background: #0b4939;
+      transform: translateY(-2px)
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: var(--ink);
+      border-color: #bbc9bf
+    }
+
+    .btn.secondary:hover {
+      background: var(--light)
+    }
+
+    .menu {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 8px 12px
+    }
+
+    .hero {
+      padding: 80px 0 62px;
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 65px;
+      align-items: center
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--green);
+      display: block;
+      margin-bottom: 23px
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #ccdcca;
+      background: #f0f5e9;
+      border-radius: 30px;
+      padding: 6px 12px;
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 24px
+    }
+
+    .dot {
+      height: 6px;
+      width: 6px;
+      border-radius: 50%;
+      background: var(--green)
+    }
+
+    h1 em {
+      font-family: Georgia, serif;
+      font-weight: 400;
+      color: var(--green)
+    }
+
+    .hero-copy>p {
+      margin-top: 23px;
+      max-width: 480px;
+      font-size: 15px
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px
+    }
+
+    .hero-foot {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 30px;
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--light);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      font-size: 11px;
+      color: var(--green);
+      font-weight: bold
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover
+    }
+
+    .hero-art {
+      position: relative;
+      padding: 28px 0 24px 20px
+    }
+
+    .hero-art:before {
+      content: '';
+      position: absolute;
+      inset: 0 -18px 0 0;
+      background: radial-gradient(#a9c2aa 1px, transparent 1px);
+      background-size: 14px 14px;
+      opacity: .45;
+      border-radius: 30px
+    }
+
+    .dashboard {
+      position: relative;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      box-shadow: 0 24px 70px #234c3220;
+      overflow: hidden;
+      transform: rotate(-2deg)
+    }
+
+    .dash-head {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px
+    }
+
+    .dash-head b {
+      font-size: 12px
+    }
+
+    .dots {
+      letter-spacing: 2px;
+      color: #9caea3
+    }
+
+    .dash-body {
+      padding: 22px
+    }
+
+    .dash-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px
+    }
+
+    .dash-title h3 {
+      font-size: 18px
+    }
+
+    .sample {
+      font-size: 9px;
+      border: 1px solid var(--line);
+      padding: 3px 8px;
+      border-radius: 4px;
+      color: var(--muted)
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px
+    }
+
+    .kpi {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 7px
+    }
+
+    .kpi span {
+      font-size: 9px;
+      color: var(--muted)
+    }
+
+    .kpi strong {
+      display: block;
+      font-size: 20px;
+      letter-spacing: -1px;
+      margin: 3px 0
+    }
+
+    .kpi small {
+      font-size: 9px;
+      color: var(--green)
+    }
+
+    .chart {
+      margin-top: 20px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px
+    }
+
+    .chart-title {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px
+    }
+
+    .chart svg {
+      width: 100%;
+      height: auto;
+      display: block
+    }
+
+    .chart-bottom {
+      display: flex;
+      justify-content: space-between;
+      font-size: 8px;
+      color: var(--muted)
+    }
+
+    .float-note {
+      position: absolute;
+      right: -30px;
+      bottom: 4px;
+      background: var(--green);
+      color: white;
+      padding: 16px 22px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px #193d3422;
+      font-size: 12px
+    }
+
+    .float-note span {
+      display: block;
+      font-size: 9px;
+      color: #c7dacd
+    }
+
+    .tools {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 22px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap
+    }
+
+    .tools small {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+      color: var(--muted)
+    }
+
+    .tools b {
+      font-size: 16px;
+      color: #4b6257;
+      font-weight: 600
+    }
+
+    .section {
+      padding: 90px 0
+    }
+
+    .section-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 30px;
+      margin-bottom: 34px
+    }
+
+    .section-top p {
+      max-width: 340px;
+      font-size: 13px
+    }
+
+    .section-top .eyebrow {
+      margin-bottom: 14px
+    }
+
+    .filters {
+      display: flex;
+      gap: 9px;
+      margin-bottom: 28px;
+      flex-wrap: wrap
+    }
+
+    .filter {
+      border: 1px solid var(--line);
+      border-radius: 25px;
+      padding: 8px 17px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px
+    }
+
+    .filter[aria-pressed=true] {
+      color: white;
+      background: var(--green);
+      border-color: var(--green)
+    }
+
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px
+    }
+
+    .project {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform .2s, box-shadow .2s
+    }
+
+    .project:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px #22473310
+    }
+
+    .project[hidden] {
+      display: none
+    }
+
+    .project-visual {
+      height: 205px;
+      background: #e8efe5;
+      padding: 23px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .project:nth-child(2n) .project-visual {
+      background: #e5edea
+    }
+
+    .project:nth-child(3n) .project-visual {
+      background: #eeeede
+    }
+
+    .mini-window {
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 8px 20px #213c2912;
+      height: 165px;
+      padding: 13px
+    }
+
+    .mini-top {
+      font-size: 8px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 7px;
+      display: flex;
+      justify-content: space-between
+    }
+
+    .mini-cells {
+      display: flex;
+      gap: 7px;
+      margin: 11px 0
+    }
+
+    .mini-cells i {
+      display: block;
+      background: #edf3eb;
+      height: 22px;
+      flex: 1;
+      border-radius: 3px
+    }
+
+    .mini-bars {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      height: 62px;
+      border-bottom: 1px solid var(--line);
+      padding: 0 9px
+    }
+
+    .mini-bars i {
+      flex: 1;
+      background: #2e7560;
+      border-radius: 3px 3px 0 0
+    }
+
+    .mini-bars i:nth-child(even) {
+      background: #b3cf88
+    }
+
+    .preview-label {
+      position: absolute;
+      bottom: 5px;
+      right: 13px;
+      font-size: 8px;
+      color: #53675d
+    }
+
+    .project-visual img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: white
+    }
+
+    .project-body {
+      padding: 23px
+    }
+
+    .tag {
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--green);
+      font-weight: bold
+    }
+
+    .project h3 {
+      font-size: 20px;
+      margin: 11px 0
+    }
+
+    .project p {
+      font-size: 12px;
+      line-height: 1.8;
+      min-height: 65px
+    }
+
+    .project-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 0;
+      border-top: 1px solid var(--line);
+      padding: 16px 0 0;
+      margin-top: 19px;
+      background: none;
+      width: 100%;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink)
+    }
+
+    .count {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 18px
+    }
+
+    .services-shell {
+      background: #eef3eb;
+      border-block: 1px solid var(--line)
+    }
+
+    .services {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 25px
+    }
+
+    .service {
+      padding: 25px 0;
+      border-top: 1px solid #b9cbb9
+    }
+
+    .service .number {
+      font-size: 11px;
+      color: var(--green);
+      display: block;
+      margin-bottom: 26px
+    }
+
+    .service h3 {
+      font-size: 22px;
+      margin-bottom: 16px
+    }
+
+    .service p {
+      font-size: 12px
+    }
+
+    .service ul {
+      padding-left: 17px;
+      margin: 20px 0 0;
+      font-size: 11px;
+      color: #466251
+    }
+
+    .service li {
+      margin-top: 8px
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: .9fr 1.2fr;
+      gap: 90px;
+      align-items: start
+    }
+
+    .about-card {
+      background: var(--green);
+      color: white;
+      border-radius: 14px;
+      padding: 37px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .about-card:after {
+      content: '';
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border: 1px solid #ffffff25;
+      border-radius: 50%;
+      right: -100px;
+      top: -80px
+    }
+
+    .portrait {
+      height: 78px;
+      width: 78px;
+      background: #d8e6c9;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      color: var(--green);
+      font-size: 28px;
+      margin-bottom: 35px;
+      overflow: hidden
+    }
+
+    .portrait img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover
+    }
+
+    .about-card h3 {
+      font-size: 30px
+    }
+
+    .about-card p {
+      color: #d3e2d8;
+      font-size: 13px;
+      margin-top: 14px
+    }
+
+    .about-card .tag {
+      color: var(--lime)
+    }
+
+    .profile-details {
+      margin-top: 30px;
+      border-top: 1px solid #ffffff30;
+      padding-top: 20px;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px
+    }
+
+    .about-copy h2 {
+      margin-bottom: 24px
+    }
+
+    .about-copy p {
+      font-size: 14px;
+      margin-bottom: 18px
+    }
+
+    .education {
+      margin-top: 28px;
+      display: grid;
+      gap: 14px
+    }
+
+    .edu {
+      display: flex;
+      gap: 14px;
+      border-top: 1px solid var(--line);
+      padding-top: 15px;
+      font-size: 12px
+    }
+
+    .edu b {
+      font-weight: 600
+    }
+
+    .edu span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px
+    }
+
+    .check {
+      color: var(--green)
+    }
+
+    .skills {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px
+    }
+
+    .skill-card {
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: white
+    }
+
+    .skill-card h3 {
+      font-size: 20px;
+      margin-bottom: 18px
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px
+    }
+
+    .chips span {
+      padding: 6px 10px;
+      background: #f0f4ed;
+      border-radius: 5px;
+      color: #466251;
+      font-size: 11px
+    }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 28px;
+      margin-top: 40px
+    }
+
+    .step {
+      border-top: 1px solid var(--line);
+      padding-top: 20px
+    }
+
+    .step span {
+      color: var(--green);
+      font-size: 11px
+    }
+
+    .step h3 {
+      font-size: 18px;
+      margin: 12px 0
+    }
+
+    .step p {
+      font-size: 12px
+    }
+
+    .contact-shell {
+      background: #123f34;
+      color: white
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 90px
+    }
+
+    .contact-shell .eyebrow {
+      color: var(--lime)
+    }
+
+    .contact-shell h2 {
+      font-size: 49px;
+      margin-bottom: 22px
+    }
+
+    .contact-shell p {
+      color: #c3d3ca;
+      font-size: 14px
+    }
+
+    .socials {
+      display: flex;
+      gap: 25px;
+      margin-top: 30px;
+      font-size: 13px;
+      color: #e2eddb
+    }
+
+    .socials a {
+      border-bottom: 1px solid #709788;
+      padding-bottom: 5px
+    }
+
+    .contact-form {
+      display: grid;
+      gap: 15px
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      margin-bottom: 6px;
+      color: #dbe7df
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      background: #ffffff09;
+      border: 1px solid #527468;
+      color: white;
+      padding: 11px 13px;
+      border-radius: 6px;
+      font-size: 12px
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #a7bfb3
+    }
+
+    select option {
+      color: var(--ink);
+      background: white
+    }
+
+    .contact-form .btn {
+      background: var(--lime);
+      color: #173b2a;
+      border-color: var(--lime)
+    }
+
+    .contact-form .note {
+      font-size: 10px;
+      color: #b3c8bb
+    }
+
+    .draft {
+      background: #214e41;
+      padding: 16px;
+      border-radius: 6px
+    }
+
+    .draft textarea {
+      margin: 10px 0
+    }
+
+    .draft button {
+      padding: 7px 13px;
+      font-size: 11px
+    }
+
+    footer {
+      padding: 25px 0;
+      background: #123f34;
+      border-top: 1px solid #ffffff20;
+      color: #adc4b5;
+      font-size: 10px
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px
+    }
+
+    .footer-inner a {
+      color: white
+    }
+
+    dialog {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      max-width: 600px;
+      width: calc(100% - 32px);
+      padding: 34px;
+      color: var(--ink);
+      box-shadow: 0 30px 100px #0003
+    }
+
+    dialog::backdrop {
+      background: #0b271ecc;
+      backdrop-filter: blur(5px)
+    }
+
+    dialog h2 {
+      font-size: 30px;
+      margin: 15px 0
+    }
+
+    dialog p {
+      font-size: 14px
+    }
+
+    dialog ul {
+      font-size: 13px;
+      color: var(--muted);
+      padding-left: 20px;
+      margin: 24px 0
+    }
+
+    dialog li {
+      margin: 9px 0
+    }
+
+    .dialog-close {
+      float: right;
+      border: 1px solid var(--line);
+      background: white;
+      padding: 4px 11px;
+      border-radius: 5px
+    }
+
+    #modal-link[hidden] {
+      display: none
+    }
+
+    .file-links {
+      margin-top: 25px;
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .file-links a {
+      border-bottom: 1px solid #b6c6b9;
+      margin-right: 18px
+    }
+
+    .file-links small {
+      display: block;
+      margin-top: 8px
+    }
+
+    @media(min-width:1500px) {
+      .hero {
+        padding-top: 100px;
+        padding-bottom: 90px
+      }
+    }
+
+    @media(max-width:1000px) {
+      .wrap {
+        width: calc(100% - 48px)
+      }
+
+      .hero {
+        gap: 30px
+      }
+
+      .hero-art {
+        padding-left: 0
+      }
+
+      .float-note {
+        right: 0
+      }
+
+      .links {
+        gap: 18px
+      }
+
+      .services {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .projects {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .about-grid,
+      .contact-grid {
+        gap: 40px
+      }
+
+      .hero h1 {
+        font-size: 52px
+      }
+
+      .skills {
+        gap: 12px
+      }
+
+      .tools b {
+        font-size: 13px
+      }
+    }
+
+    @media(max-width:720px) {
+      .wrap {
+        width: calc(100% - 36px)
+      }
+
+      .nav {
+        height: 72px
+      }
+
+      .brand {
+        font-size: 13px
+      }
+
+      .brand small {
+        font-size: 8px
+      }
+
+      .menu {
+        display: block
+      }
+
+      .links {
+        display: none;
+        position: absolute;
+        top: 72px;
+        left: 0;
+        right: 0;
+        background: var(--paper);
+        padding: 20px;
+        border-bottom: 1px solid var(--line);
+        flex-direction: column;
+        align-items: stretch;
+        gap: 18px
+      }
+
+      .links.open {
+        display: flex
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 42px 0 44px;
+        gap: 26px
+      }
+
+      .hero h1 {
+        font-size: 49px
+      }
+
+      .hero-copy>p {
+        font-size: 14px
+      }
+
+      .hero-art {
+        max-width: 480px;
+        width: 100%;
+        margin: auto;
+        padding: 12px 8px 24px
+      }
+
+      .hero-art:before {
+        right: 0
+      }
+
+      .hero-foot {
+        margin-top: 22px
+      }
+
+      .tools {
+        justify-content: center;
+        gap: 16px 24px
+      }
+
+      .tools small {
+        width: 100%;
+        text-align: center
+      }
+
+      .section {
+        padding: 60px 0
+      }
+
+      .section-top {
+        display: block
+      }
+
+      .section-top p {
+        margin-top: 18px
+      }
+
+      .projects,
+      .about-grid,
+      .contact-grid,
+      .skills {
+        grid-template-columns: 1fr
+      }
+
+      .services,
+      .workflow {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .project p {
+        min-height: 0
+      }
+
+      .about-grid {
+        gap: 32px
+      }
+
+      .about-card {
+        padding: 30px
+      }
+
+      .contact-shell h2 {
+        font-size: 40px
+      }
+
+      .contact-grid {
+        gap: 35px
+      }
+
+      .footer-inner {
+        flex-wrap: wrap
+      }
+
+      .form-row {
+        grid-template-columns: 1fr
+      }
+
+      .kpi strong {
+        font-size: 18px
+      }
+
+      .kpi {
+        padding: 9px
+      }
+
+      .dash-body {
+        padding: 17px
+      }
+
+      .dashboard {
+        transform: none
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+      html {
+        scroll-behavior: auto
+      }
+
+      * {
+        transition: none !important
+      }
+    }
+
+    .hero-profile {
+      padding: 18px;
+      background: #e5ede1;
+      border: 1px solid #d1ddcc;
+      border-radius: 20px;
+      max-width: 440px;
+      width: 100%;
+      justify-self: end
+    }
+
+    .profile-photo {
+      height: 390px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      background: linear-gradient(140deg, #c8dcc2, #ecf1df)
+    }
+
+    .profile-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      position: absolute;
+      inset: 0
+    }
+
+    .photo-fallback {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #215540
+    }
+
+    .photo-fallback strong {
+      font: 100px Georgia, serif
+    }
+
+    .photo-fallback small {
+      font-size: 10px;
+      color: #54705a
+    }
+
+    .profile-caption {
+      padding: 22px 8px 8px
+    }
+
+    .profile-caption h3 {
+      margin-top: 10px;
+      font-size: 26px
+    }
+
+    .profile-caption p {
+      margin-top: 6px;
+      font-size: 12px
+    }
+
+    .portrait {
+      width: 100%;
+      height: 280px;
+      margin-bottom: 25px;
+      font-size: 70px
+    }
+
+    .portrait img {
+      object-position: center top
+    }
+
+    .section-shortcuts {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 20px 0;
+      border-top: 1px solid var(--line)
+    }
+
+    .section-shortcuts a {
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 12px;
+      background: white
+    }
+
+    .section-shortcuts a:hover {
+      background: var(--light)
+    }
+
+    .restored-section {
+      border-top: 1px solid var(--line)
+    }
+
+    .restored-image {
+      height: 205px;
+      background: #e4eddf;
+      position: relative;
+      display: grid;
+      place-items: center;
+      padding: 25px;
+      text-align: center;
+      color: var(--green);
+      font-size: 20px;
+      font-weight: 600
+    }
+
+    .restored-image small {
+      display: block;
+      font-size: 10px;
+      font-weight: 400;
+      margin-top: 12px
+    }
+
+    .restored-image img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: white
+    }
+
+    .restored-section .project {
+      display: block
+    }
+
+    .restored-section .project p {
+      min-height: 0
+    }
+
+    @media(max-width:720px) {
+      .hero-profile {
+        justify-self: center
+      }
+
+      .profile-photo {
+        height: 340px
+      }
+
+      .portrait {
+        height: 300px
+      }
+    }
+
+    [hidden] {
+      display: none !important
+    }
+
+    .career-facts {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 30px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line)
+    }
+
+    .career-facts span {
+      font-size: 10px;
+      color: var(--muted)
+    }
+
+    .career-facts b {
+      display: block;
+      font-size: 14px;
+      color: var(--ink);
+      margin-bottom: 4px
+    }
+
+    .profile-role {
+      border-top: 1px solid #c6d7c0;
+      margin-top: 15px;
+      padding-top: 14px;
+      font-size: 11px;
+      color: var(--green)
+    }
+
+    .profile-role span {
+      margin: 0 6px
+    }
+
+    .experience-section {
+      border-top: 1px solid var(--line)
+    }
+
+    .experience-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.65fr;
+      gap: 48px;
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 16px;
+      padding: 36px
+    }
+
+    .experience-summary h3 {
+      font-size: 30px;
+      margin: 20px 0 10px
+    }
+
+    .experience-summary .chips {
+      margin: 20px 0 30px
+    }
+
+    .experience-body>p {
+      margin: 18px 0 26px;
+      font-size: 14px
+    }
+
+    .experience-focus {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 23px
+    }
+
+    .experience-focus>div {
+      border-top: 1px solid var(--line);
+      padding-top: 16px
+    }
+
+    .experience-focus b {
+      font-size: 13px
+    }
+
+    .experience-focus p {
+      font-size: 12px;
+      margin-top: 8px
+    }
+
+    .fit-section {
+      padding: 32px;
+      border-radius: 14px;
+      background: #e7efdf;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+      margin-bottom: 65px
+    }
+
+    .fit-section h2 {
+      font-size: 32px
+    }
+
+    .fit-section p {
+      grid-column: 1/-1;
+      font-size: 13px
+    }
+
+    .fit-roles {
+      display: flex;
+      gap: 10px;
+      align-content: center;
+      flex-wrap: wrap
+    }
+
+    .fit-roles span {
+      border: 1px solid #bdceb4;
+      background: #f6f9f1;
+      border-radius: 30px;
+      padding: 8px 13px;
+      font-size: 12px
+    }
+
+    .capability-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px
+    }
+
+    .capability-grid article {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 28px
+    }
+
+    .capability-grid h3 {
+      font-size: 21px;
+      margin: 20px 0 15px
+    }
+
+    .capability-grid p {
+      font-size: 13px
+    }
+
+    .number {
+      font-size: 11px;
+      color: var(--green)
+    }
+
+    .project-search {
+      max-width: 430px;
+      margin-bottom: 18px
+    }
+
+    .project-search label {
+      color: var(--muted)
+    }
+
+    .project-search input {
+      color: var(--ink);
+      border-color: var(--line);
+      background: white
+    }
+
+    .project-search input::placeholder {
+      color: #6a7e70
+    }
+
+    .case-context {
+      padding: 20px;
+      background: var(--paper);
+      border-radius: 8px;
+      margin-top: 20px
+    }
+
+    .case-context h3 {
+      font-size: 15px;
+      letter-spacing: 0;
+      margin: 0 0 8px
+    }
+
+    .case-context p {
+      font-size: 13px;
+      margin-bottom: 18px
+    }
+
+    .case-context p:last-child {
+      margin: 0
+    }
+
+    .restored-section#data-analysis .projects {
+      grid-template-columns: repeat(3, minmax(0, 1fr))
+    }
+
+    .section-shortcuts {
+      gap: 8px
+    }
+
+    .hero h1 {
+      font-size: clamp(42px, 4.8vw, 65px)
+    }
+
+    @media(max-width:720px) {
+      .experience-layout {
+        grid-template-columns: 1fr;
+        padding: 24px;
+        gap: 30px
+      }
+
+      .experience-focus {
+        grid-template-columns: 1fr
+      }
+
+      .fit-section {
+        grid-template-columns: 1fr;
+        padding: 24px
+      }
+
+      .capability-grid {
+        grid-template-columns: 1fr
+      }
+
+      .hero h1 {
+        font-size: 44px
+      }
+
+      .career-facts {
+        gap: 10px
+      }
+
+      .career-facts b {
+        font-size: 12px
+      }
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 16mm
+      }
+
+      body {
+        background: white;
+        font-size: 11px;
+        color: #111
+      }
+
+      .wrap {
+        width: 100%;
+        max-width: none
+      }
+
+      .header,
+      .section-shortcuts,
+      .tools,
+      .hero-art,
+      .hero-profile,
+      .actions,
+      .hero-foot,
+      .project-search,
+      .filters,
+      .file-links,
+      .services-shell,
+      .restored-section,
+      .fit-section,
+      .print-profile,
+      footer,
+      dialog,
+      .contact-form,
+      .skip {
+        display: none !important
+      }
+
+      .section {
+        padding: 18px 0
+      }
+
+      .hero {
+        display: block;
+        padding: 0 0 18px
+      }
+
+      .hero h1 {
+        font-size: 32px
+      }
+
+      .hero h1 br {
+        display: none
+      }
+
+      .hero-copy>p {
+        max-width: none;
+        font-size: 12px
+      }
+
+      .career-facts {
+        margin-top: 15px
+      }
+
+      .projects {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .project-visual {
+        display: none
+      }
+
+      .project-body {
+        padding: 12px
+      }
+
+      .project {
+        break-inside: avoid
+      }
+
+      .project h3 {
+        font-size: 16px
+      }
+
+      .project p {
+        font-size: 11px;
+        min-height: 0
+      }
+
+      .project-link {
+        display: none
+      }
+
+      .count {
+        display: none
+      }
+
+      .section-top {
+        margin-bottom: 16px
+      }
+
+      .section-top h2 {
+        font-size: 24px
+      }
+
+      .eyebrow {
+        margin-bottom: 10px
+      }
+
+      .about-grid {
+        display: block
+      }
+
+      .about-card {
+        display: none
+      }
+
+      .about-copy h2 {
+        font-size: 24px
+      }
+
+      .about-copy p {
+        font-size: 12px
+      }
+
+      .education {
+        gap: 8px;
+        margin-top: 12px
+      }
+
+      .experience-layout {
+        padding: 16px;
+        gap: 20px;
+        grid-template-columns: 1fr 2fr
+      }
+
+      .experience-layout h3 {
+        font-size: 18px
+      }
+
+      .experience-focus p {
+        font-size: 10px
+      }
+
+      .skills {
+        grid-template-columns: repeat(3, 1fr)
+      }
+
+      .skill-card {
+        padding: 14px
+      }
+
+      .skill-card h3 {
+        font-size: 15px
+      }
+
+      .chips span {
+        font-size: 9px;
+        padding: 3px 6px
+      }
+
+      .contact-shell {
+        background: white;
+        color: #111;
+        padding: 20px 0
+      }
+
+      .contact-shell h2 {
+        font-size: 22px
+      }
+
+      .contact-shell p {
+        color: #444;
+        font-size: 11px
+      }
+
+      .contact-grid {
+        display: block
+      }
+
+      .socials {
+        margin-top: 12px;
+        color: #111
+      }
+
+      .socials a:after {
+        content: ' (' attr(href) ')';
+        font-size: 9px
+      }
+
+      .workflow {
+        gap: 15px
+      }
+
+      .step p {
+        font-size: 10px
+      }
+
+      #skill,
+      section:has(>.workflow) {
+        padding-bottom: 20px !important
+      }
+
+      a {
+        color: inherit
+      }
+    }
+
+    .project-image-link {
+      position: absolute;
+      inset: 0;
+      display: block
+    }
+
+    .project-visual .project-image-link img {
+      object-fit: contain;
+      background: #fff
+    }
+
+    .restored-image img {
+      object-fit: contain
+    }
+
+    .project-image-link:focus-visible {
+      outline-offset: -4px;
+      z-index: 2
+    }
+
+    .project-image-link:hover img,
+    .restored-image:hover img {
+      transform: scale(1.025);
+      transition: transform .2s
+    }
+
+    .restored-image {
+      overflow: hidden
+    }
+
+    .project-visual {
+      height: 230px
+    }
+
+    .restored-image {
+      height: 230px
+    }
+
+    @media(max-width:1000px) {
+      .restored-section#data-analysis .projects {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+      }
+    }
+
+    @media(max-width:720px) {
+      .restored-section#data-analysis .projects {
+        grid-template-columns: 1fr
+      }
+    }
+
+    @media print {
+      .project-image-link {
+        display: none !important
+      }
+    }
+
+    /* Compact layout and consistent, filled project thumbnails. */
+    .hero {
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 48px;
+      padding: 42px 0 32px
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 4.2vw, 54px);
+      line-height: 1.12
+    }
+
+    .hero-copy>p {
+      max-width: 650px;
+      font-size: 14px;
+      margin-top: 18px
+    }
+
+    .hero .pill {
+      margin-bottom: 17px
+    }
+
+    .hero-profile {
+      max-width: 280px;
+      padding: 10px;
+      border-radius: 14px
+    }
+
+    .profile-photo {
+      height: 210px;
+      border-radius: 9px
+    }
+
+    .profile-photo img {
+      object-fit: cover;
+      object-position: center 20%
+    }
+
+    .photo-fallback strong {
+      font-size: 62px
+    }
+
+    .photo-fallback span {
+      font-size: 12px
+    }
+
+    .profile-caption {
+      padding: 14px 6px 5px
+    }
+
+    .profile-caption h3 {
+      font-size: 20px;
+      margin-top: 8px
+    }
+
+    .profile-caption p {
+      font-size: 11px
+    }
+
+    .profile-role {
+      font-size: 10px;
+      margin-top: 10px;
+      padding-top: 10px
+    }
+
+    .career-facts {
+      margin-top: 22px;
+      padding-top: 17px;
+      max-width: 620px
+    }
+
+    .actions {
+      margin-top: 22px
+    }
+
+    .section {
+      padding: 52px 0
+    }
+
+    .section-top {
+      margin-bottom: 25px
+    }
+
+    .section-top h2 {
+      font-size: 34px
+    }
+
+    .section-top h2 br {
+      display: none
+    }
+
+    .section-top h2 br:after {
+      content: ' '
+    }
+
+    .section-top .eyebrow {
+      margin-bottom: 10px
+    }
+
+    .section-shortcuts {
+      padding: 14px 0
+    }
+
+    .tools {
+      padding: 16px 0
+    }
+
+    .about-grid {
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 38px
+    }
+
+    .about-card {
+      padding: 22px;
+      border-radius: 12px
+    }
+
+    .about-card .portrait {
+      height: 68px;
+      width: 68px;
+      border-radius: 12px;
+      font-size: 28px;
+      margin-bottom: 18px
+    }
+
+    .about-card h3 {
+      font-size: 24px
+    }
+
+    .about-card p {
+      font-size: 12px
+    }
+
+    .about-card .profile-details {
+      flex-direction: column;
+      gap: 8px;
+      padding-top: 13px;
+      margin-top: 17px
+    }
+
+    .about-copy h2 {
+      font-size: 34px;
+      margin-bottom: 17px
+    }
+
+    .about-copy p {
+      font-size: 14px;
+      margin-bottom: 13px
+    }
+
+    .education {
+      margin-top: 20px;
+      gap: 10px
+    }
+
+    .edu {
+      padding-top: 10px
+    }
+
+    .experience-layout {
+      padding: 25px;
+      gap: 30px
+    }
+
+    .experience-summary h3 {
+      font-size: 25px;
+      margin-top: 13px
+    }
+
+    .experience-focus {
+      gap: 17px
+    }
+
+    .experience-body>p {
+      font-size: 13px;
+      margin: 14px 0 18px
+    }
+
+    .experience-body h3 {
+      font-size: 23px
+    }
+
+    .project-visual,
+    .restored-image {
+      height: auto !important;
+      aspect-ratio: 16/10;
+      padding: 0 !important;
+      position: relative;
+      overflow: hidden;
+      background: #edf1eb
+    }
+
+    .project-visual .mini-window {
+      margin: 20px;
+      height: calc(100% - 40px)
+    }
+
+    .project-image-link {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block
+    }
+
+    .project-visual img,
+    .project-visual .project-image-link img,
+    .restored-image img {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+      max-width: 100%;
+      object-fit: cover !important;
+      object-position: center;
+      transform: none !important;
+      border: 0
+    }
+
+    .restored-image>span {
+      padding: 20px;
+      font-size: 17px
+    }
+
+    .project-body {
+      padding: 18px
+    }
+
+    .project h3 {
+      font-size: 19px;
+      margin: 9px 0
+    }
+
+    .project p {
+      font-size: 12px;
+      min-height: 0
+    }
+
+    .project-link {
+      margin-top: 14px;
+      padding-top: 12px
+    }
+
+    .projects {
+      align-items: start;
+      gap: 20px
+    }
+
+    .contact-shell h2 {
+      font-size: 36px
+    }
+
+    .contact-grid {
+      gap: 50px
+    }
+
+    .service {
+      padding: 16px 0
+    }
+
+    .service .number {
+      margin-bottom: 17px
+    }
+
+    .service h3 {
+      font-size: 21px
+    }
+
+    #skill {
+      padding-bottom: 50px !important
+    }
+
+    .skill-card {
+      padding: 21px
+    }
+
+    @media(max-width:1000px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr) 240px;
+        gap: 28px
+      }
+
+      .hero-profile {
+        max-width: 240px
+      }
+
+      .profile-photo {
+        height: 185px
+      }
+
+      .about-grid {
+        grid-template-columns: 220px minmax(0, 1fr);
+        gap: 25px
+      }
+    }
+
+    @media(max-width:720px) {
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 22px;
+        padding: 28px 0
+      }
+
+      .hero h1 {
+        font-size: 39px
+      }
+
+      .hero-profile {
+        max-width: 100%;
+        display: grid;
+        grid-template-columns: 95px minmax(0, 1fr);
+        align-items: center;
+        gap: 13px;
+        padding: 12px
+      }
+
+      .profile-photo {
+        height: 110px
+      }
+
+      .profile-caption {
+        padding: 0
+      }
+
+      .profile-caption h3 {
+        font-size: 19px
+      }
+
+      .profile-caption .tag {
+        font-size: 8px;
+        letter-spacing: .7px
+      }
+
+      .profile-role {
+        font-size: 9px
+      }
+
+      .photo-fallback strong {
+        font-size: 35px
+      }
+
+      .photo-fallback span,
+      .photo-fallback small {
+        display: none
+      }
+
+      .section {
+        padding: 35px 0
+      }
+
+      .section-top h2,
+      .about-copy h2 {
+        font-size: 29px
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 23px
+      }
+
+      .about-card {
+        display: none
+      }
+
+      .experience-layout {
+        padding: 21px;
+        gap: 22px
+      }
+
+      .project-visual,
+      .restored-image {
+        aspect-ratio: 16/10
+      }
+
+      .contact-shell h2 {
+        font-size: 32px
+      }
+
+      .career-facts {
+        gap: 10px
+      }
+
+      .contact-grid {
+        gap: 26px
+      }
+    }
+
+    @media print {
+      .hero {
+        display: block;
+        padding: 0 0 18px
+      }
+
+      .hero-profile {
+        display: none !important
+      }
+
+      .about-grid {
+        display: block
+      }
+
+      .about-card {
+        display: none
+      }
+
+      .project-visual {
+        display: none
+      }
+
+      .section {
+        padding: 18px 0
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <!-- navbar  -->
-  <nav class="bg-gray-800 p-4 fixed w-full z-10 top-0">
-    <div class="container mx-auto flex justify-between items-center">
-      <a href="#" class="text-white text-lg font-bold">Sunil Kumar Kashyap</a>
-      <div class="hidden md:flex space-x-4">
-        <a href="#home" class="text-gray-300 hover:text-white">Home</a>
-        <a href="#about" class="text-gray-300 hover:text-white">About</a>
-        <a href="#projects" class="text-gray-300 hover:text-white">Projects</a>
-        <div class="relative group" id="services-dropdown">
-          <a href="#Services" class="text-gray-300 hover:text-white">Services</a>
-          <div class="absolute hidden group-hover:block bg-gray-800 text-gray-300 mt-1 rounded-md shadow-lg"
-            id="dropdown-content">
-            <a href="#web-development" class="block px-4 py-2 hover:bg-gray-700">Web Development</a>
-            <a href="#data-analysis" class="block px-4 py-2 hover:bg-gray-700">Data Analysis</a>
-            <a href="#power-bi-dashboard" class="block px-4 py-2 hover:bg-gray-700">Power BI Dashboard</a>
-            <a href="#excel-dashboard" class="block px-4 py-2 hover:bg-gray-700">Excel Dashboard</a>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="header">
+    <nav class="nav wrap" aria-label="Main navigation"><a class="brand" href="#home"><span
+          class="monogram">SK.</span><span>Sunil Kumar Kashyap<small>DATA ANALYTICS · MIS · POWER
+            BI</small></span></a><button class="menu" aria-expanded="false" aria-controls="navigation" id="menu">Menu
+        ☰</button>
+      <div class="links" id="navigation"><a href="#home" class="active">Home</a><a href="#projects">Projects</a><a
+          href="#experience">Experience</a><a href="#about">About Me</a><a href="#skill">Skills</a><a href="#contact"
+          class="btn">Let’s connect <span>↗</span></a></div>
+    </nav>
+  </header>
+  <main id="main">
+    <div class="wrap">
+      <section class="hero" id="home">
+        <div class="hero-copy">
+          <div class="pill"><span class="dot"></span>MIS Professional · Data Analytics</div>
+          <h1>Clear insights.<br><em>Better decisions.</em></h1>
+          <p>I’m Sunil Kumar Kashyap, an MIS professional with 3 years of experience. I turn business data into clear
+            reports and interactive dashboards using Advanced Excel and Power BI — with a focus on data analyst
+            opportunities.</p>
+          <div class="actions"><a class="btn" href="#projects">Explore my work <span>↗</span></a><a
+              class="btn secondary" href="#contact">Discuss an opportunity <span>→</span></a></div>
+          <div class="career-facts"><span><b>3 years</b>MIS experience</span><span><b>Excel + Power BI</b>Core analytics
+              toolkit</span><span><b>Business reporting</b>Decision-focused work</span></div>
+        </div>
+        <div class="hero-profile">
+          <div class="profile-photo">
+            <div class="photo-fallback"><strong>SK.</strong><span>Sunil Kumar Kashyap</span><small>MIS & Data
+                Analytics</small></div><img src="HomePagePhoto.png" alt="Sunil Kumar Kashyap — profile photograph"
+              data-profile hidden>
+          </div>
+          <div class="profile-caption"><span class="tag">Data Analytics · Business Reporting</span>
+            <h3>Sunil Kumar Kashyap</h3>
+            <p>Uttar Pradesh, India</p>
+            <div class="profile-role">MIS Executive <span>→</span> Data Analyst opportunities</div>
           </div>
         </div>
-        <a href="#skill" class="text-gray-300 hover:text-white">My Skills</a>
-        <a href="#contact" class="text-gray-300 hover:text-white">Contact</a>
-        <a href="ANALYSIS REPORT.html" class="text-gray-300 hover:text-white">Report Analysis</a>
-        <a href="Sales Dashboard-1.html" class="text-gray-300 hover:text-white">Sales Dashboard</a>
-      </div>
-      <button class="md:hidden text-white" id="nav-toggle">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
-      </button>
+      </section>
+      <div class="section-shortcuts" aria-label="All portfolio sections"><a href="#about">About Me</a><a
+          href="#experience">Experience</a><a href="#skill">My Skills</a><a href="#projects">Projects</a><a
+          href="#web-development">Web Development</a><a href="#data-analysis">Data Analysis</a><a
+          href="#excel-dashboard">Excel Dashboard</a><a href="#power-bi-dashboard">Power BI Dashboard</a><a
+          href="#contact">Contact Me</a></div>
+      <div class="tools"><small>My everyday toolkit</small><b>▥ &nbsp; Power BI</b><b>▦ &nbsp; Advanced Excel</b><b>⌘
+          &nbsp; Tally Prime</b><b>◈ &nbsp; React</b><b>〈/〉 &nbsp; Tailwind CSS</b></div>
+      <section class="section" id="projects">
+        <div class="section-top">
+          <div><span class="eyebrow">01 / Selected work</span>
+            <h2>Selected analytics & digital projects.</h2>
+          </div>
+          <p>Explore the business questions, analytical approach and reporting features behind my work. Start with the
+            Power BI dashboards.</p>
+        </div>
+        <div class="project-search"><label for="project-search">Find a project</label><input type="search"
+            id="project-search" placeholder="Search sales, purchase, Power BI or web…" autocomplete="off"></div>
+        <div class="filters" role="group" aria-label="Filter projects"><button class="filter" aria-pressed="true"
+            data-filter="all">All projects</button><button class="filter" aria-pressed="false"
+            data-filter="analytics">Power BI & Analytics</button><button class="filter" aria-pressed="false"
+            data-filter="web">Web development</button></div>
+        <div class="projects" id="project-grid"></div>
+        <p class="count" id="project-count" aria-live="polite"></p><noscript>
+          <p>Please enable JavaScript to view the project gallery and enquiry builder.</p>
+        </noscript>
+        <div class="file-links"><a href="ANALYSIS REPORT.html">Report analysis ↗</a><a
+            href="Sales Dashboard-1.html">Sales dashboard ↗</a></div>
+      </section>
     </div>
-    <div class="md:hidden flex flex-col space-y-5 mt-4" id="nav-content">
-      <a href="#home" class="text-gray-300 hover:text-white">Home</a>
-      <a href="#about" class="text-gray-300 hover:text-white">About</a>
-      <a href="#projects" class="text-gray-300 hover:text-white">Projects</a>
-      <a href="#services" class="text-gray-300 hover:text-white">Services</a>
-      <a href="#skill" class="text-gray-300 hover:text-white">My Skill</a>
-      <a href="#contact" class="text-gray-300 hover:text-white">Contact</a>
-      <a href="ANALYSIS REPORT.html" class="text-gray-300 hover:text-white">Report Analysis</a>
-      <a href="Sales Dashboard-1.html" class="text-gray-300 hover:text-white">Sales Dashboard</a>
+    <div class="services-shell">
+      <section id="services" class="section wrap">
+        <div class="section-top">
+          <div><span class="eyebrow">02 / What I can help with</span>
+            <h2>From raw data to practical solutions.</h2>
+          </div>
+          <p>Focused support for business reporting, dashboard design and digital experiences.</p>
+        </div>
+        <div class="services">
+          <article class="service"><span class="number">01 — BUSINESS INTELLIGENCE</span>
+            <h3>Power BI<br>dashboards</h3>
+            <p>Bring key business information together in interactive, easy-to-explore reports.</p>
+            <ul>
+              <li>Sales & purchase insights</li>
+              <li>Category and regional analysis</li>
+              <li>Business KPI visualization</li>
+            </ul>
+          </article>
+          <article class="service"><span class="number">02 — REPORTING</span>
+            <h3>Excel & MIS<br>reporting</h3>
+            <p>Organize operational data into structured reports that support daily decisions.</p>
+            <ul>
+              <li>Dashboard layouts & summaries</li>
+              <li>Advanced Excel calculations</li>
+              <li>Recurring reporting workflows</li>
+            </ul>
+          </article>
+          <article class="service"><span class="number">03 — INSIGHTS</span>
+            <h3>Data<br>analysis</h3>
+            <p>Make patterns easier to understand with purposeful analysis and clear presentation.</p>
+            <ul>
+              <li>Trend and performance analysis</li>
+              <li>Data organization & validation</li>
+              <li>Decision-focused visualizations</li>
+            </ul>
+          </article>
+          <article class="service"><span class="number">04 — DIGITAL EXPERIENCES</span>
+            <h3>Web<br>development</h3>
+            <p>Build responsive interfaces with a focus on usability and practical functionality.</p>
+            <ul>
+              <li>Portfolio & business websites</li>
+              <li>Responsive web interfaces</li>
+              <li>Online tools & utilities</li>
+            </ul>
+          </article>
+        </div>
+      </section>
     </div>
-  </nav>
-  <!-- Hero Section  -->
-  <section id="home" class="bg-gray-100 h-full py-20">
-    <div class="container mx-auto flex flex-col md:flex-row items-center md:justify-between">
-      <div class="md:w-1/2 text-center md:text-left">
-        <h1 class="text-4xl font-bold text-gray-800 animate__animated animate__fadeInDown">
-          Welcome to My Portfolio Page
-        </h1>
-        <p class="text-gray-600 mt-4 p-5 md:p-0 animate__animated animate__fadeInLeft">
-          I am Sunil Kumar Kashyap, a skilled professional in dashboard creation and data visualization, specializing in
-          Power BI
-          and Microsoft Advanced Excel. I design and develop interactive dashboards that transform complex data into
-          clear,
-          actionable insights. My expertise lies in streamlining analytics, automating reports, and enhancing business
-          intelligence solutions. With a strong focus on responsiveness and user-friendly interfaces, I aim to optimize
-          decision-making processes through innovative and efficient data representation.
-        </p>
-        <p class="text-gray-600 mt-4 animate__animated animate__fadeInRight">Showcasing my projects and skills</p>
-        <a href="#projects"
-          class="mt-8 inline-block bg-gray-800 text-white py-2 px-4 rounded transition ease-in hover:bg-indigo-800 duration-300 animate__animated animate__fadeInUp">View
-          Projects</a>
-        <a href="#contact"
-          class="mt-8 inline-block bg-gray-800 text-white py-2 px-4 rounded transition ease-in hover:bg-indigo-800 duration-300 animate__animated animate__fadeInUp">View
-          Contact</a>
-      </div>
-      <div class="md:w-1/2 w-full mx-auto mt-8 md:mt-0 relative group">
-        <img src="HomePagePhoto.png" alt="Hero Image"
-          class="w-1/2 md:w-1/2 mx-auto rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105  group-hover:scale-105 animate__animated animate__zoomIn ">
-      </div>
-    </div>
-  </section>
-  <!-- About Section -->
-  <section id="about" class="bg-gray-100 py-10 h-full">
-    <div class="container mx-auto flex flex-col md:flex-row items-center">
-      <div class=" md:w-1/2 flex justify-center md:justify-start">
-        <img src="HomePagePhoto.png" alt="About Me Image"
-          class="text-center w-full h-auto max-w-xs md:min-w-md lg:min-w-lg rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 hover:border-2 hover:border-indigo-600">
-      </div>
-      <div class="text-content text-center md:text-left mt-5 md:mt-0 md:w-2/5">
-        <h2 class="text-2xl md:text-3xl font-bold text-gray-800">About Me</h2>
-        <p class="text-base md:text-lg text-gray-600 mt-3">
-          My name is Sunil Kumar Kashyap, and I hold a Bachelor's degree from Kanpur University, completed in 2016. I
-          have further enhanced my skills with certifications in CCC and O Level from NIELIT. And also enhanced my skill
-          with certifications full stack web development from PW Skill. I am currently residing in Uttar Pradesh.
-          Throughout my academic and professional journey, I have developed a strong foundation in Microsoft Excel,
-          Power BI, which has equipped me with the skills and knowledge needed to excel in this domain. I am eager to
-          bring my expertise and enthusiasm to your esteemed organization.
-        </p>
-      </div>
-    </div>
-  </section>
-  <!-- My Skill Section  -->
-  <section id="skill" class="bg-gray-100 py-10">
-    <div class="p-5 md:p-0 container mx-auto text-center">
-      <h2 class="text-3xl font-bold text-gray-800 animate__animated animate__fadeInDown">My Skills</h2>
-      <p class="text-gray-600 mt-4 animate__animated animate__fadeInLeft">Some of the skills I have acquired.</p>
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-10">
-        <div
-          class="bg-white rounded-lg shadow-lg p-6 hover:bg-gray-800 hover:text-white transition duration-300 ease-in-out transform hover:scale-105 animate__animated animate__zoomIn">
-          <h3 class="text-lg font-semibold">HTML</h3>
+    <div class="wrap">
+      <section id="about" class="section about-grid">
+        <div class="about-card">
+          <div class="portrait"><span>SK.</span><img src="HomePagePhoto.png" alt="Sunil Kumar Kashyap" hidden
+              data-optional></div><span class="tag">The person behind the work</span>
+          <h3 style="margin-top:16px">Sunil Kumar<br>Kashyap</h3>
+          <p>MIS Executive with 3 years of experience.<br>Focused on analytics, dashboards and clear business reporting.
+          </p>
+          <div class="profile-details"><span>⌖ Uttar Pradesh, India</span><a
+              href="https://in.linkedin.com/in/sunil-kumar-kashyap" target="_blank" rel="noopener noreferrer">LinkedIn
+              ↗</a></div>
         </div>
-        <div
-          class="bg-white rounded-lg shadow-lg p-6 hover:bg-gray-800 hover:text-white transition duration-300 ease-in-out transform hover:scale-105 animate__animated animate__zoomIn">
-          <h3 class="text-lg font-semibold">CSS</h3>
-        </div>
-        <div
-          class="bg-white rounded-lg shadow-lg p-6 hover:bg-gray-800 hover:text-white transition duration-300 ease-in-out transform hover:scale-105 animate__animated animate__zoomIn">
-          <h3 class="text-lg font-semibold">JavaScript</h3>
-        </div>
-        <div
-          class="bg-white rounded-lg shadow-lg p-6 hover:bg-gray-800 hover:text-white transition duration-300 ease-in-out transform hover:scale-105 animate__animated animate__zoomIn">
-          <h3 class="text-lg font-semibold">Tailwind CSS</h3>
-        </div>
-        <div
-          class="bg-white rounded-lg shadow-lg p-6 hover:bg-gray-800 hover:text-white transition duration-300 ease-in-out transform hover:scale-105 animate__animated animate__zoomIn">
-          <h3 class="text-lg font-semibold">React</h3>
-        </div>
-        <div
-          class="bg-white rounded-lg shadow-lg p-6 hover:bg-gray-800 hover:text-white transition duration-300 ease-in-out transform hover:scale-105 animate__animated animate__zoomIn">
-          <h3 class="text-lg font-semibold">Node.js</h3>
-        </div>
-        <div
-          class="bg-white rounded-lg shadow-lg p-6 hover:bg-gray-800 hover:text-white transition duration-300 ease-in-out transform hover:scale-105 animate__animated animate__zoomIn">
-          <h3 class="text-lg font-semibold">Express.js</h3>
-        </div>
-        <div
-          class="bg-white rounded-lg shadow-lg p-6 hover:bg-gray-800 hover:text-white transition duration-300 ease-in-out transform hover:scale-105 animate__animated animate__zoomIn">
-          <h3 class="text-lg font-semibold">MongoDB</h3>
-        </div>
-        <div
-          class="bg-white rounded-lg shadow-lg p-6 hover:bg-gray-800 hover:text-white transition duration-300 ease-in-out transform hover:scale-105 animate__animated animate__zoomIn">
-          <h3 class="text-lg font-semibold">Advanced Excel</h3>
-        </div>
-        <div
-          class="bg-white rounded-lg shadow-lg p-6 hover:bg-gray-800 hover:text-white transition duration-300 ease-in-out transform hover:scale-105 animate__animated animate__zoomIn">
-          <h3 class="text-lg font-semibold">Power BI</h3>
-        </div>
-        <div
-          class="bg-white rounded-lg shadow-lg p-6 hover:bg-gray-800 hover:text-white transition duration-300 ease-in-out transform hover:scale-105 animate__animated animate__zoomIn">
-          <h3 class="text-lg font-semibold">Tally Prime</h3>
-        </div>
-        <div
-          class="bg-white rounded-lg shadow-lg p-6 hover:bg-gray-800 hover:text-white transition duration-300 ease-in-out transform hover:scale-105 animate__animated animate__zoomIn">
-          <h3 class="text-lg font-semibold">Tally ERP 9.0</h3>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- Projects Section -->
-  <section id="projects" class="bg-gray-100 py-20">
-    <div class="container mx-auto text-center">
-      <h2 class="text-3xl font-bold text-gray-800">Projects</h2>
-      <p class="text-gray-600 mt-4">Some of the projects I've worked on.</p>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 p-5 md:p-0">
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-          <img src="DmartSaleProject.gif" alt="D Mart Sales Dashboard"
-            class="w-full h-48 object-cover transition ease-in border hover:border-indigo-800 duration-300" />
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-800">D Mart Sales Dashboard</h3>
-            <p class="text-gray-600 mt-2">This dashboard offers detailed analysis by ship mode, segment, region, and
-              category, enabling users to gain valuable
-              understanding and make data-driven decisions. Leveraging the powerful capabilities of Power BI, the
-              dashboard presents
-              data in a visually appealing and interactive manner, ensuring users can easily navigate and explore the
-              information.</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-          <img src="Saleandpurchase.png" alt="Sales and Purchase Dashboard"
-            class="w-full h-48 object-cover transition ease-in border hover:border-indigo-800 duration-300" />
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-800">Sales and Purchase Dashboard</h3>
-            <p class="text-gray-600 mt-2">I have created an advanced Power BI dashboard that offers an in-depth analysis
-              of sales and purchases. This
-              comprehensive tool provides valuable insights by breaking down data category-wise and region-wise,
-              enabling users to
-              make informed decisions. The dashboard is designed with a focus on clarity and user experience, presenting
-              data in an
-              interactive and visually appealing format.</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-          <img src="EStore.gif" alt="E Store Sale Dashboard"
-            class="w-full h-48 object-cover transition ease-in border hover:border-indigo-800 duration-300" />
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-800">E Store Sale Dashboard</h3>
-            <p class="text-gray-600 mt-2">This dashboard includes sales summaries, category-wise and month-wise sales,
-              and region-wise sales insights. Created using Power BI.</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-          <img src="EStore.gif" alt="E Store Sale Dashboard"
-            class="w-full h-48 object-cover transition ease-in border hover:border-indigo-800 duration-300" />
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-800">E Store Sale Dashboard</h3>
-            <p class="text-gray-600 mt-2">This dashboard includes sales summaries, category-wise and month-wise sales,
-              and region-wise sales insights. Created using Power BI.</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-          <img src="EStore.gif" alt="E Store Sale Dashboard"
-            class="w-full h-48 object-cover transition ease-in border hover:border-indigo-800 duration-300" />
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-800">E Store Sale Dashboard</h3>
-            <p class="text-gray-600 mt-2">This dashboard includes sales summaries, category-wise and month-wise sales,
-              and region-wise sales insights. Created using Power BI.</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-          <href="https:app.powerbi.com/view?r=eyJrIjoiY2RkMzg3YTctNWM4Yy00ODc5LThmNDUtOGY4Zjk3ODJjOTQ4IiwidCI6ImIyMzlmNTBlLTliYmYtNDAxYS04YTgyLTI2YWQzYjM5ZTg4ZiJ9">
-            <img src="Saleandpurchase.png" alt="Sales and Purchase Dashboard"
-              class="w-full h-48 object-cover transition ease-in border hover:border-indigo-800 duration-300" /></a>
-            <div class="p-4">
-              <h3 class="text-lg font-bold text-gray-800">Sales and Purchase Dashboard</h3>
-              <p class="text-gray-600 mt-2">This dashboard provides detailed analysis of sales and purchases, including
-                category-wise and region-wise insights. Created using Power BI.</p>
+        <div class="about-copy"><span class="eyebrow">Professional summary</span>
+          <h2>About Me</h2>
+          <p>MIS Executive with 3 years of experience, focused on business reporting and data analysis. Skilled in
+            Advanced Excel and Power BI, with a portfolio covering sales, purchases, retail performance and margin
+            analysis.</p>
+          <p>I turn business information into clear reports and interactive dashboards that help users explore trends
+            and compare performance. A B.A. graduate from Kanpur University, I am seeking a Data Analyst or Reporting
+            Analyst role where I can combine my MIS experience with analytical thinking and clear communication.</p>
+          <div class="education">
+            <div class="edu"><b class="check">✓</b>
+              <div><b>Bachelor of Arts (B.A.) · Kanpur University</b><span>Completed in 2016</span></div>
             </div>
+            <div class="edu"><b class="check">✓</b>
+              <div><b>CCC & O Level · NIELIT</b><span>Computer applications and information technology</span></div>
+            </div>
+            <div class="edu"><b class="check">✓</b>
+              <div><b>Full Stack Web Development · PW Skills</b><span>Modern web development training</span></div>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
+      <section id="experience" class="section experience-section">
+        <div class="section-top">
+          <div><span class="eyebrow">Experience / Professional background</span>
+            <h2>Experience in business reporting.</h2>
+          </div>
+          <p>Building on 3 years in MIS to pursue opportunities in data analysis, reporting and business intelligence.
+          </p>
+        </div>
+        <div class="experience-layout">
+          <aside class="experience-summary"><span class="tag">Current professional role</span>
+            <h3>MIS Executive</h3>
+            <p>3 years of experience</p>
+            <div class="chips"><span>MIS reporting</span><span>Advanced Excel</span><span>Power BI</span></div><button
+              class="btn secondary print-profile" type="button">Print / Save profile as PDF ↗</button>
+          </aside>
+          <article class="experience-body">
+            <h3>Bringing business understanding to data.</h3>
+            <p>My MIS background informs how I approach reporting: understand the question, organize the information,
+              and present a clear view of performance. I am looking to apply this experience in a Data Analyst or
+              Reporting Analyst role.</p>
+            <div class="experience-focus">
+              <div><b>Reporting & presentation</b>
+                <p>Business information organized into clear summaries and dashboard views.</p>
+              </div>
+              <div><b>Dashboard portfolio</b>
+                <p>Power BI projects covering sales, purchases, retail trends, regions and categories.</p>
+              </div>
+              <div><b>Analytical focus</b>
+                <p>Interpreting performance, comparing trends and making data easier to explore.</p>
+              </div>
+              <div><b>Additional technical perspective</b>
+                <p>Web development knowledge that supports responsive, user-friendly presentation.</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+      <section class="section restored-section" id="web-development">
+        <div class="section-top">
+          <div><span class="eyebrow">Portfolio / Web Development</span>
+            <h2>Web Development</h2>
+          </div>
+        </div>
+        <div class="projects">
+          <article class="project">
+            <div class="restored-image"><span>Online Tools Converter website<small>Project image
+                  preview</small></span><img src="./pdftools.png" alt="Online Tools Converter website" data-profile
+                loading="lazy"></div>
+            <div class="project-body"><span class="tag">Web Development</span>
+              <h3>Online Tools Converter website</h3>
+              <p>An online tools converter built using HTML and Tailwind CSS, with AI-assisted enhancements.</p><a
+                class="project-link" href="https://kumarsunilkashyap.github.io/tools/" target="_blank"
+                rel="noopener noreferrer">Open project ↗</a>
+            </div>
+          </article>
+          <article class="project">
+            <div class="restored-image"><span>Sarkari Result UI<small>Project image preview</small></span><img
+                src="./sarkariresultui.png" alt="Sarkari Result UI" data-profile loading="lazy"></div>
+            <div class="project-body"><span class="tag">Web Development</span>
+              <h3>Sarkari Result UI</h3>
+              <p>I have successfully developed a user interface for a website similar to SarkariResult.com, utilizing
+                HTML and Tailwind CSS. This project demonstrates my proficiency in web development and modern design
+                principles. The UI is designed to be clean, responsive, and user-friendly, ensuring an intuitive
+                experience for users searching for government exam results and related information.</p><a
+                class="project-link" href="https://kumarsunilkashyap.github.io/sarkariresult" target="_blank"
+                rel="noopener noreferrer">Open project ↗</a>
+            </div>
+          </article>
+          <article class="project">
+            <div class="restored-image"><span>My Tools<small>Project image preview</small></span><img
+                src="./onlinetools.png" alt="My Tools" data-profile loading="lazy"></div>
+            <div class="project-body"><span class="tag">Web Development</span>
+              <h3>My Tools</h3>
+              <p>I have developed a comprehensive suite of online tools, including an Image Resizer, PDF Compressor, PDF
+                Merger, Image Converter, and PDF to JPG Converter, using HTML and Tailwind CSS with the assistance of
+                AI. This project showcases my ability to create user-friendly and efficient web applications that cater
+                to a wide range of document and image processing needs.</p><a class="project-link"
+                href="https://kumarsunilkashyap.github.io/fileconverter" target="_blank" rel="noopener noreferrer">Open
+                project ↗</a>
+            </div>
+          </article>
+        </div>
+      </section>
+      <section class="section restored-section" id="data-analysis">
+        <div class="section-top">
+          <div><span class="eyebrow">Portfolio / Data Analysis</span>
+            <h2>Data Analysis</h2>
+          </div>
+        </div>
+        <div class="projects">
+          <article class="project">
+            <div class="restored-image"><span>Sales &amp; Margin Analysis<small>Project image preview</small></span><img
+                src="margindashboard.png" alt="Sales &amp; Margin Analysis" data-profile loading="lazy"></div>
+            <div class="project-body"><span class="tag">Data Analysis</span>
+              <h3>Sales & Margin Analysis</h3>
+              <p>Explore sales and margin insights with filters to focus on the information that matters.</p><a
+                class="project-link" href="SALES DASHBOARD MARGIN.html" target="_blank" rel="noopener noreferrer">Open
+                project ↗</a>
+            </div>
+          </article>
+          <article class="project"><a class="restored-image" href="image.png" target="_blank" rel="noopener noreferrer"
+              aria-label="Open Data Analysis Project 2 image"><span>Data Analysis Project 2<small>Image file:
+                  image.png</small></span><img src="image.png" alt="Data Analysis Project 2" loading="lazy"
+                data-profile></a>
+            <div class="project-body">
+              <h3>Data Analysis Project 2</h3>
+              <p>Data analysis preview from the original portfolio.</p><a class="project-link" href="image.png"
+                target="_blank" rel="noopener noreferrer">View full image ↗</a>
+            </div>
+          </article>
+          <article class="project"><a class="restored-image" href="data_analysis_project3.png" target="_blank"
+              rel="noopener noreferrer" aria-label="Open Data Analysis Project 3 image"><span>Data Analysis Project
+                3<small>Image file: data_analysis_project3.png</small></span><img src="data_analysis_project3.png"
+                alt="Data Analysis Project 3" loading="lazy" data-profile></a>
+            <div class="project-body">
+              <h3>Data Analysis Project 3</h3>
+              <p>Additional data visualization preview.</p><a class="project-link" href="data_analysis_project3.png"
+                target="_blank" rel="noopener noreferrer">View full image ↗</a>
+            </div>
+          </article>
+        </div>
+      </section>
+      <section class="section restored-section" id="excel-dashboard">
+        <div class="section-top">
+          <div><span class="eyebrow">Analytics / Dashboard gallery</span>
+            <h2>Excel Dashboard</h2>
+          </div>
+          <p>Select a preview to open the original project image.</p>
+        </div>
+        <div class="projects">
+          <article class="project"><a class="restored-image" href="margindashboard.png" target="_blank"
+              rel="noopener noreferrer" aria-label="Open Excel Dashboard 1 image"><span>Excel Dashboard 1<small>Image
+                  file: margindashboard.png</small></span><img src="margindashboard.png" alt="Excel Dashboard 1"
+                loading="lazy" data-profile></a>
+            <div class="project-body">
+              <h3>Excel Dashboard 1</h3>
+              <p>Dashboard preview from the original portfolio.</p><a class="project-link" href="margindashboard.png"
+                target="_blank" rel="noopener noreferrer">View full image ↗</a>
+            </div>
+          </article>
+          <article class="project"><a class="restored-image" href="image.png" target="_blank" rel="noopener noreferrer"
+              aria-label="Open Excel Dashboard 2 image"><span>Excel Dashboard 2<small>Image file:
+                  image.png</small></span><img src="image.png" alt="Excel Dashboard 2" loading="lazy" data-profile></a>
+            <div class="project-body">
+              <h3>Excel Dashboard 2</h3>
+              <p>Excel reporting and dashboard preview.</p><a class="project-link" href="image.png" target="_blank"
+                rel="noopener noreferrer">View full image ↗</a>
+            </div>
+          </article>
+          <article class="project"><a class="restored-image" href="image.png" target="_blank" rel="noopener noreferrer"
+              aria-label="Open Excel Dashboard 3 image"><span>Excel Dashboard 3<small>Image file:
+                  image.png</small></span><img src="image.png" alt="Excel Dashboard 3" loading="lazy" data-profile></a>
+            <div class="project-body">
+              <h3>Excel Dashboard 3</h3>
+              <p>Additional Excel dashboard preview.</p><a class="project-link" href="image.png" target="_blank"
+                rel="noopener noreferrer">View full image ↗</a>
+            </div>
+          </article>
+        </div>
+      </section>
+      <section class="section restored-section" id="power-bi-dashboard">
+        <div class="section-top">
+          <div><span class="eyebrow">Analytics / Dashboard gallery</span>
+            <h2>Power BI Dashboard</h2>
+          </div>
+          <p>Select a preview to open the original project image.</p>
+        </div>
+        <div class="projects">
+          <article class="project"><a class="restored-image" href="DmartSaleProject.gif" target="_blank"
+              rel="noopener noreferrer" aria-label="Open D Mart Sales Dashboard image"><span>D Mart Sales
+                Dashboard<small>Image file: DmartSaleProject.gif</small></span><img src="DmartSaleProject.gif"
+                alt="D Mart Sales Dashboard" loading="lazy" data-profile></a>
+            <div class="project-body">
+              <h3>D Mart Sales Dashboard</h3>
+              <p>Explore shipping modes, segments, regions and categories.</p><a class="project-link"
+                href="DmartSaleProject.gif" target="_blank" rel="noopener noreferrer">View full image ↗</a>
+            </div>
+          </article>
+          <article class="project"><a class="restored-image" href="Saleandpurchase.png" target="_blank"
+              rel="noopener noreferrer" aria-label="Open Sales & Purchase Dashboard image"><span>Sales & Purchase
+                Dashboard<small>Image file: Saleandpurchase.png</small></span><img src="Saleandpurchase.png"
+                alt="Sales & Purchase Dashboard" loading="lazy" data-profile></a>
+            <div class="project-body">
+              <h3>Sales & Purchase Dashboard</h3>
+              <p>Category-wise and region-wise sales and purchase insights.</p><a class="project-link"
+                href="Saleandpurchase.png" target="_blank" rel="noopener noreferrer">View full image ↗</a>
+            </div>
+          </article>
+          <article class="project"><a class="restored-image" href="EStore.gif" target="_blank" rel="noopener noreferrer"
+              aria-label="Open E Store Sales Dashboard image"><span>E Store Sales Dashboard<small>Image file:
+                  EStore.gif</small></span><img src="EStore.gif" alt="E Store Sales Dashboard" loading="lazy"
+                data-profile></a>
+            <div class="project-body">
+              <h3>E Store Sales Dashboard</h3>
+              <p>Monthly sales trends, category summaries and regional performance.</p><a class="project-link"
+                href="EStore.gif" target="_blank" rel="noopener noreferrer">View full image ↗</a>
+            </div>
+          </article>
+        </div>
+      </section>
+      <section id="skill" style="padding-bottom:80px">
+        <div class="section-top">
+          <div><span class="eyebrow">04 / Technical toolkit</span>
+            <h2>My Skills</h2>
+          </div>
+          <p>A blend of business reporting and development skills, chosen to suit each project.</p>
+        </div>
+        <div class="skills">
+          <article class="skill-card">
+            <h3>Analytics & reporting</h3>
+            <div class="chips"><span>Advanced Excel</span><span>Power BI</span><span>Data visualization</span><span>MIS
+                reporting</span><span>Tally Prime</span><span>Tally ERP 9</span></div>
+          </article>
+          <article class="skill-card">
+            <h3>Frontend development</h3>
+            <div class="chips"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Tailwind
+                CSS</span><span>React</span><span>Responsive design</span></div>
+          </article>
+          <article class="skill-card">
+            <h3>Backend & databases</h3>
+            <div class="chips"><span>Node.js</span><span>Express.js</span><span>MongoDB</span></div>
+          </article>
+        </div>
+      </section>
     </div>
-  </section>
-
-  <!-- Web Development Section -->
-  <section id="web-development" class="bg-gray-100 py-10">
-    <div class="container mx-auto text-center">
-      <h2 class="text-3xl font-bold text-gray-800">Web Development</h2>
-      <p class="text-gray-600 mt-4">Here are some of the web development projects I've worked on.</p>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 p-5 md:p-0">
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-          <a href="https://kumarsunilkashyap.github.io/tools/">
-            <img src="./pdftools.png" alt="Project 1"
-              class="w-full h-48 object-cover transition ease-in border hover:border-indigo-800 duration-300" />
-          </a>
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-800">Online Tools Converter website</h3>
-            <p class="text-gray-600 mt-2">I've developed an online tools converter website using HTML and Tailwind CSS,
-              with AI assistance for enhancements."
-
-              If you want, I can help you with more details to make your project description even more comprehensive and
-              engaging.
-              What else would you like to highlight about your project?</p>
-          </div>
+    <section class="contact-shell section" id="contact">
+      <div class="wrap contact-grid">
+        <div><span class="eyebrow">Let’s connect / Hiring & collaboration</span>
+          <h2>Let’s connect.</h2>
+          <p>Hiring for data analysis, MIS or reporting? Share the role, the skills you need and the business problems
+            your team works on. I would welcome a conversation.</p>
+          <div class="socials"><a href="https://in.linkedin.com/in/sunil-kumar-kashyap" target="_blank"
+              rel="noopener noreferrer">LinkedIn ↗</a><a href="https://github.com/kumarsunilkashyap" target="_blank"
+              rel="noopener noreferrer">GitHub ↗</a></div>
         </div>
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-          <a href="https://kumarsunilkashyap.github.io/sarkariresult">
-            <img src="./sarkariresultui.png" alt="Project 2"
-              class="w-full h-48 object-fit transition ease-in border hover:border-indigo-800 duration-300" />
-          </a>
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-800">Sarkari Result UI </h3>
-            <p class="text-gray-600 mt-2">I have successfully developed a user interface for a website similar to
-              SarkariResult.com, utilizing HTML and Tailwind
-              CSS. This project demonstrates my proficiency in web development and modern design principles. The UI is
-              designed to be
-              clean, responsive, and user-friendly, ensuring an intuitive experience for users searching for government
-              exam results
-              and related information.
-            </p>
+        <form id="contact-form" class="contact-form">
+          <div class="form-row">
+            <div><label for="name">Your name</label><input id="name" name="name" required maxlength="100"
+                autocomplete="name" placeholder="Full name"></div>
+            <div><label for="email">Your email</label><input id="email" name="email" type="email" required
+                maxlength="150" autocomplete="email" placeholder="you@example.com"></div>
           </div>
-        </div>
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-          <a href="https://kumarsunilkashyap.github.io/fileconverter">
-            <img src="./onlinetools.png" alt="Project 3"
-              class="w-full h-48 object-cover transition ease-in border hover:border-indigo-800 duration-300" />
-          </a>
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-800">My Tools</h3>
-            <p class="text-gray-600 mt-2">I have developed a comprehensive suite of online tools, including an Image
-              Resizer, PDF Compressor, PDF Merger, Image
-              Converter, and PDF to JPG Converter, using HTML and Tailwind CSS with the assistance of AI. This project
-              showcases my
-              ability to create user-friendly and efficient web applications that cater to a wide range of document and
-              image
-              processing needs.</p>
+          <div><label for="service">What do you need help with?</label><select id="service" name="service">
+              <option>Data Analyst opportunity</option>
+              <option>MIS / Reporting Analyst opportunity</option>
+              <option>Power BI dashboard</option>
+              <option>Excel & MIS reporting</option>
+              <option>Data analysis</option>
+              <option>Web development</option>
+              <option>Career opportunity / Other</option>
+            </select></div>
+          <div><label for="message">Role or project details</label><textarea id="message" name="message" required
+              minlength="10" maxlength="4000"
+              placeholder="Share the role, location / work arrangement, key requirements or project goal..."></textarea>
+          </div><button class="btn" type="submit">Prepare enquiry <span>↗</span></button>
+          <p class="note">Creates a message for you to copy and share on LinkedIn. This form does not send or store your
+            details.</p>
+          <div class="draft" id="draft" hidden><label for="draft-text">Your enquiry — ready to copy</label><textarea
+              id="draft-text" readonly rows="7"></textarea><button class="btn" type="button" id="copy">Copy
+              message</button>
+            <p id="copy-status" role="status" class="note"></p>
           </div>
-        </div>
+        </form>
       </div>
-    </div>
-  </section>
-
-  <!-- Data Analysis Section -->
-  <section id="data-analysis" class="bg-gray-100 py-10">
-    <div class="container mx-auto text-center">
-      <h2 class="text-3xl font-bold text-gray-800">Data Analysis</h2>
-      <p class="text-gray-600 mt-4">Here are some of the data analysis projects I've worked on.</p>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 p-5 md:p-0">
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-          <a href="SALES DASHBOARD MARGIN.html">
-          <img src="margindashboard.png" alt="Data Analysis For Sales and Margin Dashboard"
-            class="w-full h-48 object-cover transition ease-in border hover:border-indigo-800 duration-300" />
-          </a>
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-800">Data Analysis Project 1</h3>
-            <p class="text-gray-600 mt-2">This project to get all hidden data insites quickly and proper Filter.</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-          <img src="image.png" alt="Data Analysis Project"
-            class="w-full h-48 object-cover transition ease-in border hover:border-indigo-800 duration-300" />
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-800">Data Analysis Project 2</h3>
-            <p class="text-gray-600 mt-2">Description of data analysis project 2.</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-          <img src="data_analysis_project3.png" alt="Data Analysis Project 3"
-            class="w-full h-48 object-cover transition ease-in border hover:border-indigo-800 duration-300" />
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-800">Data Analysis Project 3</h3>
-            <p class="text-gray-600 mt-2">Description of data analysis project 3.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- Excel Dashboard Section -->
-  <section id="excel-dashboard" class="bg-gray-100 py-10">
-    <div class="container mx-auto text-center">
-      <h2 class="text-3xl font-bold text-gray-800">Excel Dashboard</h2>
-      <p class="text-gray-600 mt-4">Here are some of the Excel dashboards I've created.</p>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 p-5 md:p-0">
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-          <img src="margindashboard.png" alt="Excel Dashboard 1"
-            class="w-full h-48 object-cover transition ease-in border hover:border-indigo-800 duration-300" />
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-800">Excel Dashboard 1</h3>
-            <p class="text-gray-600 mt-2">Description of Excel dashboard 1.</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-          <img src="image.png" alt="Excel Dashboard 2"
-            class="w-full h-48 object-cover transition ease-in border hover:border-indigo-800 duration-300" />
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-800">Excel Dashboard 2</h3>
-            <p class="text-gray-600 mt-2">Description of Excel dashboard 2.</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-          <img src="image.png" alt="Excel Dashboard 3"
-            class="w-full h-48 object-cover transition ease-in border hover:border-indigo-800 duration-300" />
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-800">Excel Dashboard 3</h3>
-            <p class="text-gray-600 mt-2">Description of Excel dashboard 3.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Power BI Dashboard Section -->
-  <!--
-  <section id="power-bi-dashboard" class="bg-gray-100 py-10">
-    <div class="container mx-auto text-center">
-      <h2 class="text-3xl font-bold text-gray-800">Power BI Dashboard</h2>
-      <p class="text-gray-600 mt-4">Here are some of the Power BI dashboards I've created.</p>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 p-5 md:p-0">
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-          <img src="power_bi_dashboard1.png" alt="Power BI Dashboard 1"
-            class="w-full h-48 object-cover transition ease-in border hover:border-indigo-800 duration-300" />
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-800">Power BI Dashboard 1</h3>
-            <p class="text-gray-600 mt-2">Description of Power BI dashboard 1.</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-          <img src="power_bi_dashboard2.png" alt="Power BI Dashboard 2"
-            class="w-full h-48 object-cover transition ease-in border hover:border-indigo-800 duration-300" />
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-800">Power BI Dashboard 2</h3>
-            <p class="text-gray-600 mt-2">Description of Power BI dashboard 2.</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-          <img src="power_bi_dashboard3.png" alt="Power BI Dashboard 3"
-            class="w-full h-48 object-cover transition ease-in border hover:border-indigo-800 duration-300" />
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-800">Power BI Dashboard 3</h3>
-            <p class="text-gray-600 mt-2">Description of Power BI dashboard 3.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
--->
-  <!-- Contact Section -->
-  <section id="contact" class="bg-gray-100 p-20">
-    <div class=" p-5 md:p-0 container mx-auto text-center">
-      <h2 class="text-3xl font-bold text-gray-800">Contact Me</h2>
-      <p class="text-gray-600 mt-4">Get in touch with me.</p>
-      <form class="max-w-lg mx-auto mt-10 ">
-        <div class="mb-4">
-          <label for="name" class="block text-gray-700">Name</label>
-          <input type="text" id="name"
-            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500" />
-        </div>
-        <div class="mb-4">
-          <label for="email" class="block text-gray-700">Email</label>
-          <input type="email" id="email"
-            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500" />
-        </div>
-        <div class="mb-4">
-          <label for="subject" class="block text-gray-700">Subject</label>
-          <input type="text" id="subject"
-            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500" />
-        </div>
-        <div class="mb-4">
-          <label for="message" class="block text-gray-700">Message</label>
-          <textarea id="message" rows="4"
-            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"></textarea>
-        </div>
-        <button type="submit" class="w-full bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500
-              transition ease-in  duration-300">
-          Send Message
-        </button>
-      </form>
-    </div>
-  </section>
-  <!-- Footer -->
-  <footer class="bg-gray-800 py-10 ">
-    <div class="container mx-auto text-center">
-      <div class="flex justify-center space-x-4 mb-4">
-        <a href="https://in.linkedin.com/in/sunil-kumar-kashyap" target="_blank" class="text-gray-300 hover:text-white">
-          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-            <path
-              d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5v-14c0-2.76-2.24-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.25c-.97 0-1.75-.78-1.75-1.75s.78-1.75 1.75-1.75 1.75.78 1.75 1.75-.78 1.75-1.75 1.75zm13.5 11.25h-3v-5.5c0-1.1-.9-2-2-2s-2 .9-2 2v5.5h-3v-10h3v1.5c.88-1.32 2.34-2.5 4-2.5 2.76 0 5 2.24 5 5v6.5z" />
-          </svg>
-        </a>
-        <a href="https://www.twitter.com" target="_blank" class="text-gray-300 hover:text-white">
-          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-            <path
-              d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.723-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-2.717 0-4.92 2.203-4.92 4.92 0 .386.044.762.127 1.124-4.087-.205-7.713-2.164-10.141-5.144-.423.725-.666 1.562-.666 2.457 0 1.694.863 3.188 2.175 4.065-.802-.026-1.558-.246-2.218-.616v.062c0 2.366 1.684 4.342 3.918 4.788-.41.111-.843.171-1.287.171-.315 0-.621-.031-.921-.088.622 1.943 2.428 3.355 4.568 3.395-1.674 1.312-3.778 2.096-6.065 2.096-.394 0-.779-.023-1.161-.068 2.162 1.386 4.729 2.194 7.486 2.194 8.982 0 13.89-7.438 13.89-13.89 0-.211-.005-.423-.014-.633.954-.689 1.78-1.55 2.436-2.533z" />
-          </svg>
-        </a>
-        <a href="https://github.com/kumarsunilkashyap" target="_blank" class="text-gray-300 hover:text-white">
-          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-            <path
-              d="M12 0c-6.627 0-12 5.373-12 12 0 5.302 3.438 9.8 8.205 11.387.6.111.82-.261.82-.577 0-.285-.011-1.04-.017-2.04-3.338.726-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.744.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.835 2.809 1.305 3.495.998.108-.775.418-1.305.762-1.605-2.665-.305-5.466-1.332-5.466-5.931 0-1.31.469-2.381 1.236-3.221-.124-.303-.535-1.527.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.289-1.552 3.295-1.23 3.295-1.23.655 1.649.244 2.873.12 3.176.77.84 1.235 1.911 1.235 3.221 0 4.61-2.805 5.624-5.475 5.921.43.371.823 1.102.823 2.222 0 1.606-.014 2.898-.014 3.293 0 .319.216.694.825.576 4.765-1.589 8.199-6.086 8.199-11.385 0-6.627-5.373-12-12-12z" />
-          </svg>
-        </a>
-      </div>
-      <div class="flex justify-center space-x-4 mb-4">
-        <a href="#home" class="text-gray-300 hover:text-white">Home</a>
-        <a href="#about" class="text-gray-300 hover:text-white">About</a>
-        <a href="#projects" class="text-gray-300 hover:text-white">Projects</a>
-        <a href="#skill" class="text-gray-300 hover:text-white">My Skill</a>
-        <a href="#contact" class="text-gray-300 hover:text-white">Contact</a>
-        <a href="Sales Dashboard-1.html" class="text-gray-300 hover:text-white">Sales Dashboard</a>
-      </div>
-      <p class="text-gray-300">Sunil Kumar Kashyap. © 2025-2026 All rights reserved.</p>
-    </div>
+    </section>
+  </main>
+  <footer>
+    <div class="wrap footer-inner"><span>© <span id="year">2026</span> Sunil Kumar Kashyap. All rights
+        reserved.</span><span>Designed around clarity. Built with purpose.</span><a href="#home">Back to top ↑</a></div>
   </footer>
+  <dialog id="project-dialog" aria-labelledby="modal-title"><button class="dialog-close"
+      aria-label="Close project details" id="close-dialog">✕</button><span class="tag" id="modal-tag"></span>
+    <h2 id="modal-title"></h2>
+    <p id="modal-description"></p>
+    <div id="case-context" class="case-context" hidden>
+      <h3>Business question</h3>
+      <p id="case-question"></p>
+      <h3>Approach</h3>
+      <p id="case-approach"></p>
+    </div>
+    <ul id="modal-features"></ul><a id="modal-link" class="btn" target="_blank" rel="noopener noreferrer">Open project
+      ↗</a>
+  </dialog>
+  <script>
+    const projectContext = [['How does sales performance vary across segments and regions?', 'Compare shipping modes, customer segments, regions and categories through Power BI visuals.'], ['How do sales and purchases compare across the business?', 'Bring category-wise and region-wise sales and purchase analysis into an interactive report.'], ['Where and when are retail sales occurring?', 'Use monthly summaries and category and regional breakdowns to explore retail performance.']];
+    const projects = [
+      { title: 'D Mart Sales Dashboard', type: 'analytics', tag: 'POWER BI · SALES ANALYTICS', image: 'DmartSaleProject.gif', desc: 'A focused view of sales performance across shipping modes, customer segments, regions and categories.', features: ['Compare sales by region and product category.', 'Explore customer segments and shipping modes.', 'Use visual summaries to support business decisions.'] },
+      { title: 'Sales & Purchase Dashboard', type: 'analytics', tag: 'POWER BI · BUSINESS REPORTING', image: 'Saleandpurchase.png', desc: 'Sales and purchase analysis brought together in an interactive, category-wise and region-wise dashboard.', features: ['Review sales and purchases in a single reporting experience.', 'Compare performance across categories and regions.', 'Explore business data through interactive visuals.'], url: 'https://app.powerbi.com/view?r=eyJrIjoiY2RkMzg3YTctNWM4Yy00ODc5LThmNDUtOGY4Zjk3ODJjOTQ4IiwidCI6ImIyMzlmNTBlLTliYmYtNDAxYS04YTgyLTI2YWQzYjM5ZTg4ZiJ9' },
+      { title: 'E Store Sales Dashboard', type: 'analytics', tag: 'POWER BI · RETAIL INSIGHTS', image: 'EStore.gif', desc: 'Retail sales summaries with monthly trends, category breakdowns and regional insights.', features: ['Understand month-wise sales movement.', 'Review category-wise sales summaries.', 'Compare regional performance in Power BI.'] },
+      { title: 'Online Tools Converter', type: 'web', tag: 'HTML · TAILWIND CSS', image: 'pdftools.png', desc: 'A responsive online tools interface that makes everyday conversion workflows easy to navigate.', features: ['Responsive interface using HTML and Tailwind CSS.', 'Utility-focused layout for everyday tasks.', 'Developed with AI-assisted enhancements.'], url: 'https://kumarsunilkashyap.github.io/tools/' },
+      { title: 'Sarkari Result UI', type: 'web', tag: 'RESPONSIVE WEB INTERFACE', image: 'sarkariresultui.png', desc: 'A structured interface for browsing government exam results and related information.', features: ['Clear visual hierarchy for information-heavy pages.', 'Responsive layouts for desktop and mobile.', 'An independent UI project inspired by Sarkari Result.'], url: 'https://kumarsunilkashyap.github.io/sarkariresult' },
+      { title: 'My Tools', type: 'web', tag: 'WEB UTILITIES · HTML & CSS', image: 'onlinetools.png', desc: 'A collection of document and image tools with a simple, approachable web interface.', features: ['Image resizing and image conversion tools.', 'PDF compression, merging and PDF-to-JPG utilities.', 'Built using HTML and Tailwind CSS with AI assistance.'], url: 'https://kumarsunilkashyap.github.io/fileconverter' }];
+    const grid = document.querySelector('#project-grid'); projects.forEach((p, i) => { const card = document.createElement('article'); card.className = 'project'; card.dataset.type = p.type; card.innerHTML = `<div class="project-visual"><div class="mini-window" aria-hidden="true"><div class="mini-top"><b>${p.type === 'analytics' ? 'PERFORMANCE OVERVIEW' : 'WORKSPACE / ONLINE TOOLS'}</b><span>•••</span></div><div class="mini-cells"><i></i><i></i><i></i></div><div class="mini-bars">${[30, 48, 35, 55, 42, 62, 50, 59].map((h, j) => `<i style="height:${(h + i * 7) % 50 + 12}px"></i>`).join('')}</div></div><span class="preview-label">Illustrative project cover</span><a class="project-image-link" href="${p.image}" target="_blank" rel="noopener noreferrer" aria-label="Open ${p.title} image"><img src="${p.image}" alt="${p.title} screenshot" loading="lazy" data-optional></a></div><div class="project-body"><span class="tag">${p.tag}</span><h3>${p.title}</h3><p>${p.desc}</p><button class="project-link" data-project="${i}" aria-label="View ${p.title} details">View project details <span>↗</span></button></div>`; grid.append(card) });
+    document.querySelectorAll('[data-optional]').forEach(img => { const show = () => { if (img.naturalWidth) { img.hidden = false; if (img.parentElement.classList.contains('avatar') || img.parentElement.classList.contains('portrait')) img.previousElementSibling.hidden = true; } }; img.addEventListener('load', show); img.addEventListener('error', () => img.hidden = true); if (img.complete) show() });
+    document.querySelectorAll('[data-profile]').forEach(img => { const show = () => { if (img.naturalWidth) img.hidden = false }; img.addEventListener('load', show); img.addEventListener('error', () => img.hidden = true); if (img.complete) show() });
+    const count = document.querySelector('#project-count'); let selectedFilter = 'all'; const search = document.querySelector('#project-search'); function applyProjectFilters() { let n = 0; const q = search.value.trim().toLowerCase(); grid.querySelectorAll('.project').forEach(c => { c.hidden = (selectedFilter !== 'all' && c.dataset.type !== selectedFilter) || !c.textContent.toLowerCase().includes(q); if (!c.hidden) n++ }); count.textContent = n ? `Showing ${n} of 6 projects` : 'No matching projects. Try another search or choose All projects.'; } document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => { selectedFilter = button.dataset.filter; document.querySelectorAll('[data-filter]').forEach(b => b.setAttribute('aria-pressed', String(b === button))); applyProjectFilters() })); search.addEventListener('input', applyProjectFilters); applyProjectFilters(); document.querySelectorAll('.print-profile').forEach(b => b.addEventListener('click', () => window.print()));
+    const modal = document.querySelector('#project-dialog'); grid.addEventListener('click', e => { const b = e.target.closest('[data-project]'); if (!b) return; const p = projects[Number(b.dataset.project)]; document.querySelector('#modal-title').textContent = p.title; document.querySelector('#modal-tag').textContent = p.tag; document.querySelector('#modal-description').textContent = p.desc; const context = projectContext[Number(b.dataset.project)]; document.querySelector('#case-context').hidden = !context; if (context) { document.querySelector('#case-question').textContent = context[0]; document.querySelector('#case-approach').textContent = context[1]; } const list = document.querySelector('#modal-features'); list.replaceChildren(); p.features.forEach(t => { const li = document.createElement('li'); li.textContent = t; list.append(li) }); const link = document.querySelector('#modal-link'); link.hidden = !p.url; if (p.url) link.href = p.url; else link.removeAttribute('href'); modal.showModal() }); document.querySelector('#close-dialog').addEventListener('click', () => modal.close()); modal.addEventListener('click', e => { if (e.target === modal) { const r = modal.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) modal.close() } });
+    const menu = document.querySelector('#menu'), nav = document.querySelector('#navigation'); function closeMenu() { nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false') } menu.addEventListener('click', () => { const open = nav.classList.toggle('open'); menu.setAttribute('aria-expanded', String(open)) }); nav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu)); document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu() });
+    if ('IntersectionObserver' in window) { const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { document.querySelectorAll('.links a').forEach(a => a.classList.toggle('active', a.hash === '#' + entry.target.id)) } }), { rootMargin: '-15% 0px -60% 0px', threshold: 0 });['home', 'projects', 'experience', 'about', 'skill', 'contact'].forEach(id => observer.observe(document.getElementById(id))) }
+    document.querySelector('#contact-form').addEventListener('submit', e => { e.preventDefault(); const data = new FormData(e.target); document.querySelector('#draft-text').value = `Hello Sunil,\n\nI would like to discuss: ${data.get('service')}.\n\n${data.get('message').trim()}\n\nName: ${data.get('name').trim()}\nEmail: ${data.get('email').trim()}`; document.querySelector('#draft').hidden = false; document.querySelector('#copy-status').textContent = 'Draft prepared. Copy it and share through LinkedIn.'; document.querySelector('#draft-text').focus() }); document.querySelector('#copy').addEventListener('click', async () => { const text = document.querySelector('#draft-text'); try { await navigator.clipboard.writeText(text.value); document.querySelector('#copy-status').textContent = 'Copied. You can now paste your enquiry into a LinkedIn message.' } catch { text.focus(); text.select(); document.querySelector('#copy-status').textContent = 'Select and copy the message with Ctrl+C (or your device’s Copy option).' } }); document.querySelector('#year').textContent = new Date().getFullYear();
+  </script>
 </body>
-
-
-<!-- java script  -->
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    var navToggle = document.getElementById("nav-toggle");
-    var navContent = document.getElementById("nav-content");
-
-    navToggle.addEventListener("click", function () {
-      if (navContent.classList.contains("hidden")) {
-        navContent.classList.remove("hidden");
-      } else {
-        navContent.classList.add("hidden");
-      }
-    });
-  });
-  var dropdownToggle = document.querySelector('.group > a');
-  var dropdownContent = document.getElementById('dropdown-content');
-
-  dropdownToggle.addEventListener('click', function (e) {
-    e.preventDefault();
-    if (dropdownContent.classList.contains('hidden')) {
-      dropdownContent.classList.remove('hidden');
-    } else {
-      dropdownContent.classList.add('hidden');
-    }
-  });
-</script>
 
 </html>
