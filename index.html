@@ -2324,37 +2324,374 @@
         padding: 18px 0
       }
     }
+
+    /* Project media: contain the full image without cropping or layout overflow. */
+    .projects {
+      min-width: 0
+    }
+
+    .projects>.project {
+      min-width: 0;
+      max-width: 100%;
+      overflow: hidden
+    }
+
+    .project-body {
+      min-width: 0;
+      overflow-wrap: anywhere
+    }
+
+    .project-visual,
+    .restored-image {
+      display: block !important;
+      position: relative !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      height: auto !important;
+      aspect-ratio: 16 / 10;
+      padding: 0 !important;
+      overflow: hidden !important;
+      background: #eef2ed
+    }
+
+    .project-image-link {
+      position: absolute !important;
+      inset: 0 !important;
+      display: block !important;
+      width: 100% !important;
+      height: 100% !important;
+      max-width: 100% !important;
+      overflow: hidden !important
+    }
+
+    .project-visual img,
+    .project-visual .project-image-link img,
+    .restored-image img,
+    .project-visual:hover img,
+    .project-image-link:hover img,
+    .restored-image:hover img {
+      position: absolute !important;
+      inset: 0 !important;
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+      max-width: 100% !important;
+      max-height: 100% !important;
+      min-width: 0 !important;
+      min-height: 0 !important;
+      object-fit: contain !important;
+      object-position: center center !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      transform: none !important;
+      transition: none !important;
+      background: #eef2ed
+    }
+
+    .restored-image>span {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-wrap: anywhere
+    }
+
+    .project-visual img[hidden],
+    .restored-image img[hidden] {
+      display: none !important
+    }
+
+    @media print {
+      .project-visual {
+        display: none !important
+      }
+    }
+
+    .project:hover {
+      transform: none
+    }
+
+    .project-visual,
+    .restored-image {
+      background: #f1f5f2
+    }
+
+    .project-visual img,
+    .project-visual .project-image-link img,
+    .restored-image img {
+      object-fit: contain !important;
+      transform: none !important
+    }
+
+    .project-visual .preview-label {
+      background: #f8faf6dc;
+      padding: 2px 6px;
+      border-radius: 4px
+    }
+
+    .project-search {
+      max-width: 100%
+    }
+
+    .project-search input {
+      max-width: 430px
+    }
+
+    .filter:hover {
+      border-color: #8dad9b
+    }
+
+    .section-shortcuts a:hover {
+      border-color: #8dad9b
+    }
+
+    .experience-focus b {
+      color: #185a43
+    }
+
+    .contact-form input:focus,
+    .contact-form select:focus,
+    .contact-form textarea:focus {
+      border-color: #d3ec93
+    }
+
+    .contact-form input,
+    .contact-form select,
+    .contact-form textarea {
+      min-height: 44px
+    }
+  </style><!-- Tailwind CSS v3.4.17: compiled locally; no runtime CDN required. -->
+  <style id="tailwind-utilities">
+    .tw-grid {
+      display: grid !important
+    }
+
+    .tw-min-w-0 {
+      min-width: 0 !important
+    }
+
+    .tw-grid-cols-1 {
+      grid-template-columns: repeat(1, minmax(0, 1fr)) !important
+    }
+
+    .tw-items-start {
+      align-items: flex-start !important
+    }
+
+    .tw-gap-2 {
+      gap: .5rem !important
+    }
+
+    .tw-gap-4 {
+      gap: 1rem !important
+    }
+
+    .tw-gap-5 {
+      gap: 1.25rem !important
+    }
+
+    .tw-gap-6 {
+      gap: 1.5rem !important
+    }
+
+    .tw-overflow-hidden {
+      overflow: hidden !important
+    }
+
+    .tw-rounded-2xl {
+      border-radius: 1rem !important
+    }
+
+    .tw-rounded-xl {
+      border-radius: .75rem !important
+    }
+
+    .tw-border {
+      border-width: 1px !important
+    }
+
+    .tw-border-emerald-100 {
+      --tw-border-opacity: 1 !important;
+      border-color: rgb(209 250 229/var(--tw-border-opacity, 1)) !important
+    }
+
+    .tw-border-slate-200 {
+      --tw-border-opacity: 1 !important;
+      border-color: rgb(226 232 240/var(--tw-border-opacity, 1)) !important
+    }
+
+    .tw-bg-white {
+      --tw-bg-opacity: 1 !important;
+      background-color: rgb(255 255 255/var(--tw-bg-opacity, 1)) !important
+    }
+
+    .tw-p-4 {
+      padding: 1rem !important
+    }
+
+    .tw-p-5 {
+      padding: 1.25rem !important
+    }
+
+    .tw-font-medium {
+      font-weight: 500 !important
+    }
+
+    .tw-text-emerald-800 {
+      --tw-text-opacity: 1 !important;
+      color: rgb(6 95 70/var(--tw-text-opacity, 1)) !important
+    }
+
+    .tw-antialiased {
+      -webkit-font-smoothing: antialiased !important;
+      -moz-osx-font-smoothing: grayscale !important
+    }
+
+    .tw-shadow-lg {
+      --tw-shadow: 0 10px 15px -3px rgba(0, 0, 0, .1), 0 4px 6px -4px rgba(0, 0, 0, .1) !important;
+      --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color) !important
+    }
+
+    .tw-shadow-lg,
+    .tw-shadow-sm {
+      box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important
+    }
+
+    .tw-shadow-sm {
+      --tw-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05) !important;
+      --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color) !important
+    }
+
+    .tw-shadow-emerald-950\/5 {
+      --tw-shadow-color: rgba(2, 44, 34, .05) !important;
+      --tw-shadow: var(--tw-shadow-colored) !important
+    }
+
+    .tw-ring-1 {
+      --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color) !important;
+      --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color) !important;
+      box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000) !important
+    }
+
+    .tw-ring-emerald-900\/10 {
+      --tw-ring-color: rgba(6, 78, 59, .1) !important
+    }
+
+    .tw-transition-colors {
+      transition-property: color, background-color, border-color, text-decoration-color, fill, stroke !important;
+      transition-timing-function: cubic-bezier(.4, 0, .2, 1) !important;
+      transition-duration: .15s !important
+    }
+
+    .tw-transition-shadow {
+      transition-property: box-shadow !important;
+      transition-timing-function: cubic-bezier(.4, 0, .2, 1) !important;
+      transition-duration: .15s !important
+    }
+
+    .selection\:tw-bg-emerald-100 ::-moz-selection {
+      --tw-bg-opacity: 1 !important;
+      background-color: rgb(209 250 229/var(--tw-bg-opacity, 1)) !important
+    }
+
+    .selection\:tw-bg-emerald-100 ::selection {
+      --tw-bg-opacity: 1 !important;
+      background-color: rgb(209 250 229/var(--tw-bg-opacity, 1)) !important
+    }
+
+    .selection\:tw-bg-emerald-100::-moz-selection {
+      --tw-bg-opacity: 1 !important;
+      background-color: rgb(209 250 229/var(--tw-bg-opacity, 1)) !important
+    }
+
+    .selection\:tw-bg-emerald-100::selection {
+      --tw-bg-opacity: 1 !important;
+      background-color: rgb(209 250 229/var(--tw-bg-opacity, 1)) !important
+    }
+
+    .hover\:tw-text-emerald-600:hover {
+      --tw-text-opacity: 1 !important;
+      color: rgb(5 150 105/var(--tw-text-opacity, 1)) !important
+    }
+
+    .hover\:tw-shadow-md:hover {
+      --tw-shadow: 0 4px 6px -1px rgba(0, 0, 0, .1), 0 2px 4px -2px rgba(0, 0, 0, .1) !important;
+      --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color) !important;
+      box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important
+    }
+
+    .focus-visible\:tw-ring-2:focus-visible {
+      --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color) !important;
+      --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color) !important;
+      box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000) !important
+    }
+
+    .focus-visible\:tw-ring-emerald-500:focus-visible {
+      --tw-ring-opacity: 1 !important;
+      --tw-ring-color: rgb(16 185 129/var(--tw-ring-opacity, 1)) !important
+    }
+
+    .focus-visible\:tw-ring-emerald-600:focus-visible {
+      --tw-ring-opacity: 1 !important;
+      --tw-ring-color: rgb(5 150 105/var(--tw-ring-opacity, 1)) !important
+    }
+
+    .focus-visible\:tw-ring-offset-2:focus-visible {
+      --tw-ring-offset-width: 2px !important
+    }
+
+    @media (min-width:768px) {
+      .md\:tw-grid-cols-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important
+      }
+    }
+
+    @media (min-width:1024px) {
+      .lg\:tw-grid-cols-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important
+      }
+    }
   </style>
 </head>
 
-<body>
+<body class="tw-antialiased selection:tw-bg-emerald-100">
   <a class="skip" href="#main">Skip to content</a>
   <header class="header">
-    <nav class="nav wrap" aria-label="Main navigation"><a class="brand" href="#home"><span
+    <nav class="nav wrap tw-gap-4" aria-label="Main navigation"><a class="brand" href="#home"><span
           class="monogram">SK.</span><span>Sunil Kumar Kashyap<small>DATA ANALYTICS · MIS · POWER
             BI</small></span></a><button class="menu" aria-expanded="false" aria-controls="navigation" id="menu">Menu
         ☰</button>
-      <div class="links" id="navigation"><a href="#home" class="active">Home</a><a href="#projects">Projects</a><a
-          href="#experience">Experience</a><a href="#about">About Me</a><a href="#skill">Skills</a><a href="#contact"
-          class="btn">Let’s connect <span>↗</span></a></div>
+      <div class="links tw-font-medium" id="navigation"><a href="#home" class="active">Home</a><a
+          href="#projects">Projects</a><a href="#experience">Experience</a><a href="#about">About Me</a><a
+          href="#skill">Skills</a><a href="#contact"
+          class="btn tw-transition-colors focus-visible:tw-ring-2 focus-visible:tw-ring-emerald-500 focus-visible:tw-ring-offset-2">Let’s
+          connect <span>↗</span></a></div>
     </nav>
   </header>
   <main id="main">
     <div class="wrap">
       <section class="hero" id="home">
-        <div class="hero-copy">
+        <div class="hero-copy tw-min-w-0">
           <div class="pill"><span class="dot"></span>MIS Professional · Data Analytics</div>
           <h1>Clear insights.<br><em>Better decisions.</em></h1>
           <p>I’m Sunil Kumar Kashyap, an MIS professional with 3 years of experience. I turn business data into clear
             reports and interactive dashboards using Advanced Excel and Power BI — with a focus on data analyst
             opportunities.</p>
-          <div class="actions"><a class="btn" href="#projects">Explore my work <span>↗</span></a><a
-              class="btn secondary" href="#contact">Discuss an opportunity <span>→</span></a></div>
+          <div class="actions"><a
+              class="btn tw-transition-colors focus-visible:tw-ring-2 focus-visible:tw-ring-emerald-500 focus-visible:tw-ring-offset-2"
+              href="#projects">Explore my work <span>↗</span></a><a
+              class="btn secondary tw-transition-colors focus-visible:tw-ring-2 focus-visible:tw-ring-emerald-500 focus-visible:tw-ring-offset-2"
+              href="#contact">Discuss an opportunity <span>→</span></a></div>
           <div class="career-facts"><span><b>3 years</b>MIS experience</span><span><b>Excel + Power BI</b>Core analytics
               toolkit</span><span><b>Business reporting</b>Decision-focused work</span></div>
         </div>
-        <div class="hero-profile">
-          <div class="profile-photo">
+        <div class="hero-profile tw-shadow-lg tw-shadow-emerald-950/5 tw-border-emerald-100">
+          <div class="profile-photo tw-ring-1 tw-ring-emerald-900/10">
             <div class="photo-fallback"><strong>SK.</strong><span>Sunil Kumar Kashyap</span><small>MIS & Data
                 Analytics</small></div><img src="HomePagePhoto.png" alt="Sunil Kumar Kashyap — profile photograph"
               data-profile hidden>
@@ -2366,7 +2703,7 @@
           </div>
         </div>
       </section>
-      <div class="section-shortcuts" aria-label="All portfolio sections"><a href="#about">About Me</a><a
+      <div class="section-shortcuts tw-gap-2" aria-label="All portfolio sections"><a href="#about">About Me</a><a
           href="#experience">Experience</a><a href="#skill">My Skills</a><a href="#projects">Projects</a><a
           href="#web-development">Web Development</a><a href="#data-analysis">Data Analysis</a><a
           href="#excel-dashboard">Excel Dashboard</a><a href="#power-bi-dashboard">Power BI Dashboard</a><a
@@ -2374,7 +2711,7 @@
       <div class="tools"><small>My everyday toolkit</small><b>▥ &nbsp; Power BI</b><b>▦ &nbsp; Advanced Excel</b><b>⌘
           &nbsp; Tally Prime</b><b>◈ &nbsp; React</b><b>〈/〉 &nbsp; Tailwind CSS</b></div>
       <section class="section" id="projects">
-        <div class="section-top">
+        <div class="section-top tw-gap-6">
           <div><span class="eyebrow">01 / Selected work</span>
             <h2>Selected analytics & digital projects.</h2>
           </div>
@@ -2383,11 +2720,15 @@
         </div>
         <div class="project-search"><label for="project-search">Find a project</label><input type="search"
             id="project-search" placeholder="Search sales, purchase, Power BI or web…" autocomplete="off"></div>
-        <div class="filters" role="group" aria-label="Filter projects"><button class="filter" aria-pressed="true"
-            data-filter="all">All projects</button><button class="filter" aria-pressed="false"
-            data-filter="analytics">Power BI & Analytics</button><button class="filter" aria-pressed="false"
-            data-filter="web">Web development</button></div>
-        <div class="projects" id="project-grid"></div>
+        <div class="filters" role="group" aria-label="Filter projects"><button
+            class="filter tw-transition-colors focus-visible:tw-ring-2 focus-visible:tw-ring-emerald-600 focus-visible:tw-ring-offset-2"
+            aria-pressed="true" data-filter="all">All projects</button><button
+            class="filter tw-transition-colors focus-visible:tw-ring-2 focus-visible:tw-ring-emerald-600 focus-visible:tw-ring-offset-2"
+            aria-pressed="false" data-filter="analytics">Power BI & Analytics</button><button
+            class="filter tw-transition-colors focus-visible:tw-ring-2 focus-visible:tw-ring-emerald-600 focus-visible:tw-ring-offset-2"
+            aria-pressed="false" data-filter="web">Web development</button></div>
+        <div class="projects tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-5 tw-items-start"
+          id="project-grid"></div>
         <p class="count" id="project-count" aria-live="polite"></p><noscript>
           <p>Please enable JavaScript to view the project gallery and enquiry builder.</p>
         </noscript>
@@ -2397,7 +2738,7 @@
     </div>
     <div class="services-shell">
       <section id="services" class="section wrap">
-        <div class="section-top">
+        <div class="section-top tw-gap-6">
           <div><span class="eyebrow">02 / What I can help with</span>
             <h2>From raw data to practical solutions.</h2>
           </div>
@@ -2445,7 +2786,7 @@
     </div>
     <div class="wrap">
       <section id="about" class="section about-grid">
-        <div class="about-card">
+        <div class="about-card tw-shadow-sm">
           <div class="portrait"><span>SK.</span><img src="HomePagePhoto.png" alt="Sunil Kumar Kashyap" hidden
               data-optional></div><span class="tag">The person behind the work</span>
           <h3 style="margin-top:16px">Sunil Kumar<br>Kashyap</h3>
@@ -2461,9 +2802,9 @@
             Advanced Excel and Power BI, with a portfolio covering sales, purchases, retail performance and margin
             analysis.</p>
           <p>I turn business information into clear reports and interactive dashboards that help users explore trends
-            and compare performance. A B.A. graduate from Kanpur University, I am seeking a Data Analyst or Reporting
+            and compare performance. I am seeking a Data Analyst or Reporting
             Analyst role where I can combine my MIS experience with analytical thinking and clear communication.</p>
-          <div class="education">
+          <div class="education tw-rounded-xl tw-bg-white tw-p-4 tw-border tw-border-slate-200">
             <div class="edu"><b class="check">✓</b>
               <div><b>Bachelor of Arts (B.A.) · Kanpur University</b><span>Completed in 2016</span></div>
             </div>
@@ -2477,14 +2818,14 @@
         </div>
       </section>
       <section id="experience" class="section experience-section">
-        <div class="section-top">
+        <div class="section-top tw-gap-6">
           <div><span class="eyebrow">Experience / Professional background</span>
             <h2>Experience in business reporting.</h2>
           </div>
           <p>Building on 3 years in MIS to pursue opportunities in data analysis, reporting and business intelligence.
           </p>
         </div>
-        <div class="experience-layout">
+        <div class="experience-layout tw-rounded-2xl tw-border-emerald-100 tw-shadow-sm">
           <aside class="experience-summary"><span class="tag">Current professional role</span>
             <h3>MIS Executive</h3>
             <p>3 years of experience</p>
@@ -2514,45 +2855,51 @@
         </div>
       </section>
       <section class="section restored-section" id="web-development">
-        <div class="section-top">
+        <div class="section-top tw-gap-6">
           <div><span class="eyebrow">Portfolio / Web Development</span>
             <h2>Web Development</h2>
           </div>
         </div>
-        <div class="projects">
-          <article class="project">
+        <div class="projects tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-5 tw-items-start">
+          <article
+            class="project tw-min-w-0 tw-overflow-hidden tw-rounded-xl tw-border tw-border-slate-200 tw-bg-white tw-shadow-sm hover:tw-shadow-md tw-transition-shadow">
             <div class="restored-image"><span>Online Tools Converter website<small>Project image
                   preview</small></span><img src="./pdftools.png" alt="Online Tools Converter website" data-profile
                 loading="lazy"></div>
-            <div class="project-body"><span class="tag">Web Development</span>
+            <div class="project-body tw-p-5"><span class="tag">Web Development</span>
               <h3>Online Tools Converter website</h3>
               <p>An online tools converter built using HTML and Tailwind CSS, with AI-assisted enhancements.</p><a
-                class="project-link" href="https://kumarsunilkashyap.github.io/tools/" target="_blank"
-                rel="noopener noreferrer">Open project ↗</a>
+                class="project-link tw-text-emerald-800 hover:tw-text-emerald-600"
+                href="https://kumarsunilkashyap.github.io/tools/" target="_blank" rel="noopener noreferrer">Open project
+                ↗</a>
             </div>
           </article>
-          <article class="project">
+          <article
+            class="project tw-min-w-0 tw-overflow-hidden tw-rounded-xl tw-border tw-border-slate-200 tw-bg-white tw-shadow-sm hover:tw-shadow-md tw-transition-shadow">
             <div class="restored-image"><span>Sarkari Result UI<small>Project image preview</small></span><img
                 src="./sarkariresultui.png" alt="Sarkari Result UI" data-profile loading="lazy"></div>
-            <div class="project-body"><span class="tag">Web Development</span>
+            <div class="project-body tw-p-5"><span class="tag">Web Development</span>
               <h3>Sarkari Result UI</h3>
               <p>I have successfully developed a user interface for a website similar to SarkariResult.com, utilizing
                 HTML and Tailwind CSS. This project demonstrates my proficiency in web development and modern design
                 principles. The UI is designed to be clean, responsive, and user-friendly, ensuring an intuitive
                 experience for users searching for government exam results and related information.</p><a
-                class="project-link" href="https://kumarsunilkashyap.github.io/sarkariresult" target="_blank"
-                rel="noopener noreferrer">Open project ↗</a>
+                class="project-link tw-text-emerald-800 hover:tw-text-emerald-600"
+                href="https://kumarsunilkashyap.github.io/sarkariresult" target="_blank" rel="noopener noreferrer">Open
+                project ↗</a>
             </div>
           </article>
-          <article class="project">
+          <article
+            class="project tw-min-w-0 tw-overflow-hidden tw-rounded-xl tw-border tw-border-slate-200 tw-bg-white tw-shadow-sm hover:tw-shadow-md tw-transition-shadow">
             <div class="restored-image"><span>My Tools<small>Project image preview</small></span><img
                 src="./onlinetools.png" alt="My Tools" data-profile loading="lazy"></div>
-            <div class="project-body"><span class="tag">Web Development</span>
+            <div class="project-body tw-p-5"><span class="tag">Web Development</span>
               <h3>My Tools</h3>
               <p>I have developed a comprehensive suite of online tools, including an Image Resizer, PDF Compressor, PDF
                 Merger, Image Converter, and PDF to JPG Converter, using HTML and Tailwind CSS with the assistance of
                 AI. This project showcases my ability to create user-friendly and efficient web applications that cater
-                to a wide range of document and image processing needs.</p><a class="project-link"
+                to a wide range of document and image processing needs.</p><a
+                class="project-link tw-text-emerald-800 hover:tw-text-emerald-600"
                 href="https://kumarsunilkashyap.github.io/fileconverter" target="_blank" rel="noopener noreferrer">Open
                 project ↗</a>
             </div>
@@ -2560,141 +2907,166 @@
         </div>
       </section>
       <section class="section restored-section" id="data-analysis">
-        <div class="section-top">
+        <div class="section-top tw-gap-6">
           <div><span class="eyebrow">Portfolio / Data Analysis</span>
             <h2>Data Analysis</h2>
           </div>
         </div>
-        <div class="projects">
-          <article class="project">
+        <div class="projects tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-5 tw-items-start">
+          <article
+            class="project tw-min-w-0 tw-overflow-hidden tw-rounded-xl tw-border tw-border-slate-200 tw-bg-white tw-shadow-sm hover:tw-shadow-md tw-transition-shadow">
             <div class="restored-image"><span>Sales &amp; Margin Analysis<small>Project image preview</small></span><img
                 src="margindashboard.png" alt="Sales &amp; Margin Analysis" data-profile loading="lazy"></div>
-            <div class="project-body"><span class="tag">Data Analysis</span>
+            <div class="project-body tw-p-5"><span class="tag">Data Analysis</span>
               <h3>Sales & Margin Analysis</h3>
               <p>Explore sales and margin insights with filters to focus on the information that matters.</p><a
-                class="project-link" href="SALES DASHBOARD MARGIN.html" target="_blank" rel="noopener noreferrer">Open
-                project ↗</a>
+                class="project-link tw-text-emerald-800 hover:tw-text-emerald-600" href="SALES DASHBOARD MARGIN.html"
+                target="_blank" rel="noopener noreferrer">Open project ↗</a>
             </div>
           </article>
-          <article class="project"><a class="restored-image" href="image.png" target="_blank" rel="noopener noreferrer"
+          <article
+            class="project tw-min-w-0 tw-overflow-hidden tw-rounded-xl tw-border tw-border-slate-200 tw-bg-white tw-shadow-sm hover:tw-shadow-md tw-transition-shadow">
+            <a class="restored-image" href="image.png" target="_blank" rel="noopener noreferrer"
               aria-label="Open Data Analysis Project 2 image"><span>Data Analysis Project 2<small>Image file:
                   image.png</small></span><img src="image.png" alt="Data Analysis Project 2" loading="lazy"
                 data-profile></a>
-            <div class="project-body">
+            <div class="project-body tw-p-5">
               <h3>Data Analysis Project 2</h3>
-              <p>Data analysis preview from the original portfolio.</p><a class="project-link" href="image.png"
-                target="_blank" rel="noopener noreferrer">View full image ↗</a>
+              <p>Data analysis preview from the original portfolio.</p><a
+                class="project-link tw-text-emerald-800 hover:tw-text-emerald-600" href="image.png" target="_blank"
+                rel="noopener noreferrer">View full image ↗</a>
             </div>
           </article>
-          <article class="project"><a class="restored-image" href="data_analysis_project3.png" target="_blank"
-              rel="noopener noreferrer" aria-label="Open Data Analysis Project 3 image"><span>Data Analysis Project
-                3<small>Image file: data_analysis_project3.png</small></span><img src="data_analysis_project3.png"
+          <article
+            class="project tw-min-w-0 tw-overflow-hidden tw-rounded-xl tw-border tw-border-slate-200 tw-bg-white tw-shadow-sm hover:tw-shadow-md tw-transition-shadow">
+            <a class="restored-image" href="data_analysis_project3.png" target="_blank" rel="noopener noreferrer"
+              aria-label="Open Data Analysis Project 3 image"><span>Data Analysis Project 3<small>Image file:
+                  data_analysis_project3.png</small></span><img src="data_analysis_project3.png"
                 alt="Data Analysis Project 3" loading="lazy" data-profile></a>
-            <div class="project-body">
+            <div class="project-body tw-p-5">
               <h3>Data Analysis Project 3</h3>
-              <p>Additional data visualization preview.</p><a class="project-link" href="data_analysis_project3.png"
+              <p>Additional data visualization preview.</p><a
+                class="project-link tw-text-emerald-800 hover:tw-text-emerald-600" href="data_analysis_project3.png"
                 target="_blank" rel="noopener noreferrer">View full image ↗</a>
             </div>
           </article>
         </div>
       </section>
       <section class="section restored-section" id="excel-dashboard">
-        <div class="section-top">
+        <div class="section-top tw-gap-6">
           <div><span class="eyebrow">Analytics / Dashboard gallery</span>
             <h2>Excel Dashboard</h2>
           </div>
           <p>Select a preview to open the original project image.</p>
         </div>
-        <div class="projects">
-          <article class="project"><a class="restored-image" href="margindashboard.png" target="_blank"
-              rel="noopener noreferrer" aria-label="Open Excel Dashboard 1 image"><span>Excel Dashboard 1<small>Image
-                  file: margindashboard.png</small></span><img src="margindashboard.png" alt="Excel Dashboard 1"
+        <div class="projects tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-5 tw-items-start">
+          <article
+            class="project tw-min-w-0 tw-overflow-hidden tw-rounded-xl tw-border tw-border-slate-200 tw-bg-white tw-shadow-sm hover:tw-shadow-md tw-transition-shadow">
+            <a class="restored-image" href="margindashboard.png" target="_blank" rel="noopener noreferrer"
+              aria-label="Open Excel Dashboard 1 image"><span>Excel Dashboard 1<small>Image file:
+                  margindashboard.png</small></span><img src="margindashboard.png" alt="Excel Dashboard 1"
                 loading="lazy" data-profile></a>
-            <div class="project-body">
+            <div class="project-body tw-p-5">
               <h3>Excel Dashboard 1</h3>
-              <p>Dashboard preview from the original portfolio.</p><a class="project-link" href="margindashboard.png"
+              <p>Dashboard preview from the original portfolio.</p><a
+                class="project-link tw-text-emerald-800 hover:tw-text-emerald-600" href="margindashboard.png"
                 target="_blank" rel="noopener noreferrer">View full image ↗</a>
             </div>
           </article>
-          <article class="project"><a class="restored-image" href="image.png" target="_blank" rel="noopener noreferrer"
+          <article
+            class="project tw-min-w-0 tw-overflow-hidden tw-rounded-xl tw-border tw-border-slate-200 tw-bg-white tw-shadow-sm hover:tw-shadow-md tw-transition-shadow">
+            <a class="restored-image" href="image.png" target="_blank" rel="noopener noreferrer"
               aria-label="Open Excel Dashboard 2 image"><span>Excel Dashboard 2<small>Image file:
                   image.png</small></span><img src="image.png" alt="Excel Dashboard 2" loading="lazy" data-profile></a>
-            <div class="project-body">
+            <div class="project-body tw-p-5">
               <h3>Excel Dashboard 2</h3>
-              <p>Excel reporting and dashboard preview.</p><a class="project-link" href="image.png" target="_blank"
+              <p>Excel reporting and dashboard preview.</p><a
+                class="project-link tw-text-emerald-800 hover:tw-text-emerald-600" href="image.png" target="_blank"
                 rel="noopener noreferrer">View full image ↗</a>
             </div>
           </article>
-          <article class="project"><a class="restored-image" href="image.png" target="_blank" rel="noopener noreferrer"
+          <article
+            class="project tw-min-w-0 tw-overflow-hidden tw-rounded-xl tw-border tw-border-slate-200 tw-bg-white tw-shadow-sm hover:tw-shadow-md tw-transition-shadow">
+            <a class="restored-image" href="image.png" target="_blank" rel="noopener noreferrer"
               aria-label="Open Excel Dashboard 3 image"><span>Excel Dashboard 3<small>Image file:
                   image.png</small></span><img src="image.png" alt="Excel Dashboard 3" loading="lazy" data-profile></a>
-            <div class="project-body">
+            <div class="project-body tw-p-5">
               <h3>Excel Dashboard 3</h3>
-              <p>Additional Excel dashboard preview.</p><a class="project-link" href="image.png" target="_blank"
+              <p>Additional Excel dashboard preview.</p><a
+                class="project-link tw-text-emerald-800 hover:tw-text-emerald-600" href="image.png" target="_blank"
                 rel="noopener noreferrer">View full image ↗</a>
             </div>
           </article>
         </div>
       </section>
       <section class="section restored-section" id="power-bi-dashboard">
-        <div class="section-top">
+        <div class="section-top tw-gap-6">
           <div><span class="eyebrow">Analytics / Dashboard gallery</span>
             <h2>Power BI Dashboard</h2>
           </div>
           <p>Select a preview to open the original project image.</p>
         </div>
-        <div class="projects">
-          <article class="project"><a class="restored-image" href="DmartSaleProject.gif" target="_blank"
-              rel="noopener noreferrer" aria-label="Open D Mart Sales Dashboard image"><span>D Mart Sales
-                Dashboard<small>Image file: DmartSaleProject.gif</small></span><img src="DmartSaleProject.gif"
-                alt="D Mart Sales Dashboard" loading="lazy" data-profile></a>
-            <div class="project-body">
+        <div class="projects tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-5 tw-items-start">
+          <article
+            class="project tw-min-w-0 tw-overflow-hidden tw-rounded-xl tw-border tw-border-slate-200 tw-bg-white tw-shadow-sm hover:tw-shadow-md tw-transition-shadow">
+            <a class="restored-image" href="DmartSaleProject.gif" target="_blank" rel="noopener noreferrer"
+              aria-label="Open D Mart Sales Dashboard image"><span>D Mart Sales Dashboard<small>Image file:
+                  DmartSaleProject.gif</small></span><img src="DmartSaleProject.gif" alt="D Mart Sales Dashboard"
+                loading="lazy" data-profile></a>
+            <div class="project-body tw-p-5">
               <h3>D Mart Sales Dashboard</h3>
-              <p>Explore shipping modes, segments, regions and categories.</p><a class="project-link"
-                href="DmartSaleProject.gif" target="_blank" rel="noopener noreferrer">View full image ↗</a>
+              <p>Explore shipping modes, segments, regions and categories.</p><a
+                class="project-link tw-text-emerald-800 hover:tw-text-emerald-600" href="DmartSaleProject.gif"
+                target="_blank" rel="noopener noreferrer">View full image ↗</a>
             </div>
           </article>
-          <article class="project"><a class="restored-image" href="Saleandpurchase.png" target="_blank"
-              rel="noopener noreferrer" aria-label="Open Sales & Purchase Dashboard image"><span>Sales & Purchase
-                Dashboard<small>Image file: Saleandpurchase.png</small></span><img src="Saleandpurchase.png"
-                alt="Sales & Purchase Dashboard" loading="lazy" data-profile></a>
-            <div class="project-body">
+          <article
+            class="project tw-min-w-0 tw-overflow-hidden tw-rounded-xl tw-border tw-border-slate-200 tw-bg-white tw-shadow-sm hover:tw-shadow-md tw-transition-shadow">
+            <a class="restored-image" href="Saleandpurchase.png" target="_blank" rel="noopener noreferrer"
+              aria-label="Open Sales & Purchase Dashboard image"><span>Sales & Purchase Dashboard<small>Image file:
+                  Saleandpurchase.png</small></span><img src="Saleandpurchase.png" alt="Sales & Purchase Dashboard"
+                loading="lazy" data-profile></a>
+            <div class="project-body tw-p-5">
               <h3>Sales & Purchase Dashboard</h3>
-              <p>Category-wise and region-wise sales and purchase insights.</p><a class="project-link"
-                href="Saleandpurchase.png" target="_blank" rel="noopener noreferrer">View full image ↗</a>
+              <p>Category-wise and region-wise sales and purchase insights.</p><a
+                class="project-link tw-text-emerald-800 hover:tw-text-emerald-600" href="Saleandpurchase.png"
+                target="_blank" rel="noopener noreferrer">View full image ↗</a>
             </div>
           </article>
-          <article class="project"><a class="restored-image" href="EStore.gif" target="_blank" rel="noopener noreferrer"
+          <article
+            class="project tw-min-w-0 tw-overflow-hidden tw-rounded-xl tw-border tw-border-slate-200 tw-bg-white tw-shadow-sm hover:tw-shadow-md tw-transition-shadow">
+            <a class="restored-image" href="EStore.gif" target="_blank" rel="noopener noreferrer"
               aria-label="Open E Store Sales Dashboard image"><span>E Store Sales Dashboard<small>Image file:
                   EStore.gif</small></span><img src="EStore.gif" alt="E Store Sales Dashboard" loading="lazy"
                 data-profile></a>
-            <div class="project-body">
+            <div class="project-body tw-p-5">
               <h3>E Store Sales Dashboard</h3>
-              <p>Monthly sales trends, category summaries and regional performance.</p><a class="project-link"
-                href="EStore.gif" target="_blank" rel="noopener noreferrer">View full image ↗</a>
+              <p>Monthly sales trends, category summaries and regional performance.</p><a
+                class="project-link tw-text-emerald-800 hover:tw-text-emerald-600" href="EStore.gif" target="_blank"
+                rel="noopener noreferrer">View full image ↗</a>
             </div>
           </article>
         </div>
       </section>
       <section id="skill" style="padding-bottom:80px">
-        <div class="section-top">
+        <div class="section-top tw-gap-6">
           <div><span class="eyebrow">04 / Technical toolkit</span>
             <h2>My Skills</h2>
           </div>
           <p>A blend of business reporting and development skills, chosen to suit each project.</p>
         </div>
         <div class="skills">
-          <article class="skill-card">
+          <article class="skill-card tw-rounded-xl tw-shadow-sm tw-border-slate-200">
             <h3>Analytics & reporting</h3>
             <div class="chips"><span>Advanced Excel</span><span>Power BI</span><span>Data visualization</span><span>MIS
                 reporting</span><span>Tally Prime</span><span>Tally ERP 9</span></div>
           </article>
-          <article class="skill-card">
+          <article class="skill-card tw-rounded-xl tw-shadow-sm tw-border-slate-200">
             <h3>Frontend development</h3>
             <div class="chips"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Tailwind
                 CSS</span><span>React</span><span>Responsive design</span></div>
           </article>
-          <article class="skill-card">
+          <article class="skill-card tw-rounded-xl tw-shadow-sm tw-border-slate-200">
             <h3>Backend & databases</h3>
             <div class="chips"><span>Node.js</span><span>Express.js</span><span>MongoDB</span></div>
           </article>
@@ -2711,7 +3083,7 @@
               rel="noopener noreferrer">LinkedIn ↗</a><a href="https://github.com/kumarsunilkashyap" target="_blank"
               rel="noopener noreferrer">GitHub ↗</a></div>
         </div>
-        <form id="contact-form" class="contact-form">
+        <form id="contact-form" class="contact-form tw-min-w-0">
           <div class="form-row">
             <div><label for="name">Your name</label><input id="name" name="name" required maxlength="100"
                 autocomplete="name" placeholder="Full name"></div>
@@ -2730,12 +3102,15 @@
           <div><label for="message">Role or project details</label><textarea id="message" name="message" required
               minlength="10" maxlength="4000"
               placeholder="Share the role, location / work arrangement, key requirements or project goal..."></textarea>
-          </div><button class="btn" type="submit">Prepare enquiry <span>↗</span></button>
+          </div><button
+            class="btn tw-transition-colors focus-visible:tw-ring-2 focus-visible:tw-ring-emerald-500 focus-visible:tw-ring-offset-2"
+            type="submit">Prepare enquiry <span>↗</span></button>
           <p class="note">Creates a message for you to copy and share on LinkedIn. This form does not send or store your
             details.</p>
           <div class="draft" id="draft" hidden><label for="draft-text">Your enquiry — ready to copy</label><textarea
-              id="draft-text" readonly rows="7"></textarea><button class="btn" type="button" id="copy">Copy
-              message</button>
+              id="draft-text" readonly rows="7"></textarea><button
+              class="btn tw-transition-colors focus-visible:tw-ring-2 focus-visible:tw-ring-emerald-500 focus-visible:tw-ring-offset-2"
+              type="button" id="copy">Copy message</button>
             <p id="copy-status" role="status" class="note"></p>
           </div>
         </form>
@@ -2756,8 +3131,9 @@
       <h3>Approach</h3>
       <p id="case-approach"></p>
     </div>
-    <ul id="modal-features"></ul><a id="modal-link" class="btn" target="_blank" rel="noopener noreferrer">Open project
-      ↗</a>
+    <ul id="modal-features"></ul><a id="modal-link"
+      class="btn tw-transition-colors focus-visible:tw-ring-2 focus-visible:tw-ring-emerald-500 focus-visible:tw-ring-offset-2"
+      target="_blank" rel="noopener noreferrer">Open project ↗</a>
   </dialog>
   <script>
     const projectContext = [['How does sales performance vary across segments and regions?', 'Compare shipping modes, customer segments, regions and categories through Power BI visuals.'], ['How do sales and purchases compare across the business?', 'Bring category-wise and region-wise sales and purchase analysis into an interactive report.'], ['Where and when are retail sales occurring?', 'Use monthly summaries and category and regional breakdowns to explore retail performance.']];
@@ -2768,7 +3144,7 @@
       { title: 'Online Tools Converter', type: 'web', tag: 'HTML · TAILWIND CSS', image: 'pdftools.png', desc: 'A responsive online tools interface that makes everyday conversion workflows easy to navigate.', features: ['Responsive interface using HTML and Tailwind CSS.', 'Utility-focused layout for everyday tasks.', 'Developed with AI-assisted enhancements.'], url: 'https://kumarsunilkashyap.github.io/tools/' },
       { title: 'Sarkari Result UI', type: 'web', tag: 'RESPONSIVE WEB INTERFACE', image: 'sarkariresultui.png', desc: 'A structured interface for browsing government exam results and related information.', features: ['Clear visual hierarchy for information-heavy pages.', 'Responsive layouts for desktop and mobile.', 'An independent UI project inspired by Sarkari Result.'], url: 'https://kumarsunilkashyap.github.io/sarkariresult' },
       { title: 'My Tools', type: 'web', tag: 'WEB UTILITIES · HTML & CSS', image: 'onlinetools.png', desc: 'A collection of document and image tools with a simple, approachable web interface.', features: ['Image resizing and image conversion tools.', 'PDF compression, merging and PDF-to-JPG utilities.', 'Built using HTML and Tailwind CSS with AI assistance.'], url: 'https://kumarsunilkashyap.github.io/fileconverter' }];
-    const grid = document.querySelector('#project-grid'); projects.forEach((p, i) => { const card = document.createElement('article'); card.className = 'project'; card.dataset.type = p.type; card.innerHTML = `<div class="project-visual"><div class="mini-window" aria-hidden="true"><div class="mini-top"><b>${p.type === 'analytics' ? 'PERFORMANCE OVERVIEW' : 'WORKSPACE / ONLINE TOOLS'}</b><span>•••</span></div><div class="mini-cells"><i></i><i></i><i></i></div><div class="mini-bars">${[30, 48, 35, 55, 42, 62, 50, 59].map((h, j) => `<i style="height:${(h + i * 7) % 50 + 12}px"></i>`).join('')}</div></div><span class="preview-label">Illustrative project cover</span><a class="project-image-link" href="${p.image}" target="_blank" rel="noopener noreferrer" aria-label="Open ${p.title} image"><img src="${p.image}" alt="${p.title} screenshot" loading="lazy" data-optional></a></div><div class="project-body"><span class="tag">${p.tag}</span><h3>${p.title}</h3><p>${p.desc}</p><button class="project-link" data-project="${i}" aria-label="View ${p.title} details">View project details <span>↗</span></button></div>`; grid.append(card) });
+    const grid = document.querySelector('#project-grid'); projects.forEach((p, i) => { const card = document.createElement('article'); card.className = 'project tw-min-w-0 tw-overflow-hidden tw-rounded-xl tw-border tw-border-slate-200 tw-bg-white tw-shadow-sm hover:tw-shadow-md tw-transition-shadow'; card.dataset.type = p.type; card.innerHTML = `<div class="project-visual"><div class="mini-window" aria-hidden="true"><div class="mini-top"><b>${p.type === 'analytics' ? 'PERFORMANCE OVERVIEW' : 'WORKSPACE / ONLINE TOOLS'}</b><span>•••</span></div><div class="mini-cells"><i></i><i></i><i></i></div><div class="mini-bars">${[30, 48, 35, 55, 42, 62, 50, 59].map((h, j) => `<i style="height:${(h + i * 7) % 50 + 12}px"></i>`).join('')}</div></div><span class="preview-label">Illustrative project cover</span><a class="project-image-link" href="${p.image}" target="_blank" rel="noopener noreferrer" aria-label="Open ${p.title} image"><img src="${p.image}" alt="${p.title} screenshot" loading="lazy" data-optional></a></div><div class="project-body tw-p-5"><span class="tag">${p.tag}</span><h3>${p.title}</h3><p>${p.desc}</p><button class="project-link tw-text-emerald-800 hover:tw-text-emerald-600" data-project="${i}" aria-label="View ${p.title} details">View project details <span>↗</span></button></div>`; grid.append(card) });
     document.querySelectorAll('[data-optional]').forEach(img => { const show = () => { if (img.naturalWidth) { img.hidden = false; if (img.parentElement.classList.contains('avatar') || img.parentElement.classList.contains('portrait')) img.previousElementSibling.hidden = true; } }; img.addEventListener('load', show); img.addEventListener('error', () => img.hidden = true); if (img.complete) show() });
     document.querySelectorAll('[data-profile]').forEach(img => { const show = () => { if (img.naturalWidth) img.hidden = false }; img.addEventListener('load', show); img.addEventListener('error', () => img.hidden = true); if (img.complete) show() });
     const count = document.querySelector('#project-count'); let selectedFilter = 'all'; const search = document.querySelector('#project-search'); function applyProjectFilters() { let n = 0; const q = search.value.trim().toLowerCase(); grid.querySelectorAll('.project').forEach(c => { c.hidden = (selectedFilter !== 'all' && c.dataset.type !== selectedFilter) || !c.textContent.toLowerCase().includes(q); if (!c.hidden) n++ }); count.textContent = n ? `Showing ${n} of 6 projects` : 'No matching projects. Try another search or choose All projects.'; } document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => { selectedFilter = button.dataset.filter; document.querySelectorAll('[data-filter]').forEach(b => b.setAttribute('aria-pressed', String(b === button))); applyProjectFilters() })); search.addEventListener('input', applyProjectFilters); applyProjectFilters(); document.querySelectorAll('.print-profile').forEach(b => b.addEventListener('click', () => window.print()));
